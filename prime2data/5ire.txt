@@ -1,0 +1,41 @@
+ジカウイルス
+
+cmd	load "" FILTER "*.CA,*.P,biomolecule 1";selectionHalos OFF; slab off; set zshade on; set zshadepower 1; set zslab 60;set echo bottom left;font echo 18 serif bold; color echo blue;  select all; cartoon off; backbone off; trace off; rocket off; backbone 300; color chain; display !water; select all;
+
+init	_mm.rebuild().asb(1);
+
+h1	ジカウイルスってなに？
+
+2015年から「ジカ熱」という伝染病が急速に世界中に広がっていて、大きな問題になっています。その病原ウイルスが「ジカウイルス」です。ジカウイルスは[蚊 か]によって広まるので、特に温かい地域では防ぐのが難しい病気です。
+
+h1	これはなにを見ているの？
+
+タンパク質でできた、ジカウイルスの[殻 から]を見ています。ジカウイルスはウイルスの[設計図 せっけいず]である{RNA}と、そのRNAを包みこむ、この丸い殻とでできています。
+
+btn	断面を見る	slab 50; depth 0 ; slab on;
+btn	もとにもどす	slab off;depth 0;set zshade on;set zslab 60;
+
+btn2	一部を拡大	_cmd.asb(4);
+btn2	すべて表示	_cmd.asb(1);
+
+h1	これからなにがわかったの？
+
+ジカウイルスは「デング熱」の原因となる「デングウイルス」の仲間です。予想どおりデングウイルスとそっくりの構造でした。なのでジカウイルスに対抗するには、ジカウイルスに特徴的な部分の構造を知ることがカギとなります。多くのウイルスや細胞には、表面を守るために糖がつながってできた鎖、[糖鎖 とうさ]が生えています。この構造からジカウイルスに特徴的な糖鎖の構造も部分的に見えています。
+
+btn	糖鎖の部分	load "" FILTER "[NAG],biomolecule 1"
+btn	もとにもどす	load "" FILTER "*.CA,biomolecule 1"
+
+btn2	糖鎖はこれ！	_cmd.focus_chain(['G','H']);
+btn2	これも糖鎖！	_cmd.focus_chain(['I','J']);
+btn2	これも糖鎖！	_cmd.focus_chain(['K','L']);
+btn2	もとにもどす	_mm.reset_focus().asb(-1).asb(1);
+
+h1	急速に広がる病気の原因をすばやく解析
+
+これまでは、このようなウイルスの立体構造を解明するには何年もの研究が必要でした。このジカウイルスの構造解析では、一般的な解析手法であるX線結晶学ではなく、[低温電子顕微鏡法 ていおんでんしけんびきょうほう]という方法が使われています。低温電子顕微鏡法は、近年急速に発達している手法です。今回の構造解析も伝染病の流行から1年程度という短い時間で達成されました。今後はこのような新しい方法ですばやく、病原体や病気に関連するタンパク質の構造が明らかになっていくでしょう。
+
+h1	くわしくは・・・
+
+{wikipe ジカ熱}
+{wikipe ジカウイルス}
+{http://pdbj.org/info/papermodel-zikavirus ジカウイルスのペーパーモデル}

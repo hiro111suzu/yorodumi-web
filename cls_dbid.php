@@ -10,9 +10,17 @@ class cls_dbid {
 
 //. vals
 //protected $json, $info = [], $key, $name, $cache;
-protected $key, $key_ar, $ecnum_ja_tsv;
+protected $key, $db, $id, $str_id;
 
-//. set_key
+//. FHアイテムベース
+//.. key
+protected function key( $key = null ) {
+	if ( $key )
+		$this->set_key( $key );
+	return $this->key;
+}
+
+//.. set_key
 function set_key( $db_or_key, $id = '' ) {
 	if ( $id ) {
 		$d = strtolower( $db_or_key );
@@ -27,28 +35,43 @@ function set_key( $db_or_key, $id = '' ) {
 			'genbank'	=> 'gb' ,
 			'cath'		=> 'ct' ,
 		][ $d ] ?: $d ) .':'. strtolower( $id );
+		$this->db = $d;
 	} else {
 		$this->key = $db_or_key;
+		list( $this->db, $this->id ) = explode( ':', $db_or_key, 2 );
 	}
-	return $this->key;
+	return $this;
 }
 
-//. icon
-function icon() {
-	return _fa( 'database', 'large dbid_' . explode( ':', $this->key, 2 )[0] );
+//.. get_cls
+function get_cls() {
+	return [
+			'ec' => 'f' ,
+			'go' => 'f' ,
+			'rt' => 'f' ,
+			'pf' => 'h' ,
+			'in' => 'h' ,
+			'pr' => 'h' ,
+			'ct' => 'h' ,
+//			'un' => 'c' ,
+//			'gb' => 'c' ,
+//			'bd' => 'c' ,
+//			'no' => 'c' ,
+		][ $this->db ] ?: 'c';
 }
 
-//. title
+
+//.. title
 function title( $title, $key, $flg_array = false ) {
 	_add_lang( 'dbid_title' );
 	//- $flg_array: Wikipedia情報は配列で別々に返すフラグ
-	$this->set_key( $key );
+	$key = $this->key( $key );
 	list( $t1, $t2 ) = explode( '|', $title, 2 );
 
 	//- bird: $t2がクラス、タイプ、コンマ区切り
 	list( $db, $id ) = explode( ':', $key, 2 );
 
-	//.. bird
+	//... bird
 	if ( $db == 'bd' ) {
 		_add_lang( 'bird' );
 		$t = [];
@@ -60,7 +83,7 @@ function title( $title, $key, $flg_array = false ) {
 		;
 	}
 
-	//.. cath
+	//... cath
 	if ( $db == 'ct' ) {
 		$t2 = $t1;
 		$t1 = 'CATH '. _l([
@@ -71,7 +94,7 @@ function title( $title, $key, $flg_array = false ) {
 		][ count( explode( '.', $key ) ) ]);
 	}
 
-	//.. ec 日本語
+	//... ec 日本語
 	if ( L_JA && $db == 'ec' && substr( $id, -1 ) == '-' ) {
 		$t = $this->ec_ja( $id ) ?: $t1;
 		return $flg_array
@@ -80,7 +103,7 @@ function title( $title, $key, $flg_array = false ) {
 		;
 	}
 
-	//.. $t2がない
+	//... $t2がない
 	if ( !$t2 ) {
 		return $flg_array ? (
 			$t1
@@ -93,7 +116,7 @@ function title( $title, $key, $flg_array = false ) {
 		);
 	}
 
-	//.. uniprot / reactome:  (生物種名がくる)
+	//... uniprot / reactome:  (生物種名がくる)
 	if ( $db == 'rt' || $db == 'un' ) {
 		return $flg_array
 			? [ "$t2 -" . _obj('taxo')->item( $t1 ) ]
@@ -101,19 +124,16 @@ function title( $title, $key, $flg_array = false ) {
 		;
 	}
 
-	//.. その他
+	//... その他
 	return $flg_array
 		? [ '<b>'. _l( $t1 ) ."</b>: $t2", _obj('wikipe')->show( $t2 ) ]
 		: '<b>'. _l( $t1 ) ."</b>: $t2". _obj('wikipe')->pop_xx($t2)
 	;
 }
 
-//. link
+//.. link
 function link( $key = '' ) {
-	if ( $key )
-		$this->key = $key;
-	$key = $key ?: $this->key ;
-	list( $db, $id ) = explode( ':', $key, 2 );
+	$key = $this->key( $key );
 	return _dblink(
 		[
 			'un' => 'UniProt'   ,
@@ -126,33 +146,34 @@ function link( $key = '' ) {
 			'sm' => 'SMART'		,
 			'ct' => 'CATH'	,
 			'nor' => 'Norine' ,
-		][ $db ] ?: strtoupper( $db )
+		][ $this->db ] ?: strtoupper( $this->db )
 		,
-		strtoupper( $id ), 
+		strtoupper( $this->id ), 
 		[
 			'icon' => $this->icon() ,
-
 			//- url CATHは、スーパーファミリーと、親要素で違う
-			'url'  => $db != 'ct' ? ''
+			'url'  => $this->db != 'ct' ? ''
 			 : _url(
-			 	count( explode( '.', $id ) ) == 4 ? 'cath' : 'cath_tree' ,
-			 	$id
+			 	count( explode( '.', $this->id ) ) == 4 ? 'cath' : 'cath_tree' ,
+			 	$this->id
 			 )
 		] 
 	);
 }
 
-//. hit_item
+//.. hit_item: ym search用
 function hit_item( $key, $title ) {
+	$key = $this->key( $key );
 	return _ul( array_merge(
-		[ $this->link( $key ). $this->db_wikipe() ],
+		[ $this->link(). $this->db_wikipe() ],
 		$this->title( $title, $key, true )
 	) );
 }
 
-//. pop
-function pop( $db_or_key, $id = '', $text = '', $pre_contents = '') {
-	$this->set_key( $db_or_key, $id );
+//.. pop
+function pop( $db_or_key = '', $id = '', $text = '', $pre_contents = '') {
+	if ( $db_or_key )
+		$this->set_key( $db_or_key, $id );
 	if ( !$text ) {
 		$a = explode( '|', _ezsqlite([
 			'dbname' => 'dbid' ,
@@ -181,12 +202,12 @@ function pop( $db_or_key, $id = '', $text = '', $pre_contents = '') {
 	);
 }
 
-//. pop プレコンテンツあり
+//.. pop_pre プレコンテンツあり
 function pop_pre( $key, $pre ) {
 	return $this->pop( $key, '', '', $pre );
 }
 
-//. pop_contents
+//.. pop_contents: ajax.php で利用
 function pop_contents( $key, $opt = [] ) {
 	$this->set_key( $key );
 	//- YM search へのリンク
@@ -233,17 +254,13 @@ function pop_contents( $key, $opt = [] ) {
 	]);
 }
 
-//. strid2keys
-function strid2keys( $id ) {
-	return array_filter( explode( '|', _ezsqlite( [
-		'dbname' => 'strid2dbids' ,
-		'where'	 => [ 'strid', $id ] ,
-		'select' => 'dbids' ,
-	])));
+//.. icon
+protected function icon() {
+	return _fa( 'database', 'large dbid_'. $this->db );
 }
 
-//. db_wikipe
-function db_wikipe() {
+//.. db_wikipe
+protected function db_wikipe() {
 	$n = explode( ':', $this->key )[0];
 	return _kakko( $n == 'bd'
 		? _ab( 'prd_help', IC_HELP. TERM_ABOUT_PRD )
@@ -251,21 +268,37 @@ function db_wikipe() {
 	;
 }
 
-//. ec_ja
-function ec_ja( $ecnum ) {
+//.. ec_ja
+protected function ec_ja( $ecnum ) {
 	return _json_cache( DN_DATA. '/ecnum_ja.json.gz' )->$ecnum;
 }
 
-//. end
+//. 構造エントリベース
+//.. set_strid
+function set_str_id( $id ) {
+	$this->str_id = $this->prep_str_id( $id );
+	return $this;
 }
 
-/*
-* hit_item
-	+ 
-* list_item
-pop
-pop_conttents
+//.. prep_str_id
+protected function prep_str_id( $id ) {
+	return is_object( $id ) 
+		? ( $id->db == 'emdb' ? 'e' : '' ). $id->id
+		: $id
+	;
+}
+
+//.. strid2keys
+function strid2keys( $id = null ) {
+	if ( $id )
+		$this->set_str_id( $id );
+	return array_filter( explode( '|', _ezsqlite( [
+		'dbname' => 'strid2dbids' ,
+		'where'	 => [ 'strid', $this->str_id ] ,
+		'select' => 'dbids' ,
+	])));
+}
 
 
+}
 
-*/

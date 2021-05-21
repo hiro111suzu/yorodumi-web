@@ -1,0 +1,45 @@
+生き物の設計図 - DNA
+
+cmd	select water;cpk off;select !water;rotate x 90;rotate y -45;rotate z -45;wireframe only; wireframe 0.25; spacefill 33%;spin y;
+init	_mm.style('bs').color('cpk');
+
+btn	本当の構造に近いかたち	cpk
+btn	ほねぐみを見やすく	wireframe only; wireframe 0.25; spacefill 33%;
+
+h1	生き物の[設計図 せっけいず]
+
+親と子が似ていること、けがをしても同じような細胞が増えてきずをふさいでくれること、このような現象は生き物の設計図である{[遺伝情報 いでんじょうほう]}が受け継がれていることに基づいています。それぞれの細胞は、{DNA}（デオキシリボ[核酸 かくさん]）という分子のかたちで遺伝情報をもっています。
+
+btn	回す	spin y;
+btn	ストップ	spin off;
+
+h1	これはなにを見ているの？
+
+{DNA}分子の構造を見ています。{DNA}は2本のくさりが互いに巻き付き合ったかたちをしています（このかたちを{二重らせん}と呼びます）。両方のくさりには同じ情報が入っていて、一方のくさりがきずついても元に戻せるようになっています。
+
+DNAは{A}、{C}、{G}、{T}、4種類の{[核酸 かくさん]}でできています。
+btn2	これがA	_cmd.focus_res_ns({A:[5]});
+btn2	これがC	_cmd.focus_res_ns({A:[1]});
+btn2	これがG	_cmd.focus_res_ns({A:[2]});
+btn2	これがT	_cmd.focus_res_ns({A:[7]});
+btn2	もとにもどす	_mm.reset_focus();
+
+ことうち、AはTと、CはGとペアになりやすい性質をもっていてます。DNAが同じ情報を持っている2重のくさりとなっているのは、この性質によるものです。
+btn2	AとTのペア	_cmd.focus_res_ns({A:[6],B:[7]});
+btn2	CとGのペア	_cmd.focus_res_ns({A:[1],B:[12]});
+btn2	もとにもどす	_mm.reset_focus();
+
+//	それぞれのくさりは、背骨のように長く1本につながった{主鎖}と、そこから横に出た{側鎖}でできています。遺伝情報が入っているのは{側鎖}の方で、この大切な情報を守るように主鎖が周りを取り囲んでいます。
+
+btn	主鎖はここ!	selectionHalo on; select backbone;
+btn	側鎖はここ!	selectionHalo on; select sidechain;
+btn	もとにもどす	selectionHalo off; select all;
+
+h1	DNA〜本当はとても長い
+
+人間の細胞にはこのようなDNAの鎖が23本入っていますが、どれもとても長く、
+全部つなぎ合わせると今見ているDNAの1億倍くらいの長さになります。
+
+h1	くわしくは・・・
+{wikipe DNA}
+{mom 023 DNA}

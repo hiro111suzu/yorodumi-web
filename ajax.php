@@ -223,6 +223,7 @@ if ( MODE == 'acomp' ) {
 		$ret .= '<option value="' . htmlspecialchars( $w ) . '">';
 	die( $ret );
 }
+
 //. wikipedia pop-up
 if ( MODE == 'wp' ) {
 	_test_wait();
@@ -248,4 +249,19 @@ if ( MODE == 'met' || MODE == 'met2') {
 if ( MODE == 'chemlinks' ) {
 	_test_wait();
 	die( _imp2( _get_chemlinks( _getpost( 'id' ) ) ) );
+}
+
+//. omo_small_search
+if ( MODE == 'omokage' ) {
+	require_once( __DIR__. '/omo-calc-common.php' );
+	$ret = '';
+	$rank = 0;
+	$list = ( new cls_omo_small_search() )->do( _getpost('id') );
+	foreach ( $list as $ida => $score ) {
+		if ( $score < OMOPRE_SCORE_LIMIT[ $rank ] ) break;
+		if ( ! $ida ) continue;
+		$ret .= _pop_omoitem( $ida, [ 'score' => $score ] );
+		++ $rank;
+	}
+	die( $ret );
 }

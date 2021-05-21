@@ -669,10 +669,10 @@ foreach ( (array)$json->pdbx_deposit_group as $c ) {
 	;
 }
 
-//... main
-_related_out( $json->pdbx_deposit_group != '' );
-
+//.. relatd str
+//_related_out( $json->pdbx_deposit_group != '' );
 //... Experimental data
+$exp_data = [];
 foreach ( (array)$json->pdbx_related_exp_data_set as $c ) {
 	$o = [];
 	foreach ( $c as $key => $val ) {
@@ -696,10 +696,97 @@ foreach ( (array)$json->pdbx_related_exp_data_set as $c ) {
 		$o[ _cifdic_link( $key, "pdbx_related_exp_data_set.$key" ) ] = $val;
 //		$o[ $key ] = $val;
 	}
-	$o_data->lev2( _sharp( $c->ordinal ), $o );
+//	$o_data->lev2( _sharp( $c->ordinal ), $o );
+	$exp_data[ _l('Experimental dataset'). ' '.  _sharp( $c->ordinal ) ] = _quick_kv( $o );
 }
-$o_data->end2( 'Experimental dataset||pdbx_related_exp_data_set' );
-$_simple->time( 'related' );
+//$o_data->end2( 'Experimental dataset||pdbx_related_exp_data_set' );
+
+
+//... related str
+$id_list = [];
+$others = [];
+foreach ( (array)$json->pdbx_database_related as $a ) {
+	$content_type = $db_id = $db_name = $details = '';
+	extract( (array)$a );
+	$DB_NAME = strtoupper( $db_name );
+	if ( $content_type == 'unspecified' )
+		$content_type = '';
+	if ( $DB_NAME == 'PDB' ) {
+		$i = _rep_pdbid( strtolower( $db_id ) );
+		$id_list[ "pdb-$i" ][ 'txt' ] = _imp([ $content_type, $details ]);
+	} else if ( $db_name == 'EMDB' ) {
+		$i = _numonly( $db_id );
+		if ( $i == '0000' ) continue;
+		$id_list[ "emdb-$i" ][ 'txt' ] = _imp([ $content_type, $details ]);
+	} else {
+		//- その他のDB
+		$others[] = _ab([ strtolower( $db_name ), $db_id ], "$db_name: $db_id" )
+			. _imp([ $content_type, $details ]);
+	}
+}
+
+//... starting model
+foreach ( (array)$json->refine as $a ) {
+	foreach ( (array)_extract_pdbid( 
+		strtolower( $a->pdbx_starting_model ) 
+	) as $i ) {
+		$id_list[ "pdb-$i" ][ 'start' ] =true;
+	}
+}
+
+//... omokage_id
+$j = json_decode( _ezsqlite([
+	'dbname' => 'pdb' ,
+	'select' => 'json' ,
+	'where'  => [ 'id', ID ]
+]) );
+$asb = in_array( $j->asb[0], (array)$j->identasb )
+	? 'd'
+	: ( $j->asb[0] ?: 'd' )
+;
+
+//- タブバージョン
+$dep_array = [
+	'tab' => _l( 'Deposited unit' ) ,
+	'ida' => ID. '-d' ,
+];
+$flg = false;
+$asb_list = [];
+foreach ( (array)$j->asb as $a ) {
+	if ( in_array( $a, (array)$j->identasb ) ) {
+		if ( $flg ) continue;
+		$flg = true;
+		$asb_list[] = $dep_array;
+	} else {
+		$ida = ID. "-$a";
+		if ( _ezsqlite([
+			'dbname' => 'profdb_ss' ,
+			'select' => 'id',
+			'where'  => [ 'id', $ida ]
+		])) {
+			$asb_list[] = [
+				'tab' => _l('Assembly'). " #$a" ,
+				'ida' => $ida ,
+			];
+		}
+	}
+}
+if ( ! $flg )
+	$asb_list[] = $dep_array;
+
+//... output
+( new cls_related([
+	'id_list'		=> $id_list ,
+	'flg_group_dep'	=> $json->pdbx_deposit_group != '' ,
+	'is_em'			=> $main_id->is_em() ,
+]) )
+->set_omokage( ID. "-$asb" )
+->set_similar( $asb_list )
+->set_others( $exp_data + [
+	'Other databases' => $others ? _ul( $others ) : null
+])
+->end();
+unset( $exp_data, $others, $id_list, $asb_list );
 
 //.. mom keyword
 $kw = [ $json->struct_keywords[0]->pdbx_keywords ];

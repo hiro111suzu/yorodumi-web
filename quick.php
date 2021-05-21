@@ -3,6 +3,7 @@
 ini_set( 'memory_limit', '2048M' );
 define( 'COLOR_MODE', 'ym' );
 require( __DIR__. '/common-web.php' );
+require( __DIR__. '/cls_omoid.php' );
 //if ( TEST )
 //	set_time_limit(120);
 
@@ -92,10 +93,13 @@ TERM_SHOW_IN_VIEWER
 	ビューアーで表示
 TERM_SEARCH_OMOKAGE
 	Search similar-shape structures by Omokage search
-	'Omokage検索で類似形状データを探す
+	Omokage検索で類似形状データを探す
 TERM_SIMILAR_SHAPE_DATA
 	Similar-shape strucutres
 	類似形状データ
+TERM_SIM_SHAPE
+	Similar-shape
+	類似形状
 TERM_SEARCH_OMOKAGE_ASB
 	Search similar-shape structures of this assembly by Omokage search
 	Omokage検索でこの集合体の類似形状データを探す
@@ -114,18 +118,6 @@ TERM_REL_CITE
 TERM_REL_START
 	Starting model for refinement
 	精密化の開始モデル
-TERM_FIGURE
-	Figure
-	画像
-TERM_CHIMERA_SESSION
-	Chimera session file
-	Chimera セッションファイル
-TERM_MP4
-	.mp4 (H.264/MPEG-4 AVC format)
-	.mp4 (H.264/MPEG-4 AVC 形式)
-TERM_WEBM
-	.webm (WebM/VP8 format)
-	.webm (WebM/VP8 形式)
 TERM_OPEN_VIEWER
 	Open structure viewer
 	構造ビューアを開く
@@ -544,7 +536,9 @@ if ( ! ID_HIT ) {
 //. misc init 続き
 define( 'I_SEL', _ic( 'select' ) );
 
+$_has_fh_item = [];
 $_primary_pap_id = '';
+define( 'FH_CLS_NAME', _subdata( 'trep', 'fhinfo_cls_name' ) );
 
 //. main
 $js = '';
@@ -583,6 +577,7 @@ $_simple
 function _viewer() {
 	global $o_data, $main_id;
 	$o_data->lev1title( 'strvis' );
+	$term_file_type = _subdata( 'trep', 'media_file_type' );
 
 	//.. movie
 	foreach ( (array)$main_id->movinfo() as $num => $a ) {
@@ -598,16 +593,9 @@ function _viewer() {
 		] as $t => $n ) {
 			if ( ! file_exists( $n ) ) continue;
 			$dl_items[] = _a( $n,
-				[
-					'mp4'	=> TERM_MP4 ,
-					'webm'	=> TERM_WEBM ,
-					'img'	=> TERM_FIGURE ,
-					'ses'	=> TERM_CHIMERA_SESSION
-				][ $t ]
-				. ', '. _format_bytes( filesize( $n ) )
+				$term_file_type[ $t ]. ', '. _format_bytes( filesize( $n ) )
 			);
 		}
-
 		$out .= _div( '.clearfix topline' ,
 			_btn( "!_pmov.open('" .DID. "','$num')| .left enticon_cap movselbtn",
 				_img( $c, $img ) . _p( "#$num" )
@@ -687,200 +675,6 @@ function _icap( $o ) {
 		_ab( $url, _img( '.icapi', $img ) . BR . _l( $cap ) )
 		. ( $add == '' ? '' : BR . $add )
 	);
-}
-
-//.. _related_str: 関連構造データ
-//- いるもの: $_primary_pap_id, $json, $idarray
-//- なくてもいい: $ids
-
-function _related_str( $flg_group = false ) {
-	global $main_id, $_simple , $json, $_primary_pap_id;
-	extract( $main_id->get() );
-	$others = '';
-
-	//... 印の種類
-	$mark_dic = [
-		'cite'	=> _span( '.r_cite', 'C' ) ,
-		'fit'	=> _span( '.r_fit',  'M' ) ,
-		'start'	=> _span( '.r_fit',  'S' )
-	];
-	$comment_dic = [
-		'cite'	=> TERM_REL_CITE. _kakko( $_primary_pap_id
-			? _ab(['pap', 'id' => $_primary_pap_id ], _ic('article'). _ej( 'ref.', '文献' ) )
-			: ''
-		) ,
-		'fit'	=> DB == 'emdb' ? TERM_REL_FIT_E : TERM_REL_FIT_P ,
-		'start'	=> TERM_REL_START
-	];
-
-	//... PDB jsonから
-	if ( $db == 'pdb' ) {
-		foreach ( (array)$json->pdbx_database_related as $a ) {
-			$content_type = $db_id = $db_name = $details = '';
-			extract( (array)$a );
-			$DB_NAME = strtoupper( $db_name );
-			if ( $content_type == 'unspecified' )
-				$content_type = '';
-			if ( $DB_NAME == 'PDB' ) {
-				$i = _rep_pdbid( strtolower( $db_id ) );
-				$ids[ "pdb-$i" ][ 'txt' ] = _imp([ $content_type, $details ]);
-			} else if ( $db_name == 'EMDB' ) {
-				$i = _numonly( $db_id );
-				if ( $i == '0000' ) continue;
-				$ids[ "emdb-$i" ][ 'txt' ] = _imp([ $content_type, $details ]);
-			} else {
-				//- その他のDB
-				$others .= _p(
-					_ab([ strtolower( $db_name ), $db_id ], "$db_name: $db_id" )
-					. _imp([ $content_type, $details ]) 
-				);
-			}
-		}
-		//- starting model
-		foreach ( (array)$json->refine as $a ) {
-			foreach ( (array)_extract_pdbid( 
-				strtolower( $a->pdbx_starting_model ) 
-			) as $i ) {
-				$ids[ "pdb-$i" ][ 'start' ] =true;
-			}
-		}
-	}
-	$_simple->time( 'related - pdbjson' );
-
-	//... EM data relatedjsonから
-	foreach ( (array)_emn_json( 'related', $did ) as $i )
-		$ids[ $i ][ 'r' ] = true;
-	$_simple->time( 'related - EM data' );
-
-	//... pubmed-IDから
-	if ( !$flg_group && $_primary_pap_id ) {
-		foreach ( array_filter( explode( ',', _ezsqlite([
-			'dbname' => 'pmid2did' ,
-			'select' => 'ids' ,
-			'where'  => [ 'pmid', $_primary_pap_id ] ,
-		]))) as $i ) {
-			$i0 = substr( $i, 0, 1 );
-			if ( $i0 == 'e' )
-				$i  = 'emdb-' . _numonly( $i );
-			else if ( $i0 != 'S' )
-				$i = "pdb-$i";
-			$ids[ $i ][ 'cite' ] = true;
-		}
-	}
-	$_simple->time( 'related - pubmedid' );
-
-	//... fitted
-	foreach ( (array)_emn_json( 'fit', $did ) as $i )
-		$ids[ _rep_pdbid( $i ) ][ 'fit' ] = true;
-	$_simple->time( 'relatd - fitted' );
-
-	//... fitted annot
-	$types_exists = [];
-	$fit_annot = _json_load( DN_DATA. '/emn/fit_annot.json.gz' );
-	foreach ( $fit_annot as $k => $v ) {
-		if ( $k == 'types' ) continue;
-		if ( ! $v[ $did ] ) continue;
-		$types_exists[] = $k;
-		foreach ( $v[ $did ] as $i ) {
-			$ids[ _rep_pdbid( $i ) ][ "annot_$k" ] = true;
-		}
-	}
-	foreach ( $types_exists as $type ) {
-		$mark = _span( '.r_annot', $type );
-		$mark_dic[ "annot_$type" ] = $mark;
-		$comment_dic[ "annot_$type" ]
-			= $fit_annot[ 'types' ][ $type ][ _ej( 'e', 'j' ) ]. LABEL_YM_ANNOT;
-	}
-
-	//... リスト作成
-	unset( $ids[ $did ] ); //- 自分自身は消す
-	if (! $ids ) return [ 'others' => $others ];
-
-	//- sort 重要順
-	$sort = [];
-	foreach ( $ids as $i => $a ) {
-		$sort[ $i ] = "3$i";
-		if ( $a[ 'start'] ) $sort[ $i ] = "2$i";
-		if ( $a[ 'cite' ] ) $sort[ $i ] = "1$i";
-		if ( $a[ 'fit'  ] ) $sort[ $i ] = "0$i";
-	}
-	asort( $sort );
-
-	//- まとめ
-	$out = '';
-	foreach ( array_keys( $sort ) as $i ) {
-		$a = $ids[ $i ];
-		$marks = '';
-		foreach ( array_keys( $ids[ $i ] ) as $type ) {
-			$marks .= $mark_dic[ $type ];
-		}
-		$out .= ( new cls_entid( $i ) )->ent_item_img([
-			'txt' => $a[ 'txt' ] ,
-			'add' => $marks
-		]);
-	}
-
-	//- コメント
-	$flg = [];
-	foreach ( $ids as $i => $c ) foreach ( array_keys( $c ) as $type ) {
-		if ( $type == 'txt' || $type == 'r' ) continue;
-		$flg[ $type ] = true;
-	}
-	foreach ( array_keys( $flg ) as $type ) {
-		$comments .= _p( $mark_dic[ $type ] . ': ' . $comment_dic[ $type ] );
-	}
-
-	if ( $comments )
-		$out .= _div( '.clearfix', $comments );
-	$_simple->time( 'related - listing' );
-
-	return [ 'str' => $out, 'others' => $others ];
-}
-
-//.. _related_out
-function _related_out( $flg_group = false ) {
-	global $o_data, $main_id;
-
-	//... down load
-
-	//... 関連構造出力
-	$r = _related_str( $flg_group );
-	$o_data
-		->lev2( 'Related structure data', $r[ 'str' ] )
-		->lev2( 'Other databases', $r[ 'others' ] )
-	;
-//	if ( ! file_exists( $fn = _fn( DB . '_olist', ID ) ) ) return;
-
-	//... omokage
-	//- omokage search のリンク先
-	$ida = ID;
-	if ( DB == 'emdb' )
-		$ida = 'e' . ID;
-	else if ( DB == 'pdb' && $main_id->is_em() )
-		$ida = ID. '-'. [
-			'1'    => '1' ,
-			'2'    => '2' ,
-			'dep'  => 'd' ,
-			'sp'   => 'd' ,
-			'sp2'  => 'd' ,
-		][ $main_id->status()->snap ] ;
-	else if ( DB == 'pdb' )
-		$ida = ID;
-
-	$simlist = _emn_json( 'omolist', DID );
-	$o_data->lev2(
-		TERM_SIMILAR_SHAPE_DATA
-		, 
-		( $simlist ? _ent_catalog( $simlist, [ 'mode' => 'icon' ] ) : '' )
-		. _p( _ab([ 'omo-search', 'id' => $ida ], _ic( 'omokage' ). TERM_SEARCH_OMOKAGE )
-			//- help
-			. ' ' ._doc_pop( 'about_omosearch',
-				[ 'label' => _kakko( 'details' ) ] 
-			)
-		)
-	)
-	->end2( 'Related structure data' );
-	return;
 }
 
 //.. _pdbidrep: PDB ID が混ざっている文字列からID文字列を抽出
@@ -1332,7 +1126,7 @@ function _jsonview_links() {
 		$node = $str;
 		if ( _instr( ':', $str ) )
 			list( $type, $node ) = explode( ':', $str, 2 );
-		$ret[] = _ab( "jsonview.php?a=$type.$id.$node", $str );
+		$ret[] = _ab([ 'jsonview', 'a' => "$type.$id.$node" ], $str );
 	}
 	return _span( '.red small', 'JSON: ' ._imp( $ret ) );
 
@@ -1355,46 +1149,44 @@ function _cifdic_link( $str, $categ_item ) {
 
 //.. _func_homology
 function _func_homology() {
-	$items = _obj('dbid')->strid2keys( ( DB == 'emdb' ? 'e' : '' ) .ID );
+	global $main_id, $_has_fh_item;
+	$items = _obj('dbid')->strid2keys( $main_id );
 	if ( ! $items ) return;
 	$docpop = _div( '.right', _doc_pop('func_homology') );
+	$_has_fh_item['all'] = true;
 
 	//... 少ない
 	if ( count( $items ) < 10 ) {
 		$ret = [];
 		foreach ( $items as $key ) {
-			$ret[] = _obj('dbid')->pop( $key );
+			$o = ( new cls_dbid )->set_key( $key );
+			$ret[] = $o->pop();
+			$_has_fh_item[ $o->get_cls() ] = true;
 		}
-		return _long( $ret, 10 ) . $docpop;
+		return _long( $ret, 10 ). $docpop;
 	} 
-	
+
 	//... 多い
 	$items_cls = [];
 	foreach ( $items as $i ) {
-		$items_cls[ [
-			'ec' => 'Function' ,
-			'go' => 'Function' ,
-			'rt' => 'Function' ,
-			'pf' => 'Domain/homology' ,
-			'in' => 'Domain/homology' ,
-			'pr' => 'Domain/homology' ,
-			'ct' => 'Domain/homology' ,
-//			'un' => 'Component' ,
-//			'gb' => 'Component' ,
-//			'bd' => 'Component' ,
-//			'no' => 'Component' ,
-		][ substr( $i ,0 ,2 ) ] ?: 'Component' ][] = _obj('dbid')->pop( $i );
+		$o = ( new cls_dbid )->set_key( $i );
+		$c = $o->get_cls();
+		$items_cls[ $c ][] = $o->pop();
+		$_has_fh_item[ $c ] = true;
 	}
 	$tabs = [];
-	foreach ( [ 'Function', 'Domain/homology', 'Component', 'Others' ] as $cls ) {
-		$i = $items_cls[ $cls ];
-		if ( ! $i ) continue;
+	foreach ( FH_CLS_NAME as $cls => $cls_name ) {
+		if ( ! $items_cls[ $cls ] ) continue;
 		$tabs[] = [
-			'tab' => $cls ,
-			'div' => _long( array_slice( $i, 0, 100 ), 10 )
+			'tab' => $cls_name ,
+			'div' => _long( array_slice( $items_cls[ $cls ], 0, 100 ), 10 )
+				. ( TEST ? BR. _ab(
+					[ 'fh-search', 'id' => ID, 'type' => $cls ] ,
+					_fa('search'). _l( 'Similarity search' ) //. ' - '. $cls_name
+				) : '' )
 		];
 	}
-	return $docpop . _simple_tabs( $tabs );
+	return $docpop. _simple_tabs( $tabs );
 }
 
 //.. _mom_items
@@ -1433,7 +1225,7 @@ function _mom_items( $kw = [] ) {
 		}
 		$ret[] = _mom_link( $mom_id,
 			_pop(
-				_ej( 'similarity', '類似性' ). _kakko( count( $item_list[ $mom_id ] ) ),
+				_l('similarity'). _kakko( count( $item_list[ $mom_id ] ) ),
 				10 < count( $fhent )
 					? _div( '.pop_inner', _ul( $fhent, 0 ) )
 					: _ul( $fhent, 0 )
@@ -1459,13 +1251,7 @@ function _symmetry_text( $str ) {
 	$init = substr( $str, 0, 1 );
 	$add = $str == 'C1'
 		? 'asymmetric'
-		: [
-			'C' => '_ fold cyclic' ,
-			'D' => '2x_ fold dihedral' ,
-			'T' => 'tetrahedral' ,
-			'O' => 'octahedral' ,
-			'I' => 'icosahedral' ,
-		][ $init ]
+		: _subdata( 'trep', 'symmetry_term' )[ $init ]
 	;
 	$wikipe = $str == 'C1' ? 'x' : [
 		'C' => 'Cyclic symmetry in three dimensions' ,
@@ -1882,6 +1668,279 @@ class cls_citation {
 	}
 }
 
+//. class: cls_related
+class cls_related {
+	protected $id_list = [];
+	protected $mark_dic;
+	protected $comment_dic;
+	protected $is_em;
+	protected $omolink_temp;
+
+	//.. constractor
+	function __construct( $in = [] ){
+		global $_primary_pap_id; //- cls_citationで作成される
+		$id_list = [];
+		$flg_group_dep = $is_em = false;
+		extract( $in );
+		$this->id_list = $id_list;
+		$this->is_em = $is_em;
+
+		//- マーク、コメントデータ準備
+		$this->mark_dic = [
+			'cite'	=> _span( '.r_cite', 'C' ) ,
+			'fit'	=> _span( '.r_fit',  'M' ) ,
+			'start'	=> _span( '.r_fit',  'S' )
+		];
+		$this->comment_dic = [
+			'cite'	=> TERM_REL_CITE. _kakko( $_primary_pap_id
+				? _ab(['pap', 'id' => $_primary_pap_id ], _ic('article'). _l('ref.') )
+				: ''
+			) ,
+			'fit'	=> DB == 'emdb' ? TERM_REL_FIT_E : TERM_REL_FIT_P ,
+			'start'	=> TERM_REL_START
+		];
+
+		//- id_list追加
+		if ( $is_em )
+			$this->by_emn_info();
+		if ( ! $flg_group_dep )
+			$this->by_pubmed_id();
+
+		$this->set_str_ent();
+		
+		//- omokageリンクテンプレート
+		$this->omolink_temp = _p(
+			_ab(
+				[ 'omo-search', 'id' => '_id_' ],
+				_ic( 'omokage' ). TERM_SEARCH_OMOKAGE
+			). ' '
+			._doc_pop( 'about_omosearch', [ 'label' => _kakko( 'details' ) ] )
+		);
+		return $this;
+	}
+
+	//.. by_emn_info: EMNアノテーションから
+	function by_emn_info() {
+		//- fit
+		foreach ( (array)_emn_json( 'fit', DID ) as $i )
+			$this->id_list[ _rep_pdbid( $i ) ][ 'fit' ] = true;
+			
+		//- relatedjson
+		foreach ( (array)_emn_json( 'related', DID ) as $i )
+			$this->id_list[ $i ][ 'r' ] = true;
+
+		//- fitted
+		foreach ( (array)_emn_json( 'fit', DID ) as $i )
+			$this->id_list[ _rep_pdbid( $i ) ][ 'fit' ] = true;
+
+		//- fitted annot
+		$types_exists = [];
+		$fit_annot = _json_load( DN_DATA. '/emn/fit_annot.json.gz' );
+		foreach ( $fit_annot as $k => $v ) {
+			if ( $k == 'types' ) continue;
+			if ( ! $v[ DID ] ) continue;
+			$types_exists[] = $k;
+			foreach ( $v[ DID ] as $i ) {
+				$this->id_list[ _rep_pdbid( $i ) ][ "annot_$k" ] = true;
+			}
+		}
+		foreach ( $types_exists as $type ) {
+			$this->mark_dic[ "annot_$type" ] = _span( '.r_annot', $type );
+			$this->comment_dic[ "annot_$type" ]
+				= $fit_annot[ 'types' ][ $type ][ _ej( 'e', 'j' ) ]. LABEL_YM_ANNOT;
+		}
+	}
+
+	//.. by_pubmed_id: PubMed-IDから
+	function by_pubmed_id() {
+		global $_primary_pap_id; //- cls_citationで作成される
+		if ( ! $_primary_pap_id ) return;
+		foreach ( array_filter( explode( ',', _ezsqlite([
+			'dbname' => 'pmid2did' ,
+			'select' => 'ids' ,
+			'where'  => [ 'pmid', $_primary_pap_id ] ,
+		]))) as $i ) {
+			$i0 = substr( $i, 0, 1 );
+			if ( $i0 == 'e' )
+				$i  = 'emdb-' . _numonly( $i );
+			else if ( $i0 != 'S' )
+				$i = "pdb-$i";
+			$this->id_list[ $i ][ 'cite' ] = true;
+		}
+	}
+
+	//.. set_str_ent: 関連構造データ
+	function set_str_ent() {
+		global $o_data;
+		unset( $this->id_list[ DID ] ); //- 自分自身は消す
+		if (! $this->id_list ) return;
+		$output = '';
+
+		//- sort 重要順
+		$sort = [];
+		foreach ( $this->id_list as $i => $a ) {
+			$sort[ $i ] = "3$i";
+			if ( $a[ 'start'] ) $sort[ $i ] = "2$i";
+			if ( $a[ 'cite' ] ) $sort[ $i ] = "1$i";
+			if ( $a[ 'fit'  ] ) $sort[ $i ] = "0$i";
+		}
+		asort( $sort );
+
+		//- まとめ
+		foreach ( array_keys( $sort ) as $i ) {
+			$marks = '';
+			foreach ( array_keys( $this->id_list[ $i ] ) as $type )
+				$marks .= $this->mark_dic[ $type ];
+			$output .= ( new cls_entid( $i ) )->ent_item_img([
+				'txt' => $this->id_list[ $i ][ 'txt' ] ,
+				'add' => $marks
+			]);
+		}
+
+		//- コメント
+		$flg = [];
+		foreach ( $this->id_list as $i => $c ) foreach ( array_keys( $c ) as $type ) {
+			if ( $type == 'txt' || $type == 'r' ) continue;
+			$flg[ $type ] = true;
+		}
+		foreach ( array_keys( $flg ) as $type )
+			$comments .= _p( $this->mark_dic[ $type ] . ': ' . $this->comment_dic[ $type ] );
+		if ( $comments )
+			$output .= _div( '.clearfix', $comments );
+			
+		//- 出力
+		$o_data->lev2( 'Related structure data', $output );
+		return $this;
+	}
+
+	//.. set_empiar
+	function set_empiar() {
+		global $o_data;
+		$output = [];
+		foreach ( (array)json_decode( _ezsqlite([
+			'dbname' => 'empiar' ,
+			'select' => 'data' ,
+			'where'  => [ 'id', DID ] ,
+		]) ) as $empiar_id ) {
+			$output[] = _ab([ 'empiar_j', $empiar_id ], IC_L. "EMPIAR-$empiar_id" )
+				. _kakko( _quick_kv( (array)json_decode( _ezsqlite([
+					'dbname' => 'empiar' ,
+					'select' => 'data' ,
+					'where'  => [ 'id', $empiar_id ] ,
+				]))))
+				. ( TEST ? ' '. _ab([ 'empiar_xml', $empiar_id ], 'xml (test)' ) : '')
+			;
+		}
+		if ( $output )
+			$o_data->lev2( 'EM raw data', implode( BR, $output ) );
+		return $this;
+	}
+
+	//.. set_others
+	function set_others( $data = [] ) {
+		global $o_data;
+		if ( $this->is_em )
+			$this->set_empiar();
+		foreach ( $data as $key => $val ) {
+			if ( ! $val ) continue;
+			$o_data->lev2( $key, $val );
+		}
+		return $this;
+	}
+
+	//.. set_omokage
+	function set_omokage( $ida ) {
+		global $o_data;
+		if ( TEST ) return $this;
+		//- omokageプライマリ
+		$simlist = '';
+		foreach ( explode( ',', _ezsqlite([
+			'dbname' => 'omopre' ,
+			'select' => 'data' ,
+			'where'  => [ 'id', $ida ] ,
+		])) as $i ) {
+			if ( $i )
+				$simlist .= _pop_omoitem( $i );
+		}
+		
+		//- output
+		$o_data->lev2(
+			TERM_SIMILAR_SHAPE_DATA , 
+			$simlist
+			. _p( _ab([ 'omo-search', 'id' => $ida ], _ic( 'omokage' ). TERM_SEARCH_OMOKAGE )
+				//- help
+				. ' ' ._doc_pop( 'about_omosearch',
+					[ 'label' => _kakko( 'details' ) ] 
+				)
+			)
+		);
+		return $this;
+	}
+	//.. set_smilar
+	function set_similar( $in ) {
+		global $o_data, $_has_fh_item;
+		if ( ! TEST ) return $this;
+
+		//... omokageプライマリ
+		$ida_primary = $in[0]['ida'];
+		$simlist = '';
+		foreach ( explode( ',', _ezsqlite([
+			'dbname' => 'omopre' ,
+			'select' => 'data' ,
+			'where'  => [ 'id', $ida_primary ] ,
+		])) as $i ) {
+			if ( $i )
+				$simlist .= _pop_omoitem( $i );
+		}
+
+		//... Omokageタブ
+		$tabs = [];
+		if ( $simlist ) foreach ( $in as $num => $data ) {
+			$ida = $tab = null;
+			extract( $data );
+			$link = strtr( $this->omolink_temp, [ '_id_' => $ida ] );
+			$tabs[] = ( $num == 0 ) ? [
+				//- ひとつめのタブ
+				'tab' => count( $in ) == 1 ? TERM_SIM_SHAPE : "$tab -". TERM_SIM_SHAPE ,
+				'div' => $simlist. $link ,
+			] : [
+				//- 2以降
+				'tab' => $tab ,
+				'div' => LOADING. _div( "#sim_div_$ida", ''). $link ,
+				'js'  => "_get_simlist('omokage','$ida','#sim_div_$ida')" ,
+			];
+		}
+
+		//... fhタブ
+		foreach ( FH_CLS_NAME as $cls => $cls_name ) {
+			if ( ! $_has_fh_item[ $cls ] ) continue;
+			$tabs[] = [
+				'tab' => $cls_name ,
+				'div' => LOADING
+					. _div( "#sim_div_$cls", '' ) 
+					. _ab(
+						[ 'fh-search', 'id' => DID, 'type' => $cls ] , 
+						_fa('search'). _l( 'Similarity search' ). ' - '. _trep( $cls_name )
+					)
+				,
+				'js'  => "_get_simlist('$cls','". DID. "','#sim_div_$cls')"
+			];
+		}
+		
+		//... end
+		if ( $tabs )
+			$o_data->lev2( 'similar_str_data', _simple_tabs( $tabs ) );
+		return $this;
+	}
+
+	//.. end
+	function end() {
+		global $o_data, $_simple;
+		$o_data->end2( 'Related structure data' );
+		$_simple->time( 'related' );
+	}
+}
+
 //. class: cls_data
 //- this->$data にデータをしまっていき、最後にmakeメソッドで$_simple->hdivへ出力
 //- lev1 は直接書き込むので、終了処理が不要->先にタイトルぎめ
@@ -2083,7 +2142,7 @@ class cls_data {
 	//.. basicinfo: 基本情報の一番上の列
 	function basicinfo( $opt ) {
 		global $main_id;
-		$flg_vis = $flg_link = $js_open_viewer = false;
+		$flg_vis = $flg_link = $js_open_viewer = $add_txt = null;
 		extract( $opt );
 
 		$fn_img = $main_id->imgfile( 'l' );
@@ -2099,6 +2158,7 @@ class cls_data {
 				(string)$main_id->id 
 			)
 			->lev2( '#notag #newline' , ''
+				. ( $add_txt )
 				. ( $flg_vis  ? _hdiv_focus( 'strvis', 'strvis' ) : '' )
 				. ( $flg_link ? _hdiv_focus( 'downlink', 'downlink' ) : '' )
 			)->end2( 'Entry' )

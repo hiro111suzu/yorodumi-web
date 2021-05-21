@@ -1,0 +1,897 @@
+.	common
+Controller	コントローラー
+Structure viewers	構造ビューア
+Viewer log	ビューアのログ
+This page	このページ
+This web site	このウェブサイト
+Contact us	お問い合わせ
+PDBj Help	PDBjヘルプ
+Developed by	開発者:
+thermophilic	好熱性
+Options	オプション
+Font size	文字の大きさ
+Cross-search	横断検索
+
+EMN Search	EMN検索
+EMN Statistics	EMN統計
+EMN Gallery	EMNギャラリー
+EM Papers	EMN文献
+About EM Navigator 	EM Navigatorについて
+Yorodumi Search	万見検索
+Yorodumi Papers	万見文献 
+Yorodumi Species	万見生物種 
+About Yorodumi	万見について
+Omokage search	Omokage検索
+About Omokage search	Omokage検索について
+Help	ヘルプ
+Pages	ページ一覧
+News & docs	お知らせ・ヘルプ
+
+About this page	このページについて
+article	文献
+Assembly	集合体
+author	著者・登録者
+Basic information	基本情報
+citation	引用
+Comment	コメント
+component	構成要素
+components	要素
+country	国
+database	データベース
+data	データ
+date	日付
+deposition	登録
+description	解説
+Details	詳細
+Detail	詳細
+download	ダウンロード 
+EMDB entries	EMDBエントリ
+entry	登録情報
+entries	エントリ
+experiment	実験
+external links	外部リンク
+gallery	ギャラリー
+image	画像
+keywords	キーワード
+keyword	キーワード
+ligand	リガンド
+list	リスト
+Loading	読み込み中
+Loading...	読み込み中...
+mode	モード
+model	モデル
+models	モデル
+movie	ムービー
+Molecule	分子
+EM map	EMマップ
+name	名称
+News	お知らせ
+nucleic_acid	核酸
+number_atoms	原子数
+Omokage comparison	Omokage比較
+Omokage search	Omokage検索
+orientation	方向
+other names	他の名称
+others	その他
+Pages	ページ
+pause	一時停止
+PDB entries	PDBエントリ
+play	再生
+processing	解析
+protein	タンパク質
+release	公開
+resolution	解像度
+sample	試料
+search	検索
+Search result	検索結果
+Search results	検索結果
+sequence	配列
+Shuffle	シャッフル
+size	大きさ
+solvent 	溶媒
+source	由来
+species	生物種
+statistics	統計
+Structure viewer	構造ビューア
+Surface	表面
+synonym	別称
+table	表
+title	タイトル
+total	全体
+type	タイプ
+Version	バージョン
+view	表示
+wavelength	波長
+Wikipedia	ウィキペディア
+Yorodumi	万見
+Yorodumi papers	万見文献
+Yorodumi search	万見検索
+year	年
+journal	ジャーナル
+menu	メニュー
+Function	分子機能
+Domain/homology	ドメイン・相同性
+tile	並べて表示
+Hide details	詳細を隠す
+hide	隠す
+Submit	送信
+ items	件
+
+Show/hide all	すべて表示・隠す
+Exclusive	単独表示
+日本語	English
+English	日本語
+ja	en
+
+Nikkaji	日化辞
+Wikipedia search	Wikipedia検索
+Google search	Google検索
+
+External DB	外部データベース
+Methods	手法
+method	手法
+
+.	index
+All	すべて
+Covid-19	新型コロナ
+Ribosome	リボソーム
+Membrane	膜
+Motor	モーター
+Virus	ウイルス
+Cell cycle	細胞周期
+Protein	タンパク質
+Flagellum	べん毛
+Synthetic	合成
+Cell	細胞
+Amyloid	アミロイド
+.	chem_info
+medication	薬剤
+chemotherapy	化学療法薬
+antidepressant	抗うつ薬
+neurotransmitter	神経伝達物質
+neurotoxin	神経毒
+agonist	アゴニスト
+antagonist	アンタゴニスト
+anticancer	抗がん剤
+antineoplastic	抗腫瘍剤
+channel blocker	チャネルブロッカー
+antiretroviral	抗レトロウイルス剤
+protease inhibitor	プロテアーゼ阻害剤
+antifungal	抗真菌剤
+antiinflammatory	抗炎症剤
+anticoagulant	抗凝固剤
+inhibitor	阻害剤
+antipsychotic	抗精神病薬
+antiarrhythmic	抗不整脈薬
+detergent	可溶化剤
+phospholipid	リン脂質
+energy-carrying molecule	エネルギー貯蔵分子
+energy-carrying molecule analogue	エネルギー貯蔵分子類似体
+precipitant	沈殿剤
+hormone	ホルモン
+antivirus	抗ウイルス剤
+antibiotic	抗生剤
+redox reagent	酸化還元剤
+precipitant	沈殿剤
+pH buffer	pH緩衝剤
+
+
+.	quick
+Funding support	資金援助
+ID/keywords	ID/キーワード
+ID or keywords	IDまたはキーワード
+Open data	データを開く
+All data	全データ
+Latest PDB	最新PDB
+All PDB	全PDB
+EMDB	EMDB
+PDB-EMDB hybrid	PDB-EMDBハイブリッド
+NMR	NMR
+Recently viewed	最近見た構造
+no data	データがありません
+Helical symmetry	らせん対称
+Icosahedral symmetry	正二十面体対称
+Chemical componets	化学物質要素
+Random choices	ランダム
+EMDB pages	EMDBのページ
+
+Links	リンク
+Gene	遺伝子
+entity	要素
+Electron microscopy imaging	電子顕微鏡撮影
+SASBDB page	SASBDBのページ
+Validation report	構造検証レポート
+Journal/publisher site	ジャーナル・出版社サイト
+Search PubMed	PubMedで検索
+Citation information	引用情報
+Other databases	その他のデータベース
+composition	組成
+vector	ベクター
+astigmatism	非点収差
+holder	ホルダー
+chemical formula	化学式
+common name	一般名
+Abstract	要旨
+Tissue	組織
+Biological species	生物種
+
+history	履歴
+supersession	置き換え
+Processing site	処理サイト
+status	状態
+current status	現状
+show all	すべて表示
+show less	表示を減らす
+ref.	文献
+similarity	類似性
+similarity search	類似検索
+
+..	em
+Imaging	撮影
+Aggregation state	試料の集合状態
+Lens	レンズ
+Camera	カメラ
+Detector	検出器
+Magnification	倍率
+Microscope	顕微鏡
+Vitrification	凍結
+Staining	染色
+Specimen	試料
+Cellular-component	細胞要素
+Accelerating_voltage	加速電圧
+Electron_source	電子線源
+Microscope model	顕微鏡モデル
+illumination_mode	照射モード
+symmetry_type	対称性のタイプ
+Humidity	湿度
+Instrument	装置
+map	マップ
+virus	ウイルス
+Class	クラス
+Empty	中空か
+enveloped	エンベロープを持つか
+Isolate	単離
+Diameter	直径
+Shell	殻
+Projections & Slices	投影像・断面図
+Density	密度
+
+tetrahedral	正4面体型対称
+octahedral	正8面体型対称
+icosahedral	正20面体型対称
+asymmetric	非対称
+Image courtesy	画像提供
+EM raw data	電子顕微鏡画像生データ
+
+.	quick-emdb
+..	emn/admin
+External references	外部リンク
+CCP4 map header	CCP4マップヘッダ
+Raw data	生データ
+FTP directory	FTPディレクトリ
+Supplemental images	添付画像
+Supplemental data	添付データ
+Annotation	注釈
+Archive directory	アーカイブディレクトリ
+
+..	map
+Projections & Slices	投影像・断面図
+Slices (1/3)	断面 (1/3)
+Slices (1/2)	断面 (1/2)
+Slices (2/3)	断面 (2/3)
+Density Histograms	密度ヒストグラム
+Voxel size	ボクセルのサイズ
+Notes	注釈
+Projections	投影像
+
+Mask	マスク
+File	ファイル
+Supplemental map	添付マップデータ
+
+
+Image control	画像のコントロール
+Brightness	明度
+Contrast	コントラスト
+Others	その他
+Invert	反転
+Y flip	上下逆
+reset	リセット
+Axes	軸
+EMDB figure	EMDB登録画像
+
+Map data	マップデータ
+Histogram	ヒストグラム
+Histogram (log scale)	ヒストグラム (対数)
+EMDB info.	EMDB情報
+CCP4 map header	CCP4マップ ヘッダ情報
+EM Navigator Movie #1	EM Navigator ムービー #1
+(movie #1)	(ムービー #1)
+by author	登録者による
+movie #1	ムービー #1
+Contour Level	表面レベル
+Minimum - Maximum	最小 - 最大
+Average (Standard dev.)	平均 (標準偏差)
+Map geometry	マップ形状
+
+..	sample
+Sample components	試料の構成要素
+
+..	imaging
+tilt angle	傾斜角度
+
+
+..	proc
+3D reconstruction	3次元再構成
+algorithm	アルゴリズム
+
+Atomic model buiding	原子モデル構築
+Input PDB model	利用したPDBモデル
+Output model	得られたモデル
+modeling	モデリング
+
+.	quick-pdb
+..	entry
+revision	改定
+Summary	概要
+Component details	構成要素の詳細
+
+Calculated values	計算値
+
+..	assmbly
+Symmetry operation	対称操作
+Number	数
+unit cell	単位格子
+Deposited unit	登録構造単位
+NMR ensembles	NMR アンサンブル
+Evidence	根拠
+Symmetry	対称性
+..	entity
+Theoretical mass	分子量 (理論値)
+Number of molelcules	分子数
+Total (without water)	合計 (水以外)
+Water	水
+Polymers	ポリマ－
+Non-polymers	非ポリマ－
+Polysaccharide	多糖
+Antibody	抗体
+X-ray diffraction	X線回折
+Molecular replacement	分子置換
+Other	その他
+
+Chemical	化合物
+Sugar	糖
+Sugars	糖
+Sites	部位
+Mutattion	変異
+Modified	修飾
+Validation	構造検証
+Water	水
+DNA chain	DNA鎖
+RNA chain	RNA鎖
+DNA/RNA hybrid	DNA/RNAハイブリッド
+non-polymers	非ポリマー
+Functions	機能
+Formula	式
+Coordinate model	座標モデル
+Antibody class	抗体クラス
+Identifier	識別子
+Descriptor	記述子
+program	プログラム
+
+..	methods
+Electron microscopy	電子顕微鏡
+Electron crystallography	電子線結晶学
+Solution nmr	溶液NMR
+Fiber diffraction	線維回折
+Solid nmr	固体NMR
+Solid-state nmr	固体NMR
+Theoretical model	理論モデル
+Solution scattering' 	溶液散乱
+NMR measurement	NMR測定
+
+Vitreous ice (cryo EM)	ガラス状氷包埋・低温電子顕微鏡法
+Single particle	単粒子解析
+Electron tomography	電子線トモグラフィー
+Subtomogram averaging	サブトモグラム平均化
+
+identity	同一
+crystal symmetry	結晶の対称性
+point symmetry	点対称性
+
+Symmetry operations	対称操作
+Fragment	断片
+Mutation	変異
+MORE	MORE
+references	参照
+grant number	認可番号
+organization	組織
+free electron laser	自由電子レーザー
+synchrotron	シンクロトロン
+neutron diffraction	中性子回折法
+isomorphous replacement	同系置換
+
+Group deposition	グループ登録
+Specimen source	試料の由来
+PDB pages	PDBのページ
+PDBx/mmcif format	PDBx/mmcif形式
+PDB format	PDB形式
+Tree view	ツリー表示
+Display in browser	ブラウザで表示
+Other downloads	その他のダウンロード
+Experimental dataset	実験データセット
+cycle	サイクル
+production host	発現宿主
+criteria	基準
+Representative	代表モデル
+
+.	quick-sasbdb
+model	モデル
+Beam	ビーム
+Scan	スキャン
+Detector	検出器
+Contact author	登録者
+Radius of dummy atoms	ダミー原子の半径
+symmetry	対称性
+Chi-square value	カイ2乗値
+concentration	濃度
+experimental	実験値
+MW	分子量
+volume	体積
+shape	形状
+
+.	quick-chem
+Create component	作成
+Modify descriptor	記述子を修正
+Modify identifier	識別子を修正
+Modify formula	組成式を修正
+Modify coordinates	座標を修正
+Modify aromatic_flag	"aromatic_flag"を修正
+Initial release	公開
+Synonym	別称
+Descriptor & identifier	記述子・識別子
+Number of atoms	原子数
+Formula	組成式
+Formula weight	化学式量
+Formal charge	形式電荷
+
+.	quick-ajax
+Ligand binding site	リガンド結合部位
+Evidence	根拠
+num. of res.	残基数
+Residues	残基
+About this data	このデータについて
+Ligand binding site	リガンド結合部位
+base pair	塩基対
+unobserved	未観測
+modified	修飾
+non W/C pair	非W/C対
+domain	ドメイン
+Modified residue	修飾残基
+Active site	活性部位
+Site	部位
+Chain	チェーン
+Metal ion-binding site	金属イオン結合部位
+Topological domain	トポロジカルドメイン
+Activity regulation	活性調節
+Transmembrane region	膜貫通領域
+Intramembrane region	膜内領域
+Mutagenesis site	変異部位
+Cytoplasmic	細胞質
+Extracellular	細胞外
+Helical	らせん
+Pore-forming	細孔形成
+Repeat	反復
+Region of interest	関心領域
+Glycosylation site	グリコシル化部位
+Binding site	結合部位
+Disulfide bond	ジスルフィド結合
+Sequence variant	配列バリアント
+Sequence conflict	配列の競合
+Splice variant	スプライスバリアント
+Lipid moiety-binding region	脂質部分結合領域
+Nucleotide phosphate-binding region	ヌクレオチドリン酸結合領域
+Cross-link	架橋
+Periplasmic	ペリプラズム
+Coiled-coil region	コイルドコイル領域
+Expression tag	発現タグ
+Linker	リンカー
+Engineered mutation	設計変異
+CATH domain	CATHドメイン
+Compositionally biased region	組成に偏りのある領域
+N-Glycosylation	Nグリコシル化
+O-Glycosylation	Oグリコシル化
+S-Glycosylation	Sグリコシル化
+C-Mannosylation	Cマンノシル化
+Initiating methionine	開始メチオニンコドン
+Conflict	不一致
+pattern	パターン
+Seq. num.	配列番号
+Sequcence	配列
+	
+.	quick-nohit
+Related entries	関連するエントリ
+Status	状態
+Deposition date	登録日
+Hold until	公開延期期日
+Obsoleted	取り消し
+FTP directory	FTPディレクトリ
+
+.	esearch
+images only	画像のみ
+display mode	表示モード
+Latest entries	最新エントリ
+new EMDB	新規EMDB
+new map	新規マップ
+updated map	更新されたマップ
+new PDB	新規PDB
+updated PDB	更新されたPDB
+Processing method	解析手法
+sort by	並び順
+authors	登録者
+new	新規
+new map	新規マップ
+updated	更新
+Latest entries	最新エントリ
+Updated entries	更新エントリ
+Data entries	データエントリ
+Latest only 	最新のみ
+Updated only	更新のみ
+All	すべて
+Search query	検索条件
+EMN search	EMN検索
+EMDB & PDB	EMDBとPDB
+Check all	すべてチェック
+Search options	検索条件
+Display options	表示条件
+Cross search by Yorodumi	万見で横断検索
+Found entry by ID search	IDがヒットしたエントリ
+
+.	ysearch
+images only	画像のみ
+Search query	検索条件
+display mode	表示モード
+Search result	検索結果
+Processing method	解析手法 
+sort by	並び順 
+authors	登録者
+new	新規
+new map	新規マップ
+updated	更新
+Function	機能
+Chem	化合物
+Taxonomy	生物種
+Papers	文献
+Docs	文書
+auto	自動
+All	すべて
+Newer	新しい順
+Older	古い順
+Heavier	重い順
+Lighter 	軽い順
+More in PDB	PDBに多い順
+Less in PDB	PDBに少ない順
+
+.	omokage
+All	すべて
+Search query	検索条件
+Recommended	おすすめ
+Samples	サンプル
+Query structure data	検索に使う構造
+Data type	データのタイプ
+Model	モデル
+Density map	密度マップ
+Codebook vectors	コードブックベクトル
+File: 	ファイル: 
+Identical assembly	同一の集合体
+30-dot model	30点モデル
+50-dot model	50点モデル
+Received data	受信したデータ
+error	エラー
+file	ファイル
+Surface level	表面レベル
+Uploaded data	アップロードされたデータ
+Search ID	検索ID
+deposited	登録構造
+Databases	データベース
+uploaded at	アップロード時刻
+approx size (A)	サイズ (&Aring;)
+file info	ファイル情報
+num of atoms	原子数
+File Size (byte)	ファイルサイズ (バイト)
+deposited unit	登録構造
+Biological Unit	生物学的単位
+none	なし
+similar only	似たもののみ
+different only	異なるもののみ
+Error message	エラーメッセージ
+Unknown error	不明なエラー
+Search status	検索の進捗
+Error on comp system	解析システムでのエラー
+Uploding error	アップロードエラー
+Summary	概要
+Display	表示
+Filter	絞り込み
+Functions & homology	機能・相同性
+Refinement	精密化
+Run	実行
+Composition similarity	構成の類似性
+images only	画像のみ
+as list	リスト表示
+Used filters	絞り込みフィルタ
+similar ones only	似たもののみ
+different ones only	異なるもののみ
+
+.	stat
+Statistics	統計情報
+Row key	行
+Column key	列
+
+.	pap
+Structure methods	構造解析手法
+Methods	手法
+Journal	ジャーナル
+Hybrid	ハイブリッド
+Search query	検索条件
+Journal, issue, pages	ジャーナル・号・ページ
+Publish date	掲載日
+Authors	著者
+Abstract	要旨
+External links	リンク
+Structure data	構造データ
+Chemicals	化合物
+
+.	taxo
+SASBDB entries	SASBDBエントリ
+Scientific name	科学的名称
+common name	一般名
+genbank common name	GenBank一般名
+genbank synonym	GenBank別称
+cellular organisms	細胞生物
+bacteria	バクテリア
+archaea	古細菌
+eukaryote	真核生物
+fungus	菌類
+yeast	酵母
+arthropod	節足動物
+plant	植物
+animal	動物
+invertebrata	無脊椎動物
+fish	魚類
+amphibia	両生類
+reptile	爬虫類
+bird	鳥類
+mammal	哺乳類
+virus	ウイルス
+Lineage	系統
+thermophilic	好熱性
+Host	宿主
+
+.	gallery
+Classification	グループ分け
+
+.	doc
+FAQ	ありがちな質問と回答
+Services	サービス一覧
+Information	解説
+All docs	すべての文書
+
+.	pop
+
+Data	データ
+About	ヘルプ
+
+
+.	molmil
+Style	スタイル
+Default	標準
+Spacefill	空間充填
+Ball & stick	球と棒
+stick 	棒
+Color	色
+by chian	鎖ごと
+Group (blue->red)	グループごと, 青→赤
+
+Menus	メニュー
+Conosle	コンソール
+
+Molmil UI 	MolmilのUI
+Black BG 	黒背景
+Stereo 	立体視
+Fog effect	かすみ効果
+Viewing	表示
+
+.	met
+Category	カテゴリ
+
+Method	手法
+Software	ソフトウェア
+Equipment	設備・装置
+As/for	用途・名目
+Yearly stat	年次統計
+Website	ウェブサイト
+Place	場所
+NMR experiment type 	NMR実験タイプ
+NMR refinement	NMR精密化
+
+cryo-em	クライオ電子顕微鏡法
+cryo em	クライオ電子顕微鏡法
+negative staining	ネガティブ染色法
+energy filter	エネルギーフィルター
+model fitting	モデルフィッティング
+modeling	モデリング
+SYNCHROTRON	シンクロトロン
+radiation source	放射線源
+X-ray diffraction	X線回折
+powder diffraction	粉末回折
+solution scattering	溶液散乱
+fiber diffraction	繊維回折
+neutron diffraction	中性子回折
+structure determination	構造決定
+data analysis	データ解析
+crystalization	結晶化
+VAPOR DIFFUSION	蒸気拡散法
+MOLECULAR REPLACEMENT	分子置換
+HANGING DROP	ハンギングドロップ法
+SITTING DROP	シッティングドロップ法
+EVAPORATION	蒸発脱水法
+LIPIDIC CUBIC PHASE	脂質キュービック相法
+MICROBATCH	マイクロバッチ法
+BATCH	バッチ法
+refinement	精密化
+refine	精密化
+phasing	位相決定
+theoretical model	理論モデル
+final Euler assignment	最終オイラー角割当
+initial Euler assignment	初期オイラー角割当
+data extraction	データ抽出
+data scaling	データスケーリング
+data reduction	データ削減
+data collection	データ収集
+symmetry determination	対称性決定
+structure solution	構造決定
+infrared spectroscopy	赤外分光
+classification	分類
+
+model building	モデル構築
+model refinement	モデル精密化
+electron microscopy	電子顕微鏡法
+Single particle reconstruction 	単粒子再構成法
+Electron tomography 	電子線トモグラフィー法
+Subtomogram averaging 	サブトモグラム平均法
+Helical reconstruction 	らせん対称体再構成法
+Electron crystallography 	電子線結晶学
+3D reconstruction	３次元再構成
+image acquisition	画像取得
+microscope model	顕微鏡モデル
+CTF correction	CTF補正
+particle selection	粒子像選択
+EM sample preparation	EM試料調製
+spectrometer	スペクトロメーター
+solution NMR	溶液NMR
+solid-state NMR	個体NMR
+synchrotron site	シンクロトロン拠点
+
+DM	直接法
+ISAS	反復単波長異常分散
+ISIR	反復単一同系置換
+ISIRAS	反復単一同系置換・異常分散
+MAD	多波長異常分散
+SAD	単波長異常分散
+MIR	多重同系置換
+MIRAS	多重同系置換・異常分散
+MR	分子置換
+SIR	単一同系置換
+SIRAS	単一同系置換・異常分散
+free electron laser	自由電子レーザー
+fourier synthesis	フーリエ合成
+rotating anode	回転陽極
+detector type	検出器タイプ
+assembly computation	集合体解析
+assembly experiment	集合体実験
+.	dbid_title
+Cellular component 	細胞要素
+Molecular function 	分子機能
+Biological process 	生物学的過程
+Domain  	ドメイン
+Homologous superfamily 	相同スーパーファミリー
+conserved site	保存部位, 
+active site	活性部位
+binding site	結合部位
+ptm                	翻訳後修飾
+family	ファミリー
+repeat	反復
+
+.	country
+United States	米国
+United Kingdom	英国
+China	中国
+Japan	日本
+Germany	ドイツ
+France	フランス
+Canada	カナダ
+Australia	オーストラリア
+Switzerland	スイス
+Sweden	スウェーデン
+Spain	スペイン
+Korea, Republic Of	韓国
+Brazil	ブラジル
+India	インド
+Czech Republic	チェコ
+Belgium	ベルギー
+Taiwan	台湾
+Denmark	デンマーク
+Poland	ポーランド
+Netherlands	オランダ
+Russian Federation	ロシア
+Austria	オーストリア
+Italy	イタリア
+Portugal	ポルトガル
+Singapore	シンガポール
+Finland	フィンランド
+New Zealand	ニュージーランド
+Israel	イスラエル
+Hong Kong	香港
+Thailand	タイ
+Norway	ノルウェー
+Ireland	アイルランド
+Mexico	メキシコ
+Slovenia	スロベニア
+Hungary	ハンガリー
+Argentina	アルゼンチン
+Greece	ギリシャ
+Saudi Arabia	サウジアラビア
+Lithuania	リトアニア
+South Africa	南アフリカ
+Malaysia	マレーシア
+Croatia	クロアチア
+Chile	チリ
+Turkey	トルコ
+Uruguay	ウルグアイ
+Pakistan	パキスタン
+
+.	cifdic
+
+SAS-CIF dictionary	SAS-CIF辞書
+PDBx/mmCIF dictionary	PDBx/mmCIF辞書
+
+Category	カテゴリ
+Item	アイテム
+Description	説明
+
+.	bird
+Antimicrobial	抗菌剤
+Antiparasitic	抗寄生虫剤
+Antibiotic	抗生剤
+Aminoglycoside	アミノグリコシド
+Oligopeptide	オリゴペプチド
+Polypeptide	ポリペプチド
+Inhibitor	阻害剤
+Peptide-like	ペプチド様
+Cyclic peptide	環状ペプチド
+Immunosuppressant	免疫抑制剤
+Glycopeptide	糖ペプチド
+Cyclic lipopeptide	環状リポペプチド
+Thiopeptide	チオペプチド
+Toxin	毒素
+Enzyme Inhibitor	酵素阻害剤
+Antiretroviral	抗レトロウイルス剤
+Lipoglycopeptide	リポ糖ペプチド
+Anticancer	抗がん剤
+Antiinflammatory	抗炎症剤
+Antitumor	抗腫瘍剤
+Thrombin inhibitor	トロンビン阻害剤
+Pharmacology	薬理学
+Mechanism of action	作用機序
+Research use	研究利用
+Info source	情報源
+Antigen	抗原
+saccharide	炭水化物
+Oligosaccharide	オリゴ糖
+metabolism	代謝
+Substrate analog	基質類似体
+Nutrient	栄養素
+Drug delivery	薬物デリバリー
+Anticoagulant	抗凝固薬
+Glycan component	糖鎖要素
+Protein binding	タンパク質結合
+Alpha-Galactosylceramide	αガラクトシルセラミド

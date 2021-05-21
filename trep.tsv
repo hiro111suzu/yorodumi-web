@@ -1,0 +1,775 @@
+
+.	quick
+p-authors	著者	Authors
+id	ID	ID
+func_homology	機能・相同性	Function / homology
+similar_str_data	類似構造データ	Similar structure data	
+strvis	構造の表示	Structure visualization
+Related items	関連情報
+Related structure data	関連構造データ
+downlink	ダウンロードとリンク	Downloads & links
+Authors	データ登録者
+Map data	マップデータ
+Experiment	実験
+Experimental details	実験情報
+Sample preparation	試料調製
+ph	pH	pH
+pdb_chain_id	PDB chain-ID
+temperature	温度
+strain	株
+plasmid_name	プラスミド	Plasmid
+comments	コメント
+unit	単位
+nucleic-acid	核酸	nucleic acid
+
+.	quick-emdb
+
+defocus	デフォーカス
+algorithm	アルゴリズム
+overallBValue	温度因子
+ligand	リガンド
+ribosome-eukaryote	真核細胞リボソーム
+ribosome-prokaryote	原核細胞リボソーム
+compDegree	オリゴマーの状態	Oligomeric State
+numComponents	構成要素数
+sciName	名称	Name
+synName	別称	a.k.a
+numCopies	個数	Number of Copies
+oligomericDetails	オリゴマーの状態	Oligomeric Details
+hostCategory	宿主のカテゴリ
+hostSpecies	宿主	Host Species
+natSource	由来(天然)	Source (natural)
+engSource	由来(合成)	Source (engineered)
+UniProt	UniProt	UniProt
+InterPro	InterPro	InterPro
+expSystem	発現系	Expression System
+recombinantExpFlag	組換発現	Recombinant expression
+organOrTissue	臓器・器官・組織
+cellLocation	細胞中の位置	Location in cell
+expSystemCell	発現系の細胞	Cell of expression system
+cell	細胞
+
+..	admin
+update	更新
+header_release	ヘッダ(付随情報) 公開	Header (metadata) release
+map_release	マップ公開	Map release
+
+
+..	hold	
+REL	公開	Released	
+HPUB	未公開（論文掲載時に公開）	On hold (released when the article is published)
+HOLD1	公開保留（1年間）	On hold for 1 year
+HOLD2	公開保留（2年間）	On hold for 2 years
+HOLD4	公開保留（4年間）	On hold for 4 years
+
+..	map
+format	形式
+symmetry	対称性
+space_group	空間群
+label	ラベル
+
+..	sample
+specimenConc	試料濃度	Specimen conc.
+specimenState	試料の状態
+specimenSupportDetails	支持膜	Support film
+cryogenName	凍結剤
+
+aLength	A	A
+bLength	B	B
+cLength	C	C
+alpha	&alpha;	&alpha;
+beta	&beta;	&beta;
+gamma	&gamma;	&gamma;
+helicalParameters	らせんパラメータ
+twoDCrystalParameters	結晶パラメータ	Crystal parameters
+threeDCrystalParameters	結晶パラメータ	Crystal parameters
+planeGroup	面群
+spaceGroup	空間群
+axialSymmetry	軸対称性
+crystalGrowDetails	結晶化の詳細
+
+Crystal parameters	結晶パラメータ
+Sample solution	試料溶液
+Buffer solution	緩衝液
+deltaPhi	&Delta;&phi;
+deltaZ	&Delta;Z
+particle	粒子
+filament	線維
+
+twoDArray	2次元配列	2D array
+threeDArray	3次元配列	3D array
+helicalArray	らせん状配列	helical array
+organ	器官
+tissue	組織
+cell	細胞
+
+..	sample compo
+expSystemStrain	株	Strain
+refUniProt	UniProt	UniProt
+refInterpro	InterPro	InterPro
+refGo	遺伝子オントロジー	Gene Ontology
+molWtTheo	理論値	Theoretical
+molWtExp	実験値	Experimental
+molWtMethod	測定法	Measured by
+timeResolvedState	時間分割
+syntheticFlag	合成
+tNumber	T番号(三角分割数)	T number (triangulation number)
+Serotype	血清型
+Strain	株
+hostSpeciesStrain	宿主株
+Entire	全体
+externalReferences	外部リンク
+Mass	分子量
+nameElement	要素名	Name of element
+
+..	imaging
+Experimental equipment	実験機器
+Electron gun	電子銃
+electronSource	電子線源
+acceleratingVoltage	加速電圧
+electronDose	照射量
+illuminationMode	照射モード
+nominalCs	Cs	Cs
+imagingMode	撮影モード
+energyFilter	エネルギーフィルター
+energyWindow	スリット
+Specimen Holder	試料ホルダ
+
+imageAcquisition	画像取得
+Image acquisition	画像取得
+numDigitalImages	デジタル画像の数
+quantBitNumber	ビット深度	Bit depth
+samplingSize	サンプリングサイズ
+odRange	ODレンジ	OD range
+URLRawData	生データのURL	URL of raw data
+
+..	proc
+Image processing	画像解析
+appliedSymmetry	想定した対称性
+resolutionByAuthor	解像度	Resolution
+ctfCorrection	CTF補正	CTF correction
+resolutionMethod	解像度の算出法
+tiltAngleIncrement	傾斜角の増分
+numProjections	投影像の数
+numSubtomograms	サブトモグラムの数
+numSections	セクションの数
+numClassAverages	クラス平均の数
+eulerAnglesDetails	オイラー角	Euler angles
+targetCriteria	当てはまり具合の基準
+
+
+refProtocol	精密化のプロトコル	Refinement protocol
+refSpace	精密化に使用した空間	Refinement space
+pdbEntryId	利用したPDBモデル	Input PDB model
+pdbChainId	鎖ID	Chain ID
+
+.	quick-sasbdb
+sas_buffer	バッファ
+description	記述
+references	参照
+PR_error	P(R) error	P(R) error
+PR	P(R)	P(R)
+sas_result	結果
+result	結果
+rg	慣性半径, Rg 	Radius of gyration, Rg
+I0	前方散乱 I0	Forward scattering, I0
+
+p_of_R_point	P(R) point	P(R) point
+detc	検出器	Detector
+Intensity	強度
+Comments	コメント
+specimen_concentration	試料濃度
+instrument_name	設備名称
+instrument_city	地域	City
+instrument_country	国	国
+type_of_source	線源
+intensity	強度
+software_p_of_R	ソフトウェア P(R)	Sofotware P(R)
+radiation_wavelength	波長	Wavelength
+measurement_date	測定日
+type_of_curve	カーブのタイプ
+number_of_frames	フレーム数
+number_of_points	ポイント数
+exposure_time	照射時間
+storage_temperature	保管温度
+cell_temperature	セル温度
+concentration_method	濃度測定法
+_pr	距離分布関数 P(R)	Distance distribution function P(R)
+_exp_info	実験情報	Experimental information
+pdbx_number_of_molecules	分子数	Num. of mol.
+formula_weight	分子量
+dist_spec_to_detc	スペクトロメータ・検出器間距離	Dist. spec. to detc.
+max_error	Error	Error
+
+.	quick-pdb
+ncs	非結晶学的対称性 (NCS)	Noncrystallographic symmetry (NCS)
+genus	属
+data_reference	データ参照
+data_set_type 	データの種類
+
+CA ATOMS ONLY	C&alpha;原子のみ	C&alpha; atoms only
+P ATOMS ONLY	P原子のみ	P atoms only
+
+deposit_site	登録サイト	Deposition site
+process_site	処理サイト	Processing site
+
+..	assembly
+ABSA (A^2)	Buried area	Buried area
+SSA (A^2)	Surface area	Surface area
+MORE	&Delta;G<sup>int</sup>	&Delta;G<sup>int</sup>
+Schoenflies_symbol	シェーンフリース記号
+circular_symmetry	回転対称性
+H-M_notation	ヘルマン・モーガン記号	Hermann–Mauguin notation
+		
+..	entity
+src_method	由来タイプ	Source method
+bird_dic	BIRD辞書	BIRD
+Seq. region	配列領域
+Str. site	構造部位
+
+formula_weight	分子量	Mass
+pdbx_number_of_molecules	分子数	Num. of mol.
+
+feature_type	タイプ
+has_ligand_of_interest	研究の焦点であるリガンドがあるか
+..	sample
+polypeptide(L)	タンパク質・ペプチド	Protein/peptide
+compound_details	構成要素の詳細
+sequence_details	配列の詳細
+nonpolymer_details	非ポリマーの詳細
+source_details	由来についての詳細
+organ_source	由来臓器
+geneus	属
+cell_line	細胞株
+cellular_location	細胞内の位置
+scientific_name	名称	name
+pdbx_gene_src_gene	遺伝子	Gene
+
+nat	天然	isolated from a natural source
+man	組換発現	isolated from a genetically manipulated source
+syn	合成	obtained synthetically
+
+
+...	go / uniprot
+Cellular component	細胞要素
+Molecular function	分子機能
+Biological process	生物学的過程
+function	機能
+catalytic activity	触媒活性
+Subunit	サブユニット
+PTM	翻訳後修飾	Post-translational modification
+Miscellaneous	備考
+Similarity	類似性
+
+..	method 総合
+
+category	カテゴリ
+exptl	実験
+authors	開発者
+
+diffrnsource	線源
+diffraction	回折
+detector	検出器
+diffrn_detector	検出器
+refine_id	RefineID	RefineID
+value	値
+units	単位
+pdb_entry_id	PDB-ID	PDB-ID
+concentration	濃度
+pdbx_details	詳細
+common_name	一般名
+chemical_formula	化学式
+pdbx_wavelength	波長
+solvent_model_details	溶媒モデル	Solvent model
+solvent_model_param_bsol	B<sub>sol</sub>	B<sub>sol</sub>
+solvent_model_param_ksol	k<sub>sol</sub>	k<sub>sol</sub>
+pdbx_solvent_ion_probe_radii	イオンプローブ半径	Ion probe radii
+pdbx_solvent_vdw_probe_radii	VDWプローブ半径	VDW probe radii
+pdbx_solvent_shrinkage_radii	減衰半径	Shrinkage radii
+pdbx_number_residues	残基数
+d_res_high	最高解像度	Highest resolution
+ls_d_res_high	最高解像度	Highest resolution
+d_resolution_high	最高解像度	Highest resolution
+d_res_low	最低解像度	Lowest resolution
+ls_d_res_low	最低解像度	Lowest resolution
+d_resolution_low	最低解像度	Lowest resolution
+pdbx_redundancy	冗長度
+
+..	em
+
+...	sample
+aggregation_state	試料の集合状態
+em_assembly	試料の集合体	Assembly of specimen
+em_specimen	試料	Specimen
+em_entity_assembly	構成要素	Component
+em_entity_assembly_molwt	分子量	Molecular weight
+em_experiment	EM実験
+em_entity_assembly_naturalsource	由来(天然)	Source (natural)
+em_entity_assembly_recombinant	由来(組換発現)	Source (recombinant)
+em_2d_crystal_entity	結晶の対称性	Crystal symmetry
+em_buffer_component	緩衝液成分	Buffer component
+em_virus_shell	ウイルス殻	Virus shell
+em_vitrification	急速凍結	Vitrification
+em_sample_support	試料支持	Specimen support
+em_virus_entity	ウイルスについての詳細	Details of virus
+em_virus_natural_host	天然宿主	Natural host
+em_buffer	緩衝液	Buffer solution
+em_sample_preparation	試料調製	Sample preparation
+
+organ	器官
+
+triangulation	三角数 (T数)	Triangulation number (T number)
+entity_id_list	Entity ID	Entity ID
+embedding_applied	包埋
+shadowing_applied	シャドウイング
+staining_applied	染色
+vitrification_applied	凍結
+point_symmetry	点対称性
+experimental_flag	実験値	Experimental value
+concentration_units	単位	Units
+
+chamber_temperature	凍結前の試料温度
+average_exposure_time	平均照射時間
+num_grids_imaged	撮影したグリッド数
+
+grid_type	グリッドのタイプ
+grid_mesh_size	グリッドのサイズ
+grid_material	グリッドの材料
+
+recording_temperature_maximum	最高温度	Temperature (max)
+recording_temperature_minimum	最低温度	Temperature (min)
+cryogen	冷却剤
+cryogen_name	凍結剤
+specimen_holder_model	モデル	Model
+
+organism	生物種
+em_entity_assembly_recombinant.cell	細胞
+plasmid	プラスミド
+cryogen_name	凍結剤
+
+
+...	em
+microscope_model	モデル	Model
+
+dimension_width	横	Width
+dimension_height	縦	Height
+
+
+em_image_recording	撮影	Image recording
+em_imaging_optics	電子光学装置
+
+calibrated_magnification	倍率（補正後）
+nominal_magnification	倍率（公称値）
+nominal_defocus_max	最大 デフォーカス（公称値）
+nominal_defocus_min	最小 デフォーカス（公称値）
+nominal_defocus	デフォーカス（公称値）
+calibrated_defocus_max	最大 デフォーカス（補正後）
+
+energyfilter_slit_width	エネルギーフィルタースリット幅
+sampling_size	サンプリングサイズ
+reconstruction_method	３次元再構成法	3D reconstruction method
+resolution_method	解像度の算出法	
+tilt_angle_max	傾斜角・最大
+tilt_angle_min	傾斜角・最小
+camera_length	カメラ長
+number_digital_images	デジタル画像の数
+sph_aberration_corrector	球面収差補正器	Spherical aberration corrector
+chr_aberration_corrector	色収差補正器	Chromatic aberration corrector
+phase_plate	位相版
+
+em_staining	染色
+em_staining.material	染色剤
+
+em_image_recording	撮影	Image recording
+em_detector	カメラ	Camera
+EM image scans	画像スキャン	Image scans
+nominal_cs	Cs	Cs
+detector_distance	カメラ長	Camera length
+Data collection	データ収集
+Microscopy	顕微鏡
+Electron gun	電子銃
+Electron lens	電子レンズ
+Specimen holder	試料ホルダ
+specimen_holder_type	資料ホルダタイプ
+
+num_real_images	実像数
+alignment_procedure	アライメント法
+c2_aperture_diameter	C2レンズ絞り径
+energyfilter_name	エネルギーフィルター名称
+energyfilter_upper	エネルギーフィルター 上限
+energyfilter_lower	エネルギーフィルター 下限
+avg_electron_dose_per_image	電子線照射量	Electron dose
+detector_mode	検出モード
+film_or_detector_model	フィルム・検出器のモデル
+
+...	proc
+ref_protocol	プロトコル	Protocol
+ref_space	空間	Space
+nominal_pixel_size	ピクセルサイズ（公称値）
+actual_pixel_size	ピクセルサイズ（実測値）
+3d_fitting_id	あてはめID
+em_3d_reconstruction.method	手法
+
+virus_type	タイプ	Type
+virus_host_category	ホストのカテゴリ	Host category
+virus_isolate	単離	isolate
+algorithm	アルゴリズム
+space_group_name	空間群名
+space_group_num	空間群番号
+magnification_calibration	倍率補正
+
+em_diffraction	EM回折
+em_diffraction_shell	EM回折 シェル
+em_diffraction_stats	EM回折 統計
+high_resolution	再高解像度
+low_resolution	最低解像度
+r_merge	R<sub>merge</sub>	R<sub>merge</sub>
+r_sym	R<sub>sym</sub>	R<sub>sym</sub>
+multiplicity	多重度
+fourier_space_coverage	フーリエ空間範囲
+num_structure_factors	構造因子数
+phase_residual	位相残差
+overall_phase_residual	位相残差
+num_intensities_measured	測定した強度の数
+phase_error_rejection_criteria	位相誤差の除外基準
+
+//	categ
+em_software	EMソフトウェア
+em_single_particle_entity	対称性	Symmetry
+em_image_processing	画像処理	Image processing
+em_ctf_correction	CTF補正	CTF correction
+em_particle_selection	粒子像の選択	Particle selection
+em_helical_entity	らせん対称	Helical symmerty
+em_2d_projection_selection	画像拾い上げ・選択	Image selection
+em_3d_reconstruction	3次元再構成	3D reconstruction
+em_3d_fitting	原子モデル構築	Atomic model building
+em_3d_fitting_list	原子モデル構築	Atomic model building
+
+//	item
+frames_per_image	動画フレーム数/画像	Movie frames/image
+used_frames_per_image	利用したフレーム数/画像	Used frames/image
+ctf_correction_method	CTF補正	CTF correction method
+num_particles_selected	選択した粒子像数
+angular_rotation_per_subunit	回転角度/サブユニット	Angular rotation/subunit
+axial_symmetry	らせん対称軸の対称性
+axial_rise_per_subunit	軸方向距離/サブユニット	Axial rise/subunit
+num_particles	粒子像の数
+num_class_averages	クラス平均像の数
+angle_alpha	&ang;&alpha;	&ang;&alpha;
+angle_beta	&ang;&beta;	&ang;&beta;
+angle_gamma	&ang;&gamma;	&ang;&gamma;
+length_a	a	a
+length_b	b	b
+length_c	c	c
+
+..	x-ray
+struct_ncs_dom	NCSドメイン	NCS domain
+struct_ncs_dom_lim	NCSドメイン領域	NCS domain segments
+struct_ncs_ens	NCSアンサンブル	NCS ensembles 
+
+pdbx_pH_range	pH範囲	pH range
+
+density_Matthews	マシュー密度
+density_percent_sol	溶媒含有率
+
+exptl_crystal	結晶
+exptl_crystal_grow.temp	温度	Temperature
+exptl_crystal_grow.method	手法
+exptl_crystal_grow_comp	溶液の組成	components of the solutions
+pdbx_collection_date	日付	Date
+monochromator	モノクロメーター
+
+// refine	精密化	Refinement
+
+refine.pdbx_method_to_determine_struct	構造決定の手法	Method to determine structure
+pdbx_wavelength_list	波長	Wavelength
+
+diffrn_source	放射光源	Diffraction source
+pdbx_synchrotron_site	サイト	Site
+pdbx_synchrotron_beamline	ビームライン	Beamline
+
+pdbx_monochromatic_or_laue_m_l	単色(M)・ラウエ(L)	Monochromatic (M) / Laue (L)
+pdbx_diffrn_protocol	プロトコル	Protocol
+pdbx_scattering_type	散乱光タイプ
+
+exptl_crystal_grow_comp.conc	濃度	Conc.
+exptl_crystal_grow_comp.conc_unit	単位	Unit
+diffrn_radiation	放射
+diffrn_radiation_wavelength	放射波長
+diffrn_radiation_wavelength.wavelength	波長
+reflns	反射
+reflns_shell	反射 シェル
+diffrn_measurement	回折測定	Diffraction measurement
+
+refine.pdbx_starting_model	開始モデル
+refine	精密化	Refinement
+refine_hist	精密化ステップ	Refinement step
+refine_ls_shell	LS精密化 シェル	LS refinement shell
+pdbx_refine_tls	精密化 TLS	Refinement TLS params.
+pdbx_refine_tls_group	精密化 TLSグループ	Refinement TLS group
+pdbx_ls_cross_valid_method	交差検証法
+pdbx_overall_phase_error	位相誤差
+overall_phase_error	位相誤差
+
+software.location	URL	URL
+language	言語
+
+pdbx_chi_squared	&Chi;<sup>2</sup>	&Chi;<sup>2</sup>
+number_residues	残基数
+number_reflns	反射数
+percent_reflns	%反射
+ls_number_reflns	反射数
+ls_percent_reflns	%反射
+
+exptl_crystal_grow	結晶化
+diffrn	回折
+pdbx_method_to_determine_struct	構造決定の手法	Method to determine structure
+pdbx_wavelength_list	波長	Wavelength
+ambient_temp	平均測定温度	Mean temperature
+wt	相対比	Relative weight
+crystals_number	使用した結晶の数	Number of used crystals
+Displacement parameters	原子変位パラメータ
+pdbx_number_atoms_protein	タンパク質	Protein
+pdbx_number_atoms_nucleic_acid	核酸	Nucleic acid
+pdbx_number_atoms_ligand	リガンド	Ligand
+number_atoms_solvent	溶媒	Solvent
+number_atoms_total	合計	Total
+least-squares process	最小二乗法精密化のプロセス
+refine_ls_restr	拘束条件
+pdbx_stereochemistry_target_values	立体化学のターゲット値
+
+..	nmr
+conditions	条件
+conformers_calculated_total_number	計算したコンフォーマーの数
+conformers_submitted_total_number	登録したコンフォーマーの数
+conformer_selection_criteria	コンフォーマー選択の基準
+contents	内容
+field_strength	磁場強度
+ionic_strength	イオン強度
+manufacturer	製造業者
+nmr_software	NMRソフトウェア
+pdbx_nmr_details	NMR実験の詳細
+pdbx_nmr_ensemble	NMRアンサンブル
+pdbx_nmr_exptl	NMR実験
+pdbx_nmr_exptl_sample	試料	Sample
+pdbx_nmr_exptl_sample_conditions	試料状態	sample conditions
+pdbx_nmr_refine	精密化	Refinement
+pdbx_nmr_representative	代表構造
+pdbx_nmr_sample_details	詳細	Details
+pdbx_nmr_software.authors	開発者	Developer
+pdbx_nmr_spectrometer	NMRスペクトロメーター
+pressure	圧
+representative_conformer	代表コンフォーマー
+selection_criteria	選択基準
+software_ordinal	ソフトェア番号
+solution	溶媒
+solvent_system	溶媒系	
+temperature unit	温度の単位
+
+..	misc
+Nucleic acid	核酸
+Solvent	溶媒
+Solvent computation	溶媒の処理
+Experimental equipment	実験機器
+
+.	qajax-unp
+func	機能・活性・疾病	Function / activity / disease
+sim	類似性・ドメイン	Similarity / domain
+compo	発現・構成・その他	Expression / composition / others
+ptm	翻訳後修飾	Post-translational modification
+
+function	機能
+molecular_function	分子機能
+biological_process	生物学的過程
+catalytic activity	触媒活性
+allergen	アレルゲン
+tissue specificity	組織特異性
+developmental stage	発達段階
+miscellaneous	備考
+disease	疾病
+pharmaceutical	製薬
+cellular_component	細胞要素
+similarity	類似性
+Miscellaneous	備考
+subunit	サブユニット
+organ_source	由来臓器
+cellular_location	細胞内の位置
+
+conserved site	保存部位
+domain	ドメイン
+homologous superfamily	相同スーパーファミリー
+family	ファミリー
+site	部位
+active site	活性部位
+binding site	結合部位
+repeat	反復
+CATH domain	CATHドメイン
+
+act_site	活性部位	Active site
+binding	結合部位	Binding site
+transmem	膜貫通	Transmembrane
+np_bind	核酸結合	Nucleotide binding
+dna_bind	DNA結合	DNA binding
+rna_bind	RNA結合	RNA binding
+met_bind	金属結合	Metal binding
+metal	金属	Metal
+catalytic	触媒残基
+
+.	qajax-valrep
+pdbx_validate_close_contact	近接	Close contact
+pdbx_validate_symm_contact	対称性に関する近接	Symmetry related close contact
+pdbx_validate_rmsd_bond	RMSD結合	RMSD bond
+pdbx_validate_rmsd_angle	RMSD角度	RMSD angle
+pdbx_validate_torsion	ねじれ角	Torsion angle
+pdbx_validate_peptide_omega	ペプチド結合 &omega;	Peptide bond &omega;
+pdbx_validate_chiral	掌性	Chiral	
+pdbx_validate_planes	面中心からの逸脱	Deviations from planes centers
+pdbx_validate_planes_atom	面中心からの逸脱	Deviations from planes centers
+pdbx_validate_main_chain_plane	主鎖原子の平面からの逸脱	Deviations from planes for main chain atoms
+pdbx_validate_polymer_linkage	ポリマー結合	Polymer linkage	
+
+.	qajax-nuc
+bp_12	Westhoff・Leontisの塩基対分類	Base pair classification of Westhoff and Leontis
+bp_28	Saengerの塩基対分類	Base pair classification of Saenger
+.	qajax-site
+covale	共有結合	covalent bond
+disulf	ジスルフィド結合	disulfide bridge
+hydrog	水素結合	hydrogen bond
+metalc	金属配位	metal coordination
+mismat	ミスマッチ塩基対	mismatched base pairs
+saltbr	イオン性相互作用	ionic interaction
+modres	共有結合残基の修飾	covalent residue modification
+covale_base	ヌクレオチド塩基の共有結合修飾	covalent modification of a nucleotide base
+covale_sugar	ヌクレオチド糖の共有結合修飾	covalent modification of a nucleotide sugar
+covale_phosphate	ヌクレオチドリン酸の共有結合修飾	covalent modification of a nucleotide phosphate
+
+.	quick-chem
+pdbx_type	PDB分類	PDB classification
+three_letter_code	3文字コード
+one_letter_code	1文字コード
+Status	状態
+Ideal coordinates details	理論座標の詳細
+pdbx_model_coordinates_details	モデル座標の詳細
+pdbx_model_coordinates_db_code	モデル座標のPDB-ID	Model coordinates PDB-ID
+mon_nstd_parent_comp_id	親要素	Parent comp.
+pdbx_subcomponent_list	子要素	Subcomponent
+Obsolete component	取り消し
+pdbx_replaced_by	置き換え先
+pdbx_replaces	置き換え元
+OBS	取り消し	Obsoleted
+HOLD	公開待ち	On hold	
+pdbx_synonyms	別称
+synonyms	別称
+
+.	gallery-grp
+categ	試料のカテゴリ	Category of sample
+submit_year	データの登録年	Submission year
+reso_seg	構造データの解像度	Resolution of structure data
+method	解析手法	Reconstruction methdos
+
+.	met2name
+x-ray	X線回折	X-ray diffraction
+neutron	中性子線回折	neutron diffraction
+fiber	線維回折	fiber diffraction
+em	電子顕微鏡	electron microscopy
+scattering	溶液散乱	solution scattering
+powder	粉末回折	powder diffraction
+infrared	赤外分光	infrared spectroscopy
+epr	EPR	EPR
+fluorescence	FRET	fluorescence transfer
+theoretical	理論モデル	theoretical model
+solution	NMR (溶液)	NMR (solution)
+solid	NMR (固体)	NMR (solid-state)
+nmr	NMR	NMR
+e	電子顕微鏡法	electron microscopy
+t	EM (トモグラフィー)	EM (tomography)
+a	EM (サブトモグラム平均)	EM (subtomogram averaging)
+s	EM (単粒子)	EM (single particle)
+i	EM (単粒子、正20面体対称)	EM (single particle, icos. sym.)
+h	EM (らせん対称)	EM (helical sym.)
+2	EM (電子線結晶学)	EM (electron crystallography)
+sas	小角散乱	small angle scattering
+
+.	rand_sel_ent
+a	全データ	All data			a	All data
+l	最新PDB	Latest PDB
+p	全PDB	All PDB
+e	EMDB	EMDB
+h	PDB-EMDBハイブリッド	PDB-EMDB hybrid
+s	SASBDB	SASBDB
+n	NMR	NMR
+c	化学物質要素	Chemical compo
+icos	正二十面体対称	Icosahedral
+hlx	らせん対称	Helical
+
+.	esearch_order
+-rdate	構造データの公開日 新しい順	Structure release date ( New - )
+rdate	構造データの公開日 古い順	Structure release date (Old -)
+-ddate	登録日 新しい順	Deposition date (New - )
+ddate	登録日 古い順	Deposition date (Old - )
+-udate	最終更新日 新しい順	Last Update (New -)
+udate	最終更新日 古い順	Last Update (Old -)
+-reso	解像度 低い順	Resolution (Low -)
+reso	解像度 高い順	Resolution (High -)
+-molw	分子量 大きい順	Molecular Weight (Heavy -)
+molw	分子量 小さい順	Molecular Weight (Light -)
+-id	ID 大きい順	ID (Large -)
+id	ID 小さい順	ID (Small -)
+
+.	movstr
+play	再生	Play
+playing	再生中	Playing
+pause	一時停止	Pause
+mouse	マウスモード	Mouse mode
+touch	タッチモード	Touch mode
+busy	プレイヤーの応答を待っています	Player is busy
+mov	ムービー #	Movie #
+loading	読み込み中	Loading
+
+top	上から	Top view
+bottom	下から	Bottom view
+left	左から	Left view
+right	右から	Right view
+front	正面から	Front view
+back	後ろから	Back view
+cut	断面	Cut-away view
+	
+comp	構成要素	Component
+
+.	met_name_long
+e	電子顕微鏡法	electron microscopy
+t	電子線トモグラフィー	electron tomography
+a	サブトモグラム平均化	subtomogram averaging
+s	単粒子再構成法	single particle reconstruction
+//i	単粒子 (正20面体対称) 再構成法	single particle (icosahedral) reconstruction
+h	らせん対称再構成法	helical reconstruction
+2	電子線結晶学	electron crystallography
+
+.	met_name_short
+e	電子顕微鏡法	electron microscopy
+t	トモグラフィー	electron tomography
+a	サブトモグラム平均	subtomogram averaging
+s	単粒子	single particle
+//i	正20面体対称	icosahedral
+h	らせん対称	helical
+2	電子線結晶学	electron crystallography
+
+.	fhinfo_cls_name
+all	機能・相同性	Function / homology
+f	分子機能	Function
+h	ドメイン・ホモロジー	Domain/homology
+c	構成要素	Component
+
+.	symmetry_term
+C	_ fold cyclic	_回回転対称
+D	2x_ fold dihedral	2回x_回 2面回転対称
+T	tetrahedral	正4面体型対称
+O	octahedral	正8面体型対称
+I	icosahedral	正20面体型対称
+X	asymmetric	非対称
+
+.	media_file_type
+mp4	.mp4 (H.264/MPEG-4 AVC 形式)	.mp4 (H.264/MPEG-4 AVC format)
+webm	.webm (WebM/VP8 形式)	.webm (WebM/VP8 format)
+img	画像	Figure
+ses	Chimera セッションファイル	Chimera session file

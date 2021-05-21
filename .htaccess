@@ -1,0 +1,23 @@
+# AddType application/x-chimerax .chimerax
+AddType video/mp4 mp4
+AddType video/mp4 m4v
+AddType video/ogg ogv
+AddType video/webm webm
+AddType video/webm webmv
+AddType image/svg+xml svg svgz
+AddEncoding gzip svgz
+
+php_value post_max_size 1024M
+php_value upload_max_filesize 1024M
+
+# Redirect permanent /emnavi/ /
+
+# RewriteEngine on
+# RewriteRule ^([0-9][0-9a-zA-Z]{3})$ emnavi_detail.php?id=$1
+# RewriteRule ^emnavi\/(.+)$ $1
+
+RedirectMatch ^\/omokage\/?$ /omo-search.php
+RedirectMatch ^\/omokage\/(.+)$ /omo-search.php?id=$1
+# RedirectMatch ^\/([0-9a-zA-Z_\-]{1,5})$ /quick.php?id=$1
+
+

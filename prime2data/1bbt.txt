@@ -1,0 +1,40 @@
+口蹄疫ウイルスの殻
+
+init	_mm.rebuild().asb(1);
+cmd	load "" FILTER "*.CA,*.P,biomolecule 1";selectionHalos OFF; slab off; set zshade on; set zshadepower 1; set zslab 60;set echo bottom left;font echo 18 serif bold; color echo blue;  select all; cpk only; color chain; select hetero; color CPK; display !water; select all;
+
+h1	[口蹄疫 こうていえき]ってなに？
+
+牛などの動物がかかるおそろしい病気です。2010年にこの病気が宮崎県南部を中心に流行し、たくさんの牛が死んでしまいました。その病気をひきおこす病原体が{口蹄疫ウイルス}です。
+
+h1	これはなにを見ているの？
+
+タンパク質でできた、口蹄疫ウイルスの[殻 から]を見ています。口蹄疫ウイルスはウイルスの[設計図 せっけいず]である{RNA}と、そのRNAを包みこむこの丸い殻とでできています。
+
+btn	断面を見る	slab 50; depth 0 ; slab on;
+btn	もとにもどす	slab off;depth 0;set zshade on;set zslab 60;
+
+btn2	一部を拡大	_cmd.asb(3);
+btn2	すべて表示	_cmd.asb(1);
+
+h1	これからなにがわかったの？
+
+口蹄疫ウイルスの殻は、４種類のタンパク質、VP1、VP2、VP3、VP4が規則正しくならんででできています。
+btn2	VP1はこれ！	_cmd.focus_chain('A');
+btn2	VP2はこれ！	_cmd.focus_chain('B');
+btn2	VP3はこれ！	_cmd.focus_chain('C');
+btn2	VP4はこれ！	_cmd.focus_chain('D');
+btn2	もとにもどす	_mm.reset_focus().asb(-1).asb(1);
+
+btn	VP1	hide !*:1;
+btn	VP2	hide !*:2;
+btn	VP3	hide !*:3;
+btn	VP4	hide !*:4;
+btn	もとにもどす	display !water;
+
+ウイルスの表面には、ウイルスが細胞に忍びこむのに大事な部分があります。この研究では、口蹄疫ウイルスの表面には特徴的な構造があることがわかりました。
+
+h1	くわしくは・・・
+
+{wikipe 口蹄疫}
+{wikipe 口蹄疫ウイルス}

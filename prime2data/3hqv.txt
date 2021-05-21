@@ -1,0 +1,36 @@
+体をかたちづくるタンパク質 - コラーゲン
+
+cmd	rotate x 90; zoom 700; spin x 30;backbone ONLY; backbone 300;
+init	_mm.rebuild().asb(1).zoom(10);
+
+h1	コラーゲンってなに？
+
+植物の[細胞 さいぼう]はかたい[細胞壁 さいぼうへき]にかこまれているのでがんじょうですが、動物の細胞は細胞壁がないのでやわらかく、フニャフニャです。でも、私たちの体はアメーバみたいにドロドロとはしていません。それは、この糸のように細長くかたいタンパク質、{コラーゲン}が[網 あみ]のように細胞のまわりをとりかこんでいるからです。動物はとてもたくさんのコラーゲンタンパク質を作っています。人間では全タンパク質の３分の１ほどがコラーゲンです。
+
+btn	回す	spin x 30;
+btn	ストップ	spin off;
+
+h1	これはなにを見ているの？
+
+ねずみのI型コラーゲンの集まりを見ています。
+
+h1	これからなにがわかったの？
+
+３本のコラーゲンタンパク質が1本の糸を作ることはわかっていました。このデータから、その糸がどのようにより合わさって大きな[束 たば]を作っているかがが分かりました。
+
+btn2	３本のコラーゲンの糸	_mm.asb(-1).zoom(10);
+btn2	コラーゲンの束	_mm.asb(1).zoom(10);
+
+
+btn	３本のコラーゲンの糸	load "";selectionHalos OFF;select all; cartoon ONLY; color monomer; select hetero; wireframe 0.5; spacefill 50%; color CPK; hide water;select all;model all;slab off; set zshade on; set zshadepower 1; set zslab 60;set echo bottom left;font echo 18 serif bold; color echo blue;rotate x 90; zoom 700; spin x 30;;backbone ONLY; backbone 300;
+
+btn	コラーゲンの束	load "" FILTER "biomolecule 1";selectionHalos OFF;select all; cartoon ONLY; color monomer; select hetero; wireframe 0.5; spacefill 50%; color CPK; hide water;select all;model all;slab off; set zshade on; set zshadepower 1; set zslab 60;set echo bottom left;font echo 18 serif bold; color echo blue;rotate x 90; zoom 700; spin x 30;backbone ONLY; backbone 300;
+
+h1	ところで、コラーゲンって[美容 びよう]と[健康 けんこう]にいいんだよね？
+
+肌にぬったり食べたりしたコラーゲンが美容と健康にいいかどうかは、じつはよくわかっていません。効果がないと言っている人もいます。
+
+h1	くわしくは・・・
+
+{wikipe コラーゲン}
+{mom 004 コラーゲン}

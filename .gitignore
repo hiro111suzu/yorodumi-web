@@ -1,0 +1,9 @@
+_jmol/
+_temp/
+data/
+emnavi/
+molmil_src/
+primedata/
+temp/
+*.sqlite
+php_errors.log

@@ -1680,8 +1680,8 @@ function _set_categ( $id ) {
 	$pop = [];
 	foreach ( CATEG_LIST as $k => $v ) {
 		$pop[] = $k == $cat
-			? "[$v]"
-			: _ab( "_mng.php?mode=categ&categ-$id=$k", $v )
+			? "[$k]"
+			: _ab( "_mng.php?mode=categ&categ-$id=$k", $k )
 		;
 	}
 	return _pop( "Categ", _ul( $pop, 0 ) );
@@ -1855,6 +1855,22 @@ function _before_release_time() {
 	$w = date( 'w', time() );
 	$h = date( 'H', time() );
 	return $w < 3 || ( $w == 3 && $h < 9 ) || $w == 6; //- 日月火・土
+}
+
+//.. _pop_omoitem: Omokage類似エントリ用のアイコン
+function _pop_omoitem( $ida, $info = [] ) {
+	$o_ida = new cls_omoid( $ida );
+	return _pop(
+		_img( $o_ida->imgfile ). _p( _ab(
+			$o_ida->u_quick() ,
+			implode( '-', array_filter([ $o_ida->id, $o_ida->asb ]) )
+		)) ,
+		$o_ida->desc(). ( $info ? BR. _kv( $info ) : '' ) ,
+		[
+		 	'type'   => 'div' , 
+		 	'trgopt' => ".enticon enticon_cap"
+		]
+	);
 }
 
 //. doc
@@ -2193,7 +2209,7 @@ function _country_flag( $str ) {
 //.. _ent_catalog
 //- 複数エントリのカタログ
 function _ent_catalog( $ids, $opt = [] ) {
-	$max = 200;
+//	$max = 200;
 	extract( (array)$opt ); //- $mode, の他？
 	//- auto mode ? デフォルト閾値7
 	if ( $mode != 'list' && $mode != 'icon' ) {
@@ -2201,6 +2217,12 @@ function _ent_catalog( $ids, $opt = [] ) {
 			? 'list' : 'icon';
 	}
 	unset( $opt[ 'mode' ] );
+	$ret = '';
+	foreach ( (array)$ids as $i )
+		$ret .= ( new cls_entid() )->set( $i )->ent_item( $mode, $opt );
+	return $ret;
+/*
+	制限ありバージョン
 	$less = $more = '';
 	$cnt = 0;
 	foreach ( (array)$ids as $i ) {
@@ -2213,6 +2235,7 @@ function _ent_catalog( $ids, $opt = [] ) {
 		}
 	}
 	return $less. _more( $more );
+*/
 }
 
 //. class cls_entid 
@@ -2284,7 +2307,9 @@ class cls_entid extends abs_entid {
 
 	//.. ent_itemstr
 	private function ent_itemstr( $opt = [] ) {
-		extract( (array)$opt ); //- $txt, $add, $data, $title?
+		$data = [];
+		$txt = $add_txt = $title = '';
+		extract( (array)$opt );
 
 		//- 規定タイトルがある？
 		$et = $title ?: $data[ 'title' ] ?: $this->title();
@@ -2343,6 +2368,8 @@ class cls_entid extends abs_entid {
 			. ( $txt == '' ? '' : " ($txt)" )
 			//- 追加情報
 			. ( $data == '' ? '' : BR . _kv( $data ) )
+//			. ( $add_txt ? SEP. $add_txt : null )
+			. ( $add_txt ? $add_txt : null )
 		;
 	}
 

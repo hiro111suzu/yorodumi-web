@@ -1069,13 +1069,6 @@ class cls_sqlite {
 		}
 
 		//... doc: docだけはemnavi/docにある
-		/*
-		if ( $db_name == 'doc' ) {
-			$fn = ( FLG_MNG ? DN_EMNAVI. '/' : '' ) . 'doc/doc.sqlite';
-			$this->log( 'doc', '-', $fn );
-			return $this->set_PDO( $fn );
-		}
-		*/
 		$fn = [
 			'doc'		=> DN_EMNAVI. '/doc.sqlite' ,
 			'subdata'	=> DN_EMNAVI. '/subdata.sqlite'

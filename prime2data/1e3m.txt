@@ -1,0 +1,38 @@
+設計図をなおす - DNA修復システム
+
+h1	DNAにまちがいがあると？
+
+DNAは生き物の[設計図 せっけいず]で、[細胞 さいぼう]の台本でもあります。DNAのまちがいは、がんなどの病気の原因になります。でも、とても長いDNAをひとつのまちがいもなくコピーすることは、とてもたいへんです。また[紫外線 しがいせん]や[放射線 ほうしゃせん]、タバコの成分などでもDNAにまちがいが生じることがあります。それでも多くの生き物は、病気にならずに何年も生きることができます。それは、DNAのまちがいをなおす{DNA[修復 しゅうふく]システム}があるからです。このような研究が評価されて、2015年のノーベル化学賞は、フランシス・クリック研究所のトーマス・リンダール博士らに贈られました
+
+h2	DNAのまちがい - ミスマッチ
+
+DNAは「A」、「C」、「G」、「T」という4種類の分子でできています。このうちAはTと、CはGとくっつきやすい分子です。DNAはくっつきやすいペアどうしの並びとなるように、2本の鎖が向き合っているので、うまくコピーできるのです。でもときどきコピーをしているときに失敗して、AとC、GとTなどのような、まちがったくみあわせにしてしまうことがあります。これがDNAの{ミスマッチ}です。
+
+h1	これはなにを見ているの？
+
+{MutS}はDNAのミスマッチを見つけるタンパク質です。そのMutSがGとTがペアになっているミスマッチの部分を見つけて、そこにくっついている状態の構造データです。
+
+
+btn	DNAはこれ！	selectionHalo off; center all; select dna; hide !dna;  zoomto 0.7 {selected} 0;
+btn	MutSはこれ！	selectionHalo off; center all; select protein; hide !protein;  zoomto 0.7 {selected} 0;
+btn	DNAのここがミスマッチ!	hide hoh;select (22 & *:F) or (9 & *:E); selectionHalo on; zoomto 0.7 {selected} 0;
+btn	もとにもどす	selectionHalo off; hide hoh; center all; zoom 110
+
+btn2	DNAはこれ！	_cmd.focus_chain(['C','D'])
+btn2	MutSはこれ！	_cmd.focus_chain(['A','B'])
+btn2	DNAのここがミスマッチ!	_cmd.focus_res({D:[22],C:[9]});
+btn2	もとにもどす	_mm.reset_focus();
+
+MutSはATPという分子からエネルギーをもらって仕事をします。ATPからエネルギーをとりだすとADPというものにかわりますが、このMutSにはそのADPがついています。
+
+btn2	ADPはこれ!	_cmd.focus_chain('E');
+btn2	もとにもどす	_mm.reset_focus();
+
+h1	これからなにがわかったの？
+
+MutSがどのようにミスマッチDNAにくっつくのかわかりました。その結果DNA少し曲がることもわかりました。
+
+h1	くわしくは・・・
+
+{wikipe DNA修復}
+{mom 023 DNA}

@@ -41,6 +41,9 @@ define( 'TERM_STAIN', $main_id->add()->stained
 $dn_media = DN_EMDB_MED . "/$id";
 
 _define_term( <<<EOD
+TERM_IMG_UNDER_PREP
+	Images and movies for this entry are currently under preparation
+	このエントリの画像及び動画は現在準備中です
 TERM_CUBIC_LATTICE
 	generated in cubic-lattice coordinate
 	これらの図は立方格子座標系で作成されたものです
@@ -298,6 +301,12 @@ $o_data->basicinfo([
 	'flg_vis'        => MOV_EX ,
 	'flg_link'       => true ,
 	'js_open_viewer' => MOV_EX ? "_pmov.open('$did')" : '',
+	'add_txt'		 =>
+		! file_exists( _fn( 'emdb_snap', ID, 's1' ) ) &&
+		! file_exists( _fn( 'emdb_snap', ID, 's2' ) )
+			? _p( LABEL_YM_ANNOT. TERM_IMG_UNDER_PREP )
+			: ''
+	, 
 ])
 ->lev1ar([
 	'Title'				=> _f( $json3->admin->title ) ,
@@ -426,7 +435,11 @@ if ( TEST ) {
 $o_data->end2( 'Download' );
 
 //.. 関連構造データ
-_related_out();
+( new cls_related([ 'is_em' => true ]) )
+->set_omokage( 'e'. ID )
+->set_similar([[ 'ida' => 'e'. ID ]])
+->set_others()
+->end();
 
 //.. リンク
 //	->lev3( '#notag',  )
@@ -456,16 +469,6 @@ foreach ( (array)$json3->sample->supramolecule as $c ) {
 //_testinfo( $kw, 'kw' );
 //_testinfo( $json3->sample );
 
-//... empiar
-$emp_json = _json_load2( DN_DATA. '/emdb/empiar.json.gz' );
-
-$emp_link = [];
-foreach ( (array)$emp_json->$did as $ei ) {
-	$emp_link[] = ''
-		. _ab([ 'empiar_j', $ei ], IC_L. "EMPIAR-$ei" )
-		. _kakko( _quick_kv( $emp_json->$ei ) );
-	;
-}
 //... output
 $o_data
 	->lev2( 'test', _test( _imp2([
@@ -482,13 +485,12 @@ $o_data
 		_ab([ 'emdb_ent_ebi' , $id ], IC_L. 'EMDB (EBI/PDBe)' ) ,
 		_ab([ 'emdb_ent_emdr', $id ], IC_L. 'EMDataResource' ),
 	]))
-	->lev2( 'EM raw data', implode( BR, $emp_link ) )
+//	->lev2( 'EM raw data', implode( BR, $emp_link ) )
 	->lev2( TERM_REL_MOM, _mom_items( $kw ) )
 
 	->end2( 'Links' )
 ;
-unset( $emp_json, $emp_link );
-
+//unset( $emp_json, $emp_link );
 //_similar();
 $_simple->time( 'dl&link' );
 

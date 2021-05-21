@@ -3,7 +3,10 @@
 define( 'COLOR_MODE', 'emn' );
 require( __DIR__. '/common-web.php' );
 
-define( 'ARC_EMDB', '/home/archive/ftp/pdbj-pre/pub/emdb' );
+define( 'ARC_EMDB', is_dir( '/data/pdbj/data-pre/' )
+	? '/data/pdbj/data-pre/ftp/pub/emdb/' 
+	: '/home/archive/ftp/pdbj-pre/pub/emdb' 
+);
 $json = _json_load2( ARC_EMDB. '/status/latest/emdb_update.json' );
 $date = $json->releaseDate;
 

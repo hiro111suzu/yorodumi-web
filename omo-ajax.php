@@ -184,7 +184,8 @@ define( 'TIME_DB',   filemtime( DN_DATA . '/profdb_s.sqlite' ) ); //- DBタイ�
 define( 'CMD_SEARCH', TESTSV
 //	? 'php ' .DN_OMO. "/search.php"
 	? 'php ' .DN_OMO. "/search_test.php"
-	: "ssh filesv3-p php /data/yorodumi/omokage/search.php"
+//	: "ssh filesv3-p php /data/yorodumi/omokage/search.php"
+	: "ssh filesv3 php /data/yorodumi/omokage/search.php"
 );
 define( 'CMD_GMCONV', DN_GMFIT_BIN. '/run_gmconvert.cgi' );
 define( 'CMD_GMREF', 'php omo_gmref.php' );
@@ -210,8 +211,8 @@ if ( _getpost( 'dbid' ) ) {
 		if ( $score < 0 ) break;
 		//- IDを変換
 		$id = substr( $i, 0, 1 ) == 's' 
-			? _sas_info( 'mid2id', $id )
-			: explode( '-', $id )[0]
+			? _sas_info( 'mid2id', $id ) //- sas-model対応
+			: explode( '-', $id )[0] //- PDB対応
 		;
 		foreach ( _obj('dbid')->strid2keys( $id ) as $i ) { 
 			$items[ $i ] += $score;

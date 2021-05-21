@@ -74,7 +74,9 @@ NO_NEW_DATA
 TERM_REL_DATE
 	Release date
 	公開日
-
+TERM_IMG_UNDER_PREP
+	Images and movies for some entries are currently under preparation
+	いくつかのエントリの画像及び動画は現在準備中です
 EOD
 );
 
@@ -85,7 +87,6 @@ define( 'G_PAGE'	, _getpost( 'page' ) ?: 0 );
 define( 'G_AJAX'	, _getpost( 'ajax' ) );
 
 //.. 表示最大数（自分用クッキー ）
-//- 
 if ( $n = _getpost( 'maxnum' ) ) {
 	if ( $n == 50 ) {
 		setcookie( "toppage-maxnum", "", time()-60);
@@ -166,6 +167,9 @@ $_simple->hdiv(
 	. _kakko( ''
 		. 'EMDB: '. _span( '#num_emdb', NUM_LIST[ 'EMDB' ] ). ', '
 		. 'PDB: ' . _span( '#num_pdb' , NUM_LIST[ 'PDB' ] )
+	)
+	. ( file_exists( DN_DATA. '/img_under_prep' )
+		? _p( '.red', '* '. TERM_IMG_UNDER_PREP ) : ''
 	)
 	. _div( '#catalog_outer', _newstr_outer() )
 

@@ -1,0 +1,664 @@
+.	unit
+..	quick-emdb
+aLength	&Aring;
+acceleratingVoltage	kV
+alpha	%deg;
+bLength	&Aring;
+beta	%deg;
+cLength	&Aring;
+cellA	&Aring;
+cellAlpha	%deg;
+cellB	&Aring;
+cellBeta	%deg;
+cellC	&Aring;
+cellGamma	%deg;
+deltaPhi	%deg;
+deltaZ	&Aring;
+diameter	&Aring;
+electronDose	e/&Aring;<sup>2</sup>
+energyWindow	eV
+gamma	%deg;
+molWtExp	MDa
+molWtTheo	MDa
+nominalCs	mm
+nominalDefocusMax	nm
+nominalDefocusMin	nm
+pixelX	&Aring;
+pixelY	&Aring;
+pixelZ	&Aring;
+samplingSize	&micro;m
+specimenConc	mg/mL
+temperature	K
+temperatureMax	K
+temperatureMin	K
+tiltAngleMax	%deg;
+tiltAngleMin	%deg;
+tiltAngleIncrement	%deg;
+resolutionByAuthor	&Aring;
+humidity	%
+
+..	quick-pdb
+temp	K
+humidity	%
+pdbx_wavelength_list	&Aring;
+density_Matthews	&Aring;<sup>3</sup>/Da
+density_percent_sol	%
+field_strength	MHz
+pdbx_redundancy	%
+ambient_temp	K
+percent_possible_obs	%
+ls_percent_reflns_R_free	%
+ls_percent_reflns_obs	%
+percent_reflns_obs	%
+percent_reflns_R_free	%
+Luzzati_d_res_low_obs	&Aring;
+solvent_model_param_ksol	e/&Aring;<sup>3</sup>
+solvent_model_param_bsol	&Aring;<sup>2</sup>
+d_res_high_rotation	&Aring;
+d_res_high_translation	&Aring;
+d_res_low_rotation	&Aring;
+d_res_low_translation	&Aring;
+
+nominal_magnification	X
+calibrated_magnification	X
+fourier_space_coverage	%
+em_buffer_component.concentration	-
+grid_mesh_size	divisions/in.
+
+nominal_pixel_size	&Aring;
+actual_pixel_size	&Aring;
+
+ABSA (A^2)	&Aring;<sup>2</sup>
+SSA (A^2)	&Aring;<sup>2</sup>
+MORE	kcal/mol
+
+
+..	quick-sasbdb
+pixsize_x	mm
+dist_spec_to_detc	mm
+cell_temperature	&deg;C
+storage_temperature	&deg;C
+experimental_MW	kDa
+sample_MW	kDa
+MW_Porod	kDa
+MW_standard	kDa
+Porod_volume	nm<sup>3</sup>
+Dmax	nm
+Rg_from_PR	nm
+Rg_from_Guinier	nm
+
+.	url
+..	common
+...	pdb
+pdbj	https://pdbj.org
+pdbj_help	https://pdbj.org/help/
+pdbj_contact	https://pdbj.org/contact/
+
+prd_help	https://pdbj.org/showBlogPost?PID=919
+about_valrep	https://www.wwpdb.org/validation/validation-reports
+
+...	db
+uniprot	https://www.uniprot.org/uniprot/[id]
+uniprotkb	https://www.uniprot.org/uniprot/[id]
+uniprot_ft	https://www.uniprot.org/uniprot/[id]#section_features
+go	https://www.ebi.ac.uk/QuickGO/term/GO:[id]
+interpro	https://www.ebi.ac.uk/interpro/entry/[id]
+pfam	https://pfam.xfam.org/family/[id]
+hamap	https://hamap.expasy.org/unirule/[id]
+prosite	https://prosite.expasy.org/[id]
+kegg	https://www.genome.jp/dbget-bin/www_bget?[id]
+genewiki	https://en.wikipedia.org/wiki/[id]
+cas	https://www.ncbi.nlm.nih.gov/sites/entrez?db=pccompound&term=[id]
+prints	https://www.ebi.ac.uk/interpro/signature/[id]
+ndb	https://ndbserver.rutgers.edu/service/ndb/atlas/summary?searchTarget=[id]
+reactome	https://reactome.org/content/detail/[id]
+trembl	https://www.ncbi.nlm.nih.gov/protein/[id]
+embl	https://www.ncbi.nlm.nih.gov/protein/[id]
+pir	https://www.ncbi.nlm.nih.gov/protein/[id]
+genbank	https://www.ncbi.nlm.nih.gov/nuccore/[id]
+genp	https://www.ncbi.nlm.nih.gov/nuccore/[id]
+tpg	https://www.ncbi.nlm.nih.gov/nuccore/[id]
+ref	https://www.ncbi.nlm.nih.gov/nuccore/[id]
+prf	https://www.ncbi.nlm.nih.gov/nuccore/[id]
+ec	https://www.enzyme-database.org/query.php?ec=[id]
+norine	https://bioinfo.lifl.fr/norine/result.jsp?ID=[id]
+nor	https://bioinfo.lifl.fr/norine/result.jsp?ID=[id]
+prosite-prorule	https://prosite.expasy.org/rule/[id]
+cath	http://www.cathdb.info/version/latest/superfamily/[id]
+cath_tree	http://www.cathdb.info/browse/sunburst?from_cath_id=[id]
+smart	http://smart.embl.de/smart/do_annotation.pl?DOMAIN=[id]
+dbsnp	https://www.ncbi.nlm.nih.gov/snp/[id]
+pubmed	https://www.ncbi.nlm.nih.gov/pubmed/[id]
+pmc	https://www.ncbi.nlm.nih.gov/pmc/articles/[id]
+doi	https://dx.doi.org/[id]
+sacs	http://www.bioinf.org.uk/abs/sacs/
+
+rulebase	https://www.uniprot.org/unirule/[id]
+rhea	https://www.rhea-db.org/reaction?id=[id]
+chebi	https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:[id]
+complexportal	https://www.ebi.ac.uk/complexportal/complex/[id]
+biogrid	https://thebiogrid.org/[id]
+intact	https://www.ebi.ac.uk/intact/interactors/id:[id]*
+mint	https://mint.bio.uniroma2.it/cgi-bin/protein.py?id=[id]
+string	https://string-db.org/network/[id]
+
+wikipe_en	https://en.wikipedia.org/wiki/[id]
+wikipe_ja	https://ja.wikipedia.org/wiki/[id]
+orcid	https://orcid.org/[id]
+
+sam	https://www.uniprot.org/help/sam
+cdd	https://www.ncbi.nlm.nih.gov/Structure/cdd/[id]
+unichem	https://www.ebi.ac.uk/unichem/frontpage/results?kind=InChIKey&queryText=[id]
+bird	quick.php?id=bird-[id]
+
+...	misc
+jmol	https://jmol.sourceforge.net/
+
+...	local
+dir_emdb_med	_mng-dir.php?fn=emdb_med.[id]
+dir_pdb_med	_mng-dir.php?fn=pdb_med.[id]
+
+pdb_img_dep	data/pdb/img_dep/[id].jpg
+pdb_img_asb	data/pdb/img_asb/[id]_[id2].jpg
+
+ym	quick.php?id=[id]
+quick	quick.php?id=[id]
+omos	omo-search.php?id=[id]
+omov	omoview.php?a=[id]
+jsonview	jsonview.php?a=[id]
+json	jsonview.php?id=[id]
+txtdisp	txtdisp.php?a=[id].[id2]
+empiar_xml	txtdisp.php?path=/data/yorodumi/fdata/empiar/empiar.pdbj.org/pub/empiar/archive/[id]/[id].xml
+
+..	quick-emdb
+emdb_ent_ebi	https://www.ebi.ac.uk/pdbe/entry/emdb/EMD-[id]
+emdb_ent_emdr	https://www.emdataresource.org/EMD-[id]
+empiar_j	https://empiar.pdbj.org/entry/[id]/
+unp_search	https://www.uniprot.org/uniprot/?query=[id]
+
+json3	jsonview.php?a=json3.[id]
+
+ftpdir	ftp://ftp.pdbj.org/pub/emdb/structures/EMD-[id]
+url_http_dl	http://ftp.pdbj.org/pub/emdb/structures/EMD-[id]
+dl-map	http://ftp.pdbj.org/pub/emdb/structures/EMD-[id]/map/emd_[id].map.gz
+
+histogram_s	data/emdb/media/[id]/mapi/hists.png
+histogram_l	data/emdb/media/[id]/mapi/hist.png
+histogram_log_s	data/emdb/media/[id]/mapi/histlogs.png
+histogram_log_l	data/emdb/media/[id]/mapi/histlog.png
+emdb_fig	data/emdb/emdb-fig/<id>.jpg
+emdb_fig_gif	data/emdb/emdb-fig/<id>.gif
+
+
+..	quick-pdb
+snfg_icon	data/chem/snfg_icon/[id].jpg
+
+cif_tree	https://pdbj.org/displayMMCIFTree?pdbid=[id]
+ncbi_str	https://www.ncbi.nlm.nih.gov/Structure/mmdb/mmdbsrv.cgi?uid=[id]
+prd_summary	https://pdbj.org/bird/summary/[id]
+doc_cif_wwpdb	https://mmcif.wwpdb.org/
+doc_cif_pdbj	https://mmcif.pdbj.org/
+doc_pdb_format	https://www.wwpdb.org/documentation/file-format-content/format33/v3.3.html
+wwpdb_landing	https://www.wwpdb.org/pdb?id=pdb_0000[id]
+rcsb	https://www.rcsb.org/structure/[id]
+pdbe	https://www.ebi.ac.uk/pdbe/entry/pdb/[id]
+bmrb	https://bmrb.protein.osaka-u.ac.jp/data_library/generate_summary.php?bmrbId=[id]
+
+ftp-bu	ftp://ftp.pdbj.org/pub/pdb/data/biounit/coordinates/all/[id].pdb[id2].gz
+mlplus_ad	ftp://ftp.pdbj.org/XML/pdbmlplus/pdbml_add/[id]-add.xml.gz
+
+jsonv_plus	jsonview.php?a=plus.[id]
+
+toxnet	https://chem.nlm.nih.gov/chemidplus/inchikey/[id]
+pubchem	https://www.ncbi.nlm.nih.gov/pccompound?term=[id]
+chemspider	https://www.chemspider.com/Search.aspx?q=[id]
+chembl	https://www.ebi.ac.uk/chembl/g/#search_results/compounds/query=[id]
+
+
+..	quick-sasbdb
+sasbdb	http://www.sasbdb.org/data/[id]/
+cifdic	cifdic.php?db=sas&ajax=1&q=[id]
+
+plot_fit	data/sas/plot/model_fitting-[id].svg
+plot_scan	data/sas/plot/scan_intensity-[id].svg
+plot_pr	data/sas/plot/p_of_R-[id].svg
+plot_prex	data/sas/plot/p_of_R_extrapolated_intensity-[id].svg
+
+..	quick-chem
+toxnet	https://chem.nlm.nih.gov/chemidplus/inchikey/[id]
+pubchem	https://www.ncbi.nlm.nih.gov/pccompound?term=[id]
+chemspider	https://www.chemspider.com/Search.aspx?q=[id]
+chembl	https://www.ebi.ac.uk/chembl/g/#search_results/compounds/query=[id]
+ChEMBL	https://www.ebi.ac.uk/chembldb/compound/inspect/[id]
+ChEBI	https://www.ebi.ac.uk/chebi/searchId.do?chebiId=[id]
+Nikkaji	http://jglobal.jst.go.jp/en/redirect?Nikkaji_No=[id]
+Nikkaji-j	http://jglobal.jst.go.jp/redirect?Nikkaji_No=[id]
+KEGG_Ligand	https://www.genome.jp/dbget-bin/www_bget?[id]
+KEGG_Ligand-j	https://www.genome.jp/dbget-bin/www_bget?cpd_ja:[id]
+ZINC	http://zinc15.docking.org/substances/[id]
+GtoPharmacology	http://www.guidetopharmacology.org/GRAC/LigandDisplayForward?ligandId=[id]
+DrugBank	http://www.drugbank.ca/drugs/[id]
+PubChem	http://pubchem.ncbi.nlm.nih.gov/compound/[id]
+PubChem_TPharma	http://pubchem.ncbi.nlm.nih.gov/substance/[id]
+BindingDB	http://www.bindingdb.org/bind/chemsearch/marvin/MolStructure.jsp?monomerid=[id]
+CompTox	https://comptox.epa.gov/dashboard/[id]
+SureChEMBL	https://www.surechembl.org/chemical/[id]
+Brenda	https://www.brenda-enzymes.org/ligand.php?brenda_ligand_id=[id]
+LipidMaps	http://www.lipidmaps.org/data/LMSDRecord.php?LMID=[id]
+SwissLipids	http://www.swisslipids.org/#/entity/[id]
+ChemicalBook	https://www.chemicalbook.com/ChemicalProductProperty_EN_[id]
+ChemicalBook-j	https://www.chemicalbook.com/ChemicalProductProperty_JP_[id].htm
+// FDA_SRS	http://fdasis.nlm.nih.gov/srs/ProxyServlet?mergeData=true&objectHandle=DBMaint&APPLICATION_NAME=fdasrs&actionHandle=default&nextPage=jsp/srs/ResultScreen.jsp&TXTSUPERLISTID=
+Rhea	http://www.rhea-db.org/searchresults?q=CHEBI:[id]
+Metabolights	http://www.ebi.ac.uk/metabolights/[id]
+NMRShiftDB	http://nmrshiftdb.org/molecule/[id]
+HMDB	http://www.hmdb.ca/metabolites/[id]
+DailyMed	https://dailymed.nlm.nih.gov/dailymed/search.cfm?adv=1&labeltype=human&query=INGREDIENT:[id]
+
+..	quick-ajax
+unp_xml	txtdisp.php?a=unp_xml.[id]
+unp_json	jsonview.php?id=unp_json.[id]
+csa	http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/CSA/CSA_Site_Wrapper.pl?pdb=[id]
+cath_sf	http://www.cathdb.info/version/latest/superfamily/[id]
+pirsr	https://proteininformationresource.org/cgi-bin/pirrule?id=[id]
+ndb_doc	http://ndbserver.rutgers.edu/ndbmodule/[id].html
+
+..	quick-nohit
+emdb_ftp	ftp://ftp.pdbj.org/pub/emdb/obsoleted/EMD-[id]/
+pdbj_obs 	https://pdbj.org/mine/obsolete/[id]
+
+prerel_json	jsonview.php?a=file.pdb/prerel.[id]
+
+..	common-pdbdet
+prorule	https://prosite.expasy.org/unirule/[id]
+quick_go	https://www.ebi.ac.uk/QuickGO/term/[id]
+hamap-rule	https://hamap.expasy.org/unirule/[id]
+targettrack	http://pdb-k-linux-8.rutgers.edu/tt/search?ttid=[id]
+cifdic	cifdic.php?ajax=1&q=[id]
+
+..	taxo
+taxo_id	https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=[id]
+
+taxo_icon_site	http://togodb.biosciencedbc.jp/togodb/view/taxonomy_icon
+taxo_icon_site2	http://biosciencedbc.jp/taxonomy_icon/taxonomy_icon.cg
+cc21en	http://creativecommons.org/licenses/by/2.1/jp/deed.en
+cc21ja	http://creativecommons.org/licenses/by/2.1/jp/
+ncbi_taxo_site	http://www.ncbi.nlm.nih.gov/taxonomy
+lsdb_site	http://lifesciencedb.jp/lsdb.cgi
+lsdb_dic_site	http://lifesciencedb.jp/lsdb.cgi?gg=dic
+
+taxo_icon	data/taxo/icon/[id]_L.png
+taxo_icon_s	data/taxo/icon/[id]_S.png
+virus_emdb_img	data/emdb/media/[id]/snaps2.jpg
+txtype_icon	img/tx_[id].gif
+wikipe_img_en	https://en.wikipedia.org/wiki/File:[id]
+wikipe_img_ja	https://ja.wikipedia.org/wiki/ファイル:[id]
+wikipe_img_s	https://upload.wikimedia.org/wikipedia/commons/thumb/[id]/50px-[id2]
+wikipe_img_l	https://upload.wikimedia.org/wikipedia/commons/thumb/[id]/150px-[id2]
+wikipe_img	data/taxo/wicon/[id]
+
+..	mng_dir
+dir	?path=[id]
+jsonview	jsonview.php?path=[id]
+tsvview	tsvview.php?path=[id]
+txt	txtdisp.php?path=[id]
+py	txtdisp.php?path=[id]
+tsv	txtdisp.php?path=[id]
+sqlite	_mng-sqliteDBs.php?sqlite=&username=s&table=main&db=[id]
+direct	[id]
+
+..	jsonview
+dic_pdb_cat	http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx.dic/Categories/[id].html
+dic_pdb_item	http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx_v40.dic/Items/_[id].html
+cifdic	cifdic.php?q=[id]
+cifdic_sas	cifdic.php?db=sas&q=[id]
+
+..	cifdic
+dic_pdb_cat	http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx_v50.dic/Categories/[id].html
+dic_pdb_item	http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx_v50.dic/Items/_[id].html
+dic_text_sas	http://mmcif.wwpdb.org/dictionaries/ascii/mmcif_sas.dic
+dic_text_pdb	http://mmcif.wwpdb.org/dictionaries/ascii/mmcif_pdbx.dic
+
+..	bird
+prd_cif	http://ftp.pdbj.org/prd/PRD_[id].cif
+prdcc_cif	http://ftp.pdbj.org/prdcc/PRDCC_[id].cif
+prdfam_cif	http://ftp.pdbj.org/family/[id].cif
+mesh	http://id.nlm.nih.gov/mesh/[id]
+chemspider	http://www.chemspider.com/Chemical-Structure.[id].html
+.	fn
+..	common
+emdb_snap	<data>/emdb/media/<id>/snap<s1>.jpg
+sasbdb_json	<data>/sas/json/<id>.json.gz
+sasbdb_img	<data>/sas/img/<id>.jpg
+pubmed	<data>/pubmed/<id>.json
+
+pdbimg_asb	<data>/pdb/img_asb/<id>_<s1>.jpg
+pdbimg_dep	<data>/pdb/img_dep/<id>.jpg
+
+binfo	<data>/binfo.json
+
+bird_json	<data>/bird/json/<id>.json.gz
+bird_img	<data>/bird/img/<id>.jpg
+bird_img2	<data>/bird/img/<id>.svg
+bird_cifcc	/home/archive/ftp/pdbj/prdcc/PRDCC_<id>.cif
+
+..	quick-emdb
+fsc_img_s	<data>/emdb/media/<id>/fsc/fscs.jpg
+fsc_img_l	<data>/emdb/media/<id>/fsc/fscl.png
+json3	jsonview.php?a=json3.<id>
+
+..	quick-pdb
+unp_json	<data>/unp/<id>.json.gz
+polysac_img	<data>/chem/polysac_img/<id>_SNFG_<s1>.svg
+
+..	quick-sasbdb
+plot_fit	<data>/sas/plot/model_fitting-<id>.svg
+plot_scan	<data>/sas/plot/scan_intensity-<id>.svg
+plot_pr	<data>/sas/plot/p_of_R-<id>.svg
+plot_prex	<data>/sas/plot/p_of_R_extrapolated_intensity-<id>.svg
+
+..	common-pdbdet
+evcode_json	<data>/pdb/evcode.json
+	
+..	esearch
+table_data	<data>/emn/tabledata.json
+latest_data	<data>/emn/latestdata.json
+
+..	taxo
+taxo_icon_json	<data>/taxo/taxoicon.json
+
+..	gallery
+categ_json	<data>/emn/categ.json
+datacount_json	<data>/emn/datacount.json.gz
+
+..	omokage
+emdb_vq50	<data>/emdb/vq/<id>-50.pdb
+pdb_vq50	<data>/pdb/vq/<id>-<s1>-50.pdb
+sasbdb_vq50	<data>/sas/vq/<id>-vq50.pdb
+
+user_json	<omokage>/userdata<s1>/<id>.json
+user_map	<omokage>/userdata<s1>/<id>.map
+user_pdb	<omokage>/userdata<s1>/<id>.pdb
+user_vq30	<omokage>/userdata<s1>/<id>.vq30.pdb
+user_vq50	<omokage>/userdata<s1>/<id>.vq30.pdb
+
+..	mng_dir
+emdb_ftp	<fdata>/emdb-mirror/structures/EMD-<id>
+
+..	cifdic
+dic_sas_json	<data>/sas/sascif_dic.json.gz
+dic_pdb_json	<data>/pdb/mmcif_dic.json.gz
+dic_item2pdbent	<data>/pdb/dicitem_ids.json.gz
+dic_item_count	<data>/pdb/dicitem_count.json.gz
+dic_pdb_gz	<data>/pdb/mmcif_pdbx_v50.dic.gz
+dic_sas_gz	<data>/sas/mmcif_sas.dic.gz
+
+..	jsonview
+unp_json	<data>/unp/<id>.json.gz
+maindbjson	<prep>/maindbjson/<id>.json
+pdb_met	<prep>/met/pdb/<id>.json
+pap_info	<prep>/pap/info/<id>.json.gz
+prd	<data>/prd/<id>.json.gz
+
+..	txtdisp
+unp_json	<data>/unp/<id>.json.gz
+unp_xml	<fdata>/unp/<id>.xml
+emdb_kw	<prep>/keyword/emdb/<id>.txt
+emdb_obs	<fdata>/emdb-mirror/obsoleted/EMD-<id>/header/emd-<id>.xml
+pdb_kw	<prep>/keyword/pdb/<id>.txt
+sasbdb_kw	<prep>/keyword/sas/<id>.txt
+sascif	<data>/sas/sasbdb/<id>.sascif
+pubmed_xml	<fdata>/pubmed_xml/<id>.xml
+papinfo	<prep>/pap/info/
+
+.	mov_caption
+..	en
+chimera	Imaged by _chimera_
+jmol	Imaged by _jmol_
+solid	Solid view (volume rendering)
+vol	Surface view with section colored by density value
+cyl	Surface view colored by cylindrical radius
+hei	Surface view colored by height
+rad	Surface view colored by radius
+pdb	Surface view with fitted model
+0	Surface view
+1	Colored surface
+2	Map surface with fitted models
+3	Map surface with fitted models
+4	Map surface with fitted models
+on_emdb	Superimposition on EM map
+mapdata	"EMDB-ID: "
+mapid	
+zoom	Close-up
+mask	Mask data
+simpfit	Simplified surface model + fitted atomic model
+simpsurf	Simplified surface model
+atomic	Atomic models
+surflev	"Surface level: "
+icos	complete icosahedral assembly
+icos5	icosahedral pentamer
+icos6	icosahedral 23 hexamer
+helix	representative helical assembly
+comp	complete point assembly
+dimeric	dimeric
+trimeric	trimeric
+tetrameric	tetrameric
+pentameric	pentameric
+hexameric	hexameric
+octameric	octameric
+depo	Deposited structure unit
+bu	"Biological unit as "
+
+..	ja
+chimera	_chimera_による作画
+jmol	_jmol_による作画
+solid	ソリッド表示（ボリュームレンダリング）
+vol	表面図（断面を密度値に従い着色）
+cyl	表面図（円筒半径に従い着色）
+rad	表面図（半径に従い着色）
+hei	表面図（高さに従い着色）
+pdb	あてはめたモデルとの重ね合わせ
+0	表面図
+1	着色した表面図
+2	あてはめたモデルとの重ね合わせ
+3	あてはめたモデルとの重ね合わせ
+4	あてはめたモデルとの重ね合わせ
+zoom	拡大図
+mask	マスクデータ
+simpfit	単純化した表面モデル + あてはめた原子モデル
+simpsurf	単純化した表面モデル
+atomic	原子モデル
+surflev	"表面レベル: "
+
+on_emdb	EMマップとの重ね合わせ
+emdbid	"マップデータ: "
+
+icos	完全な正20面体対称集合体
+icos5	正20面体対称構造中の5量体部位
+icos6	正20面体対称構造中の6量体部位
+helix	らせん対称集合体
+comp	全体構造
+dimeric	2量体
+trimeric	3量体
+tetrameric	4量体
+pentameric	5量体
+hexameric	6量体
+octameric	8量体
+nonameric	9量体
+depo	登録構造単位
+bu	"生物学的単位 - "
+
+.	categ
+..	keys
+cycle	cycle
+DNA_RNA	dna,rna
+Ribosome	70s,80s,ribosome-c
+Protein	protein
+Membrane	membrane,membrane2
+Motor	motor
+Flagellum	needle
+Amyloid	amyloid
+Cell	cell
+Virus	virus-e,virus-o,virus-c
+Synthetic	synth
+Others	hem,misc
+
+..	names
+DNA_RNA	DNA/RNA
+cycle	Cell cycle
+
+..	caption-e
+All	All new data for the week
+Covid-19	Covid-19 / SARS-CoV-2
+cycle	Cell cycle related
+DNA_RNA	DNA or RNA, (replication, transcription, etc.)
+Ribosome	Ribosome & component
+Protein	Protein folding and degradation
+Membrane	Membrane protein, pore forming, transformation
+Motor	Cytoskeleton & motor
+Flagellum	Bacterial flagellum, needle, pilli, & secretion machinery
+Amyloid	Amyloid / Tau fibril
+Cell	Cell & organelle
+Virus	Virus & component
+Synthetic	Engineered molecules (DNA origami, synthetic peptides)
+Others	Others
+
+..	caption-j
+All	この週の新規公開データすべて
+Covid-19	新型コロナウイルス(SARS-Cov-2)関連
+cycle	細胞周期関連
+DNA_RNA	DNA/RNA (複製・転写・その他)
+Ribosome	リボソーム・構成要素
+Protein	タンパク質（折りたたみ・分解）
+Membrane	膜タンパク質・膜孔形成・膜変形
+Motor	細胞骨格・分子モーター
+Flagellum	バクテリアべん毛・線毛・分泌装置関連
+Amyloid	アミロイド・タウ線維
+Cell	細胞・オルガネラ
+Virus	ウイルス・構成要素
+Synthetic	合成分子 (DNAオリガミ、合成ペプチドなど)
+Others	その他・未分類
+
+.	chem
+..	parent
+GU4	GLC
+YYJ	FRU
+3FM	MAN
+SGN	PA1
+IDS	IDR
+Z9L	GLC
+Z9K	Z0F
+GU6	GLC
+GU1	BDP
+Z9H	GLC
+SGA	GAL
+MMA	MAN
+AMG	GLA
+M6P	MAN
+ASG	NGA
+CEG	BGC
+G4S	GAL
+MFU	FUC
+ERI	RAE
+MXY	FUL
+MGL	BGC
+GP1	PA1
+IDU	3MK
+MAG	NAG
+NG6	NGA
+MBG	GAL
+GCV	GCU
+G6S	GAL
+NGS	NAG
+BHG	GAL
+RAO	RAM
+NGK	A2G
+PDX	GLC
+MXZ	FUC
+TRV	FRU
+IDX	LGU
+U9G	GLC
+GU8	BGC
+TU4	GLC
+GU3	GLC
+GU2	Z0F
+GU5	GLC
+GU9	GLC
+GU0	BGC
+F6P	FRU
+GNS	PA1
+MGC	A2G
+AMV	NAG
+NGY	NDG
+TQY	GLC
+ZDO	PA1
+SUS	PA1
+M8C	ADA
+SHB	GAL
+TVY	MAN
+ZB1	GLC
+ZB2	GLC
+ZB3	GLC
+ZB0	GLC
+KDA	KDO
+SN5	GCS
+EGA	GAL
+YZ0	BMA
+EAG	NAG
+OPM	MAN
+Z3L	GAL
+AXR	BXY
+B8D	GLC
+KME	KDO
+L6S	GXL
+Z3Q	NAG
+YYH	MAN
+Z9M	GCS
+IDY	IDR
+GNX	PA1
+GM0	GMH
+GQ1	GLC
+NM9	NAG
+NM6	NAG
+G1P	GLC
+BBV	NDG
+BG6	BGC
+RTG	Z0F
+M6D	BMA
+TVS	NAG
+TVV	GAL
+GYP	GLC
+G6P	GLC
+6S2	NAG
+TT7	FRU
+U8V	GLC
+GN1	NDG
+GN4	BM7
+5N6	SIA
+5KV	GCS
+5LS	GLC
+5TJ	GLC
+5TM	GLC
+Z4K	GLC
+5TK	GLC
+5TH	GLC
+LEC	NAG
+2F8	NDG
+TVG	GZL
+8PK	FUC
+TVM	GAL
+7CV	RAM
+HSH	GAL
+83Y	RAM
+8EX	NGA
+TUJ	AFD
+TUG	SHD
+5LT	GLC
+U2D	GLC
+PKM	SIA
+VJ4	GCS
+VJ1	PA1
+
+AGL	G6D
+DT6	NAG
+9WJ	RAM

@@ -1,0 +1,50 @@
+体中に酸素を運ぶ - ヘモグロビン
+
+cmd	spin y;;
+
+h1	酸素をすみずみまで届ける
+
+私たちの血液の中には[酸素 さんそ]を運ぶ{[赤血球 せっけっきゅう]}という細胞があります。
+{ブドウ糖}などのエネルギー源から効果的にエネルギーを取り出すには酸素が必要ですが、
+その酸素を体中の細胞に届けているのがこの赤血球です。
+そしてこの赤血球の中にあって、実際に酸素を受け取ったり渡したりしているタンパク質が{ヘモグロビン}です。
+
+btn	回す	spin y;
+btn	ストップ	spin off;
+
+h1	これはなにを見ているの？
+
+ヘモグロビンというタンパク質の分子を見ています。
+[α あるふぁ]と[β べーた]という2種類のタンパク質鎖が2本ずつ、合計4本の鎖でできています。
+それぞれの鎖には鉄を含んだ{ヘム}という分子がついています。
+このヘムが酸素を受け取ったり、渡したりしています。
+
+btn2	αはこれ！	_cmd.focus_chain('A');
+btn2	これもα!	_cmd.focus_chain('C');
+btn2	βはこれ！	_cmd.focus_chain('B');
+btn2	これもβ!	_cmd.focus_chain('D');
+btn2	これがヘム！	_cmd.focus_chain('G');
+btn2	もとにもどす	_mm.reset_focus();
+
+ヘムは全部で4こあります。さがしてみましょう。
+
+
+// {強調}
+
+btn	ヘム	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select [HEM];selectionHalos ON;
+btn	鉄	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select _Fe;selectionHalos ON;
+btn	α鎖	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:A OR *:C;selectionHalos ON;
+btn	β鎖	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:B OR *:D;selectionHalos ON;
+btn	強調を全て解除	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select all;reset;
+
+//	{一部を表示}
+
+btn	α鎖2本（A鎖とC鎖）	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:B OR *:D;cartoon off;wireframe off;cpk off;select *:A OR *:C OR [HEM];
+btn	α鎖1本（A鎖）	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:B OR *:C OR *:D;cartoon off;wireframe off;cpk off;select *:A OR [HEM];
+btn	β鎖2本（B鎖とD鎖）	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:A OR *:C;cartoon off;wireframe off;cpk off;select *:B OR *:D OR [HEM];
+btn	β鎖1本（B鎖）	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select *:A OR *:C OR *:D;cartoon off;wireframe off;cpk off;select *:B OR [HEM];
+btn	もとにもどす	select all; selectionHalos OFF;select protein;cartoon on;select [HEM];cpk 33%;wireframe 0.25;select all;reset;
+
+h2	くわしくは・・・
+{wikipe ヘモグロビン}
+{mom 041 ヘモグロビン}

@@ -1,0 +1,9 @@
+Sitemap: http://pdbj.org/emnavi/Sitemap.xml
+
+User-Agent: *
+Allow: /
+Disallow: *.py
+Disallow: *.mov
+Disallow: *.asf
+Disallow: seqview.php
+Disallow: omo-ajax.php

@@ -41,13 +41,10 @@ $ids = ( new cls_sqlite( 'main' ) )->qcol([
 	'select' => 'id' ,
 	'order by' => 'sort_sub DESC'
 ]);
-foreach ( _file( DN_PREP. '/problem/movie-6-check.txt' ) as $line ) {
-	$id = _reg_rep( $line, [ '/:.+$/' => '' ] );
-	$ids[] = $id;
-}
 
 foreach ( _file( DN_PREP. '/problem/movie-6-check.txt' ) as $line ) {
 	$id = _reg_rep( $line, [ '/:.+$/' => '' ] );
+	if ( _numonly( $id ) < 1000 ) continue;
 	$ids[] = $id;
 }
 $ids = _uniqfilt( $ids );
@@ -83,6 +80,7 @@ foreach ( $ids as $id ) {
 	$pdb_id_list = [];
 	foreach ( (array)FITDB[ "emdb-$id" ] as $pdb_id ) {
 		$pdb_id = strtr( $pdb_id, [ 'pdb-' => ''  ] );
+		if ( ! _inlist( $pdb_id, 'epdb' ) ) continue;
 		$pdb_id_list[] = $pdb_id;
 		$todo[ $pdb_id ] = in_array( $pdb_id, $in_mov );
 	}

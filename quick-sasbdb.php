@@ -212,9 +212,28 @@ $o_data->lev1( 'Contact author', implode( "\n", $ca ) );
 _viewer();
 
 //. ダウンロードとリンク
+//.. data
 $o_data->lev1title( 'downlink', true )
 	->lev2( 'SASBDB page', _ab( _url( 'sasbdb', $id ), IC_L . $id ) )
-	->lev2( 'test', TEST
+	->end2( 'Data source' )
+;
+
+//.. related
+$tabs = [];
+foreach ( (array)$json->sas_model as $j ) {
+	$tabs[] = [
+		'ida' => 's'. $j->id ,
+		'tab' => _l( 'Model' ). _sharp( $j->id ) ,
+	];
+}
+
+( new cls_related([]) )
+->set_omokage( $tabs[0]['ida'] )
+->set_similar( $tabs )
+->end();
+
+//.. リンク
+$o_data->lev2( 'test', TEST
 		? [
 			_ab( _url( 'json', DID ), 'JSONview' ) ,
 			_ab( _url( 'txtdisp', 'sascif', DID ), 'sasCIF' ) ,
@@ -224,7 +243,6 @@ $o_data->lev1title( 'downlink', true )
 	->lev2( TERM_REL_MOM, _mom_items(  ) )
 	->end2( 'External links' )
 ;
-_related_out();
 
 //. models
 
