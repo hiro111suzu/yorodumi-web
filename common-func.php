@@ -57,7 +57,7 @@ function _headmatch( $needle, $heystack ) {
 //- ページタイトル用
 function _short( $s, $l = 70 ) {
 	return ( mb_strlen( $s ) > $l )
-		? mb_substr( $s, 0, $l - 5 ) . "..."
+		? mb_substr( $s, 0, $l - 5 ). "..."
 		: $s
 	;
 }
@@ -73,7 +73,7 @@ function _x( $s ) {
 	if ( is_object( $s ) || is_array( $s ) )
 		return _test( _t( 'pre | .red bld', print_r( $s, true ) ) );
 	if ( strlen( $s ) > 5000 )
-		$s = substr( $s, 0, 5000 ) . ' ...';
+		$s = substr( $s, 0, 5000 ). ' ...';
 	return _reg_rep( trim( $s ), [
 		'/[\n\r\t ]+/' => ' ',
 		'/^(na|n\/a|null|none)$/i' => '' ,
@@ -95,7 +95,7 @@ function _format_bytes( $b ) {
 	if ( $b <       1048576 ) $r = [       1024, ' KB' ];
 	if ( $b <          1024 ) $r = [          1, ' B'  ];
 	if ( $b == 0 ) return;
-	return round( $b / $r[0], 1 ) . $r[1];
+	return round( $b / $r[0], 1 ). $r[1];
 }
 
 //.. _kv: key : value
@@ -217,7 +217,7 @@ function _e( $tag ) {
 		. implode( ' ',	_reg_rep(
 			preg_split( '/ *\| */', trim( $tag ), 0, PREG_SPLIT_NO_EMPTY ) ,
 			TAG_REP
-		)) . '>'
+		)). '>'
 	;
 }
 
@@ -245,7 +245,7 @@ function _ab( $url, $str = '', $opt = '' ) {
 //- アイコン付き
 function _ai( $url, $icon, $str = '', $opt = '' ) {
 	$url = _local_link( $url );
-	return _t( "a| href:$url | $opt", _ic( $icon ) . $str );
+	return _t( "a| href:$url | $opt", _ic( $icon ). $str );
 }
 
 //- 今のページなら太字、違えばリンク
@@ -263,11 +263,11 @@ function _local_link( $in ) {
 		return $urls[ $in ] ?: $in;
 	if ( array_keys( $in ) == [0, 1] ) //- _url関数の短縮
 		return _url( $in[0], $in[1] );
-	$php = $in[0] ? $in[0] . '.php' : '';
-	$sharp = $in['#'] ? '#' . $in['#']: '';
+	$php = $in[0] ? $in[0]. '.php' : '';
+	$sharp = $in['#'] ? '#'. $in['#']: '';
 	unset( $in[0], $in['#'] );
 	return ( $_SERVER['PHP_SELF'] == $php ? '' : $php )
-		.'?'. http_build_query( array_filter( $in ) ) . $sharp;
+		.'?'. http_build_query( array_filter( $in ) ). $sharp;
 }
 
 //.. _get_query GET文字列
@@ -346,7 +346,7 @@ function _chkbox( $label, $opt, $flg = false ) {
 		$opt = "#$id|$opt";
 	}
 	return _span( '.nw', 
-		_e( "input| type:checkbox| $opt" . ( $flg ? '|checked:checked' : '' ) )
+		_e( "input| type:checkbox| $opt". ( $flg ? '|checked:checked' : '' ) )
 		. _t( "label| for:$id", _l( $label ) )
 	);
 }
@@ -359,7 +359,7 @@ function _selopt( $opt, $ar, $sel = '' ) {
 		$s = $k == $sel ? 'selected:selected' : '';
 		$ret .= _t( "option | value:$k | $s", $v );
 	}
-	return _t( 'select |' . $opt, $ret );
+	return _t( 'select |'. $opt, $ret );
 }
 
 //.. _ul 箇条書きリスト
@@ -375,7 +375,7 @@ function _ul( $items, $num = 4 ) {
 	$n = $cnt - $num;
 	$li = _e( 'li| .more hide' );
 	return _t( "ul| #ulm_$id", ''
-		.LI . implode( LI , array_slice( $items, 0, $num ) )
+		.LI. implode( LI , array_slice( $items, 0, $num ) )
 		.$li. implode( $li, array_slice( $items, $num ) )
 	)
 	. _btn( "!_limany('$id',1)| #more_$id",
@@ -434,7 +434,7 @@ function _table_toph( $toph, $data, $o = [] ) {
 	foreach ( $data as $row ) {
 		$ret .= is_array( $row )
 			? TR.TD. implode( TD, $row )
-			: TR. _e( 'td|colspan=' . count( $toph ), $row )
+			: TR. _e( 'td|colspan='. count( $toph ), $row )
 		;
 	}
 	return _t( "table|$opt", $ret );
@@ -452,8 +452,8 @@ function _table_3col( $cont, $o = [] ) {
 			$td[] = is_array( $a ) ? _imp2( $a ) : $a;
 		$th = _l( $th );
 		$ret .=  $topth
-			 ? TR_TOP . TH . $th . TH . implode( TH, $td )
-			 : TR	  . TH . $th . TD . implode( TD, $td )
+			 ? TR_TOP. TH. $th. TH. implode( TH, $td )
+			 : TR	 . TH. $th. TD. implode( TD, $td )
 		;
 		$topth = false;
 	}
@@ -630,7 +630,7 @@ function _chemform2html( $in ) {
 		if ( $t == '-' || $t == '+' ) {
 			//- 電荷？（上付きに）
 			$num = abs( $l );
-			$ret .= '<sup>' . $t . ( $num > 1 ? $num : '' ) . '</sup>' ;
+			$ret .= '<sup>'. $t. ( $num > 1 ? $num : '' ). '</sup>' ;
 		} else {
 			//- 元素名+数（下付に）
 			preg_match( '/([A-Za-z]+)([0-9]*)/', $l, $a );
@@ -746,7 +746,7 @@ function _nikkaji_name( $chem_id ){
 function _die( $a ) {
 	if ( is_array( $a ) || is_object( $a ) )
 		$a = print_r( $a, 1 );
-	die( _p( '強制終了' ) . _t( 'pre', $a ) );
+	die( _p( '強制終了' ). _t( 'pre', $a ) );
 }
 
 //.. _redirect: リダイレクト
@@ -960,14 +960,17 @@ function _simple_tabs() {
 		extract( $a ); //- $id, $active, $tab, $div, $js
 		if ( $id == '' )
 			$id = _cssid();
-		$d = $active ? '| disabled' : '';
 
 		//- js: 開いた時に実行するスクリプト
 		if ( $js != '' )
-			$js = ",'" . strtr( htmlspecialchars( $js ), [ "'" => "\\'" ] ) . "'";
+			$js = ",'". strtr( htmlspecialchars( $js ), [ "'" => "\\'" ] ). "'";
+
+		//- 初期タブ(disabled)、jsがあったらクラス値tab_init_run
+		$active_opt = $active ? ( $js ? 'tab_init_run': '' ). '| disabled' : '';
 
 		$tabs .= _btn(
-			"#tabbtn_{$gid}_{$id} |type:button | .tabbtn tabbtn_$gid $d| !_tab.s('$gid','$id'$js)"
+			"#tabbtn_{$gid}_{$id} |type:button "
+			. "| .tabbtn tabbtn_$gid $active_opt| !_tab.s('$gid','$id'$js)"
 			. '| autocomplete="off"'
 			,
 			_icon_title( $tab )
@@ -978,7 +981,7 @@ function _simple_tabs() {
 	}
 	return _div( '', ''
 //		. _t( 'p|.tabp_pre hide', $tabstr )
-		. _p( '.tabp', $tabstr . _span('.wrap hide', BR) . $tabs )
+		. _p( '.tabp', $tabstr. _span('.wrap hide', BR). $tabs )
 		. $divs
 	);
 }
@@ -1086,7 +1089,7 @@ function _idinput( $id, $opt = [] ) {
 	extract( $opt ); //- $btnlabel, $size, $action, $posttext, $acomp
 
 	return 	_t(
-		"form | #id_form | method:get" . _attr( 'action', $action )
+		"form | #id_form | method:get". _attr( 'action', $action )
 		, ''
 		. _input( 'search', "name:$name | #idbox"
 			. _attr( 'size', $size )
@@ -1131,21 +1134,21 @@ function _print_r( $data ) {
 function _atr_data( $k, $v ) {
 	return $v == ''
 		? ''
-		: "|data-$k=\"" . htmlspecialchars(
+		: "|data-$k=\"". htmlspecialchars(
 			is_string( $v ) ? $v : json_encode( $v )
-	) . '"';
+	). '"';
 }
 
 //.. _atr_js
 function _atr_js( $v ) {
 	return $v == ''
 		? ''
-		: "|!" . htmlspecialchars( $v ) . '"'
+		: "|!". htmlspecialchars( $v ). '"'
 	;
 }
 //.. _attr
 function _attr( $k, $v ) {
-	return $v == '' ? '' : "|$k=\"" . htmlspecialchars( $v ) . '"';
+	return $v == '' ? '' : "|$k=\"". htmlspecialchars( $v ). '"';
 }
 
 //. viewer系
@@ -1168,10 +1171,10 @@ function _mov_remocon( $child = false ) {
 	,
 		_btn( "$js.tile()" , _l( 'tile' ) )
 	,
-		_btn( "$js.play(1)", _ic( 'play' ) . _l( 'Play' ) ) .
-		_btn( "$js.play()" , _ic( 'pause' ) . _l( 'Pause' ) )
+		_btn( "$js.play(1)", _ic( 'play' ). _l( 'Play' ) ) .
+		_btn( "$js.play()" , _ic( 'pause' ). _l( 'Pause' ) )
 	,
-		_l( 'Orientation' ) . ':'
+		_l( 'Orientation' ). ':'
 		. _t( 'table | .noborder', TR
 			.TD
 			.TD. _btn( "$js.ori2('top')"    , _img( 'top.g' )     )
@@ -1255,9 +1258,9 @@ function _jmolobj( $a ) {
 		'use'		=> $use ?: 'JAVA HTML5' ,
 		'isSigned'	=> true ,
 		'jarFile'	=> 'JmolAppletSigned.jar' ,
-		'j2sPath'	=> JMOLPATH . '/j2s' ,
-		'jarPath'	=> JMOLPATH . '/java' ,
-		'serverURL' => JMOLPATH . '/php/jsmol.php' ,
+		'j2sPath'	=> JMOLPATH. '/j2s' ,
+		'jarPath'	=> JMOLPATH. '/java' ,
+		'serverURL' => JMOLPATH. '/php/jsmol.php' ,
 
 
 		'script'	=> ''
@@ -1325,7 +1328,7 @@ function _jmol_params( $db, $id, $opt = [] ) {
 	//... EMDB
 	if ( $db == 'emdb' ) {
 		$dn = "emdb/media/$id/ym";
-		$insideout = file_exists( DN_DATA . "/$dn/insideout1" ) ? 'insideout' : '';
+		$insideout = file_exists( DN_DATA. "/$dn/insideout1" ) ? 'insideout' : '';
 		return [
 			'load' 	=> "load \"$d/$dn/pg1.pdb\"" ,
 			'init'	=> "isosurface s1 $insideout file \"$d/$dn/o1.zip|o1.jvxl\";"
@@ -1369,10 +1372,10 @@ function _jmol_params( $db, $id, $opt = [] ) {
 				$init = INIT_STYLE_CHAIN;
 			break;
 		}
-		$u = URL_DATA . "/sas/splitcif/$id.cif";
+		$u = URL_DATA. "/sas/splitcif/$id.cif";
 		return [
 			'load' 	=> "load \"$u\"" ,
-			'init'	=> $init . $zs
+			'init'	=> $init. $zs
 		];
 	}
 
@@ -1383,10 +1386,10 @@ function _jmol_params( $db, $id, $opt = [] ) {
 			? INIT_STYLE_CHAIN
 			: 'spacefill only; color CPK;'
 		;
-		$u = URL_DATA . "/sas/splitcif/$mid.cif";
+		$u = URL_DATA. "/sas/splitcif/$mid.cif";
 		return [
 			'load' 	=> "load \"$u\"" ,
-			'init'	=> $init . $zs
+			'init'	=> $init. $zs
 		];
 	}
 
@@ -1394,20 +1397,20 @@ function _jmol_params( $db, $id, $opt = [] ) {
 
 	if ( $opt[ 'csmodel' ] ) {
 		return [
-			'load' => "load \"csmodel.php?id=$id" . _ifnn( $opt[ 'asb' ], '-\1' ) . '"',
-			'init' => $init . '; trace 1000 only;  color chain; model all;' .  $zs
+			'load' => "load \"csmodel.php?id=$id". _ifnn( $opt[ 'asb' ], '-\1' ). '"',
+			'init' => $init. '; trace 1000 only;  color chain; model all;'.  $zs
 		];
 	}
 
 
 	$filt = [];
 	if ( $opt[ 'asb' ] != '' )
-		$filt[] = 'biomolecule ' . $opt[ 'asb' ];
+		$filt[] = 'biomolecule '. $opt[ 'asb' ];
 	if ( $opt[ 'bb' ] )
 		$filt[] = '*.CA,*.P';
 	$filt = count( $filt ) == 0
 		? ''
-		: ' filter "' . implode( ',', $filt ) . '"'
+		: ' filter "'. implode( ',', $filt ). '"'
 	;
 
 	if ( $db == 'pdb-mono' )
@@ -1421,8 +1424,8 @@ function _jmol_params( $db, $id, $opt = [] ) {
 		;
 
 	return [
-		'load' 	=> "load \"" . _url( 'mmcif', $id ) . "\"" ,
-		'init'	=> $init . $zs
+		'load' 	=> "load \"". _url( 'mmcif', $id ). "\"" ,
+		'init'	=> $init. $zs
 	];
 
 }
@@ -1450,7 +1453,7 @@ function _gmfit( $ida1, $ida2, $title = '', $opt=[] ) {
 			$a[ $n ] = $i;
 		} else if ( $f == 'e' ) {
 			//- EMDBデータ
-			$a[ $n ] = 'emdb_' . _numonly( $i );
+			$a[ $n ] = 'emdb_'. _numonly( $i );
 		} else if ( $f == 's' ) {
 			//- SASBDBデータ
 			$a[ $n ] = $i;
@@ -1466,10 +1469,10 @@ function _gmfit( $ida1, $ida2, $title = '', $opt=[] ) {
 	}
 	$u = ( TESTSV
 		? 'http://pdbj.org'
-		: 'http://' . $_SERVER[ 'SERVER_NAME' ]
-	) . "/gmfit/cgi-bin/pairgmfit.cgi?idref={$a[0]}&idtar={$a[1]}";
+		: 'http://'. $_SERVER[ 'SERVER_NAME' ]
+	). "/gmfit/cgi-bin/pairgmfit.cgi?idref={$a[0]}&idtar={$a[1]}";
 	$ic = $opt[ 'noicon' ] ? '': _ic( 'gmfit' );
-	return _ab( $u, $ic . ( $title ?: TERM_GMFIT_LINK ?: 'gmfit' ), '.nw' );
+	return _ab( $u, $ic. ( $title ?: TERM_GMFIT_LINK ?: 'gmfit' ), '.nw' );
 }
 
 //.. _fullurl
@@ -1479,7 +1482,7 @@ function _fullurl( $u ) {
 		return 'https://pdbj.org/omokage/' ;
 	return _instr( 'http', $u ) || substr( $u, 0, 2 ) == '//'
 		? $u
-		: 'https://' . $_SERVER['HTTP_HOST'] . "/emnavi/$u"
+		: 'https://'. $_SERVER['HTTP_HOST']. "/emnavi/$u"
 	;
 }
 
@@ -1532,7 +1535,7 @@ function _links( $a ) {
 		//- mine
 		if ( $name == 'mine' && $db != 'pdb' ) continue;
 
-		$ret[] = _ab( _url( $a[0], $i ), _ic( $a[1] ) . $a[2], '.nw' );
+		$ret[] = _ab( _url( $a[0], $i ), _ic( $a[1] ). $a[2], '.nw' );
 	}
 	return _imp( $ret );
 }
@@ -1553,7 +1556,7 @@ function _authlist( $auth, $em_mode = false ) {
 	foreach ( (array)$auth as $n ) {
 		$n = trim( $n );
 		if ( $n == '' ) continue;
-		$ret[] = _ab( "$u?auth=" . urlencode( '"' . $n . '"' ), $n );
+		$ret[] = _ab( "$u?auth=". urlencode( '"'. $n. '"' ), $n );
 	}
 	return _long( $ret, 10 );
 }
@@ -1575,7 +1578,7 @@ function _pap_item( $a, $opt = [] ) {
 	if ( is_string( $data ) )
 		$data = json_decode( $data, true );
 	$is = "<i>$journal</i>$if, {$data[ 'issue' ]}";
-	$ts = '<b>' . $data[ 'title' ] . '</b>';
+	$ts = '<b>'. $data[ 'title' ]. '</b>';
 	
 	return $_simple->hdiv( $ts, ''
 		. _p( '.pp_sub', ''
@@ -1641,14 +1644,14 @@ function _pubmed_auth( $pubmed_json ) {
 		$items = [_ab([
 			_getpost( 'img_mode' ) == 'em' ? 'esearch' : 'ysearch' ,
 			'auth' => $name
-		], _fa( 'user' ) . $name ) ];
+		], _fa( 'user' ). $name ) ];
 		if ( $oid = (string)$pubmed_json->orcid->$name )
 			$items[] = _ab([ 'orcid', $oid ], IC_L. "ORCiD: $oid" );
 
 		foreach ( (array)$pubmed_json->affi->$name as $s ) {
 			if ( ! $s ) continue;
 			$flg = _country_flag( trim( $s, '.' ) );
-			$items[] = $s . $flg;
+			$items[] = $s. $flg;
 			$flgs[] = trim( $flg );
 		}
 		$ret[] = $pubmed_json->affi || $pubmed_json->orcid
@@ -1913,7 +1916,7 @@ function _doc_hdiv( $docid, $opt = [] ) {
 	//- url: そのページのAboutの場合は、URLは書かない
 	$url = $nourl ? '' : $doc[ 'url' ];
 	if ( $url != '' ) {
-		$url = _p( 'URL: ' . _ab( $url, _fullurl( $url ) ) );
+		$url = _p( 'URL: '. _ab( $url, _fullurl( $url ) ) );
 	}
 
 	//- wikipe
@@ -1953,7 +1956,7 @@ function _doc_hdiv( $docid, $opt = [] ) {
 			//- 関連情報
 			. $related
 			//- 外部リンク
-			. ( $l == '' ? '' : _p( '.small', DOC_LINK . $l ) )
+			. ( $l == '' ? '' : _p( '.small', DOC_LINK. $l ) )
 			,
 			$o
 		);
@@ -2009,7 +2012,7 @@ function _doc_div( $docid ) {
 			,
 			//- 詳細へのリンク
 			_ab([ 'doc', 'id' => $docid ],
-				IC_HELP . _ej( 'Read more', '詳細を読む' )
+				IC_HELP. _ej( 'Read more', '詳細を読む' )
 			)
 		]), BR );
 	}
@@ -2047,7 +2050,7 @@ function _met_pop( $name, $type = 'm', $label = '' ) {
 		}
 		
 		$ret[] = $name == '' 
-			? ( $label ?: $n ) . _test( _span( '.red', "[x]($k) " ) )
+			? ( $label ?: $n ). _test( _span( '.red', "[x]($k) " ) )
 			: _pop_ajax(
 				_fa([
 					'm' => 'hand-paper-o' ,
@@ -2095,7 +2098,7 @@ function _met_data( $key, $flg_less = false ) {
 		
 		$num = $ans->num ? _ab(
 			[ 'ysearch', 'kw' => _quote( 'm:'. $key, 2 ) ] ,
-			number_format( $ans->num ) . _ej( ' structure data', '個の構造データ' )
+			number_format( $ans->num ). _ej( ' structure data', '個の構造データ' )
 		) : '';
 	}
 
@@ -2129,7 +2132,7 @@ function _met_data( $key, $flg_less = false ) {
 				'trgopt' => '.poptrg '
 					. ( $year == $this_year ? 'met_ybar_last' : '' )
 					. ' met_ybar ' 
-				. '| ?year: ' . $year . ', count: ' . $n 
+				. '| ?year: '. $year. ', count: '. $n 
 				. '| st:border-bottom-width: '. round( $n/$max + 1) .'px', '' 
 			]
 		);
@@ -2147,9 +2150,9 @@ function _met_data( $key, $flg_less = false ) {
 			_ab([ 'ysearch', 'kw' => _quote( 'm:'. $key, 2 ) ] 
 				,
 				_l( [
-					'm' => _fa('hand-paper-o') . _l( 'Method' ) ,
-					'e' => _fa('thermometer')  . _l( 'Equipment' ) ,
-					's' => _fa('desktop')      . _l( 'Software' ) ,
+					'm' => _fa('hand-paper-o'). _l( 'Method' ) ,
+					'e' => _fa('thermometer') . _l( 'Equipment' ) ,
+					's' => _fa('desktop')     . _l( 'Software' ) ,
 				][ $cat ] )
 				.' - '. ( $name == $jname ? $name: "$name ($jname)"  )
 			)
@@ -2159,10 +2162,10 @@ function _met_data( $key, $flg_less = false ) {
 		'as/for'		=> _imp2( $for ) ,
 		'Yearly stat'	=> _t( 'table| .met_yearly', $yearly_box ) ,
 		'Total'			=> $num ,
-		'Place'			=> $data->place . _country_flag( $data->place ) ,
+		'Place'			=> $data->place. _country_flag( $data->place ) ,
 		'Website'		=> $data->url ?  _ab( $data->url, $data->url )
-			: _test( _ab( 'https://www.google.co.jp/search?q=' . $name,
-				_span( '.red', 'Google検索' ) ) .' ' . $key 
+			: _test( _ab( 'https://www.google.co.jp/search?q='. $name,
+				_span( '.red', 'Google検索' ) ) .' '. $key 
 			)
 		,
 		'Wikipedia'		=> $wikipe ,
@@ -2200,7 +2203,7 @@ function _country_flag( $str ) {
 		'iceland', 'malawi', 'peru', 'iran', 'serbia', 'rwanda', 'turkey', 'chile', 'romania' ,
 		'pakistan',
 	] )
-		? ' ' . _img( 'img/flg_'. $c. '.gif' )
+		? ' '. _img( 'img/flg_'. $c. '.gif' )
 		: _test( _span( '.red', "[$c?]" ))
 	;
 }
@@ -2330,7 +2333,7 @@ class cls_entid extends abs_entid {
 			if ( $this->is_prerel() )
 				$et = _ej( 'PDB unreleased entry', 'PDB未公開エントリ' );
 			else {
-				$et = _ej( 'Unknown data', '不明なデータ' ) . $txt;
+				$et = _ej( 'Unknown data', '不明なデータ' ). $txt;
 				$this->db = 'unknown';
 			}
 		}
@@ -2362,12 +2365,12 @@ class cls_entid extends abs_entid {
 
 		//- まとめ
 		return '<b>'. $this->link_ym(). "</b>: "
-			. ( $btns == '' ? '' : $btns . BR )
+			. ( $btns == '' ? '' : $btns. BR )
 			. $et
 			//- 追加文字列
 			. ( $txt == '' ? '' : " ($txt)" )
 			//- 追加情報
-			. ( $data == '' ? '' : BR . _kv( $data ) )
+			. ( $data == '' ? '' : BR. _kv( $data ) )
 //			. ( $add_txt ? SEP. $add_txt : null )
 			. ( $add_txt ? $add_txt : null )
 		;
@@ -2389,9 +2392,9 @@ class cls_entid extends abs_entid {
 			$auto = [
 				'0' 		=> 'img/gray.png' ,
 				'p' 		=> DN_EMDB_MED. "/$id/mapi/proj0.jpg" ,
-				'1' 		=> _fn( 'emdb_snap', $id, $size . '1' ) ,
-				'2' 		=> _fn( 'emdb_snap', $id, $size . '2' ) ,
-				'3' 		=> _fn( 'emdb_snap', $id, $size . '3' ) ,
+				'1' 		=> _fn( 'emdb_snap', $id, $size. '1' ) ,
+				'2' 		=> _fn( 'emdb_snap', $id, $size. '2' ) ,
+				'3' 		=> _fn( 'emdb_snap', $id, $size. '3' ) ,
 				'_' 		=> 'img/gray.gif' ,
 				'surf_x'	=> "$m/surf_x.jpg" ,
 				'surf_y'	=> "$m/surf_y.jpg" ,
@@ -2420,7 +2423,7 @@ class cls_entid extends abs_entid {
 				$s = $this->status()->snap;
 				$auto = $s == ''
 					? _fn( 'pdb_img', $id )
-					: _fn( 'pdb_snap', $id, $size . $s )
+					: _fn( 'pdb_snap', $id, $size. $s )
 				;
 				return $type == ''
 					? $auto
@@ -2480,7 +2483,7 @@ class cls_entid extends abs_entid {
 		if ( ! $this->ex_mov() ) return;
 		$id = $this->id;
 		$movcap_ini = parse_ini_file( DN_DATA. "/movie_caption.ini" );
-//		$ini = $ini[ $id . '_' . $i ];
+//		$ini = $ini[ $id. '_'. $i ];
 		$ret = [];
 		foreach ( (array)$this->movjson() as $mov_num => $js ) {
 			if ( $mov_num == 'jmfit' ) continue;
@@ -2503,12 +2506,12 @@ class cls_entid extends abs_entid {
 
 			//- キャプション表面レベル
 			if ( $js->threshold != '' )
-				$caps[] = $this->movcap_str( 'surflev' ) . $js->threshold;
+				$caps[] = $this->movcap_str( 'surflev' ). $js->threshold;
 
 			$caps[] = $this->movcap_str( 'chimera' );
 
 			//- 返り値
-			$d = DN_EMDB_MED . "/$id";
+			$d = DN_EMDB_MED. "/$id";
 			$ret[ $mov_num ] = [
 				'cap'	=> array_filter( $caps ) ,
 				'file'	=> "$d/movie$mov_num" ,
@@ -2526,11 +2529,11 @@ class cls_entid extends abs_entid {
 		//- jmfit Jmolのムービー
 		foreach ( (array)$this->movjson()->jmfit as $pid ) {
 			++ $mov_num;
-			$d = DN_PDB_MED . "/$pid";
+			$d = DN_PDB_MED. "/$pid";
 			$ret[ $mov_num ] =  [
 			 	'cap'	=> [ 
 			 		$this->movcap_str( 'simpfit' ) ,
-			 		$this->movcap_str( 'atomic' ) . _ab([ 'ym', $pid ], "PDB-$pid" ) ,
+			 		$this->movcap_str( 'atomic' ). _ab([ 'ym', $pid ], "PDB-$pid" ) ,
 			 		$this->movcap_str( 'jmol' )
 				] ,
 				'file'	=> "$d/moviejm$id" ,
@@ -2544,7 +2547,7 @@ class cls_entid extends abs_entid {
 		}
 		
 		//- トモグラムのポリゴンムービー
-		$d = DN_EMDB_MED . "/$id";
+		$d = DN_EMDB_MED. "/$id";
 		if ( file_exists( "$d/moviejm.webm" ) ) {
 			++ $mov_num;
 			$ret[ $mov_num ] = [
@@ -2582,11 +2585,11 @@ class cls_entid extends abs_entid {
 					$a = [];
 					foreach ( explode( ',', $js->cofit ) as $i2 )
 						$a[] = _ab([ 'ym', $i2 ], "PDB-$i2" );
-					$caps[] = '+ ' . _imp( $a );
+					$caps[] = '+ '. _imp( $a );
 				}
 
 				//- 返り値
-				$d = DN_EMDB_MED . "/{$js->id}";
+				$d = DN_EMDB_MED. "/{$js->id}";
 				$caps[] = $this->movcap_str( 'chimera' );
 				$ret[ $cnt ] =  [
 					'cap'	=> array_filter( $caps ) ,
@@ -2617,7 +2620,7 @@ class cls_entid extends abs_entid {
 					$caps = [
 						$this->movcap_str( 'simpfit' ) ,
 						$this->movcap_str( 'emdbid' )
-							. _ab([ 'ym', $js->id ], 'EMDB-' . $js->id )
+							. _ab([ 'ym', $js->id ], 'EMDB-'. $js->id )
 					];
 				} else {
 					//- その他 BM
@@ -2662,7 +2665,7 @@ class cls_entid extends abs_entid {
 	//.. movurl: ムービーファイル名を返す
 	function movurl( $num, $s = '' ) {
 		if ( $s == '' )
-			$s = ( $this->db == 'emdb' ? DN_EMDB_MED : DN_PDB_MED ). '/' . $this->id;
+			$s = ( $this->db == 'emdb' ? DN_EMDB_MED : DN_PDB_MED ). '/'. $this->id;
 		return [
 			'l' => [
 				'webmv'  => "$s/movie$num.webm" ,

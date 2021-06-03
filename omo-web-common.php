@@ -7,7 +7,7 @@ require_once( 'cls_omoid.php' );
 
 define( 'DN_OMO', TESTSV
 	? realpath( __DIR__ . '/../omokage' )
-	: '/filesv3/yorodumi/omokage'
+	: '/mounts/filesv3/yorodumi/omokage'
 );
 define( 'ADD_PRE', TESTSV ? '_pre' : '' );
 define( 'DN_GMFIT_BIN', '../gmfit/cgi-bin' );

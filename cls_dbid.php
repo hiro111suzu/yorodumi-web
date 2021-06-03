@@ -53,6 +53,7 @@ function get_cls() {
 			'in' => 'h' ,
 			'pr' => 'h' ,
 			'ct' => 'h' ,
+			'sm' => 'h' ,
 //			'un' => 'c' ,
 //			'gb' => 'c' ,
 //			'bd' => 'c' ,

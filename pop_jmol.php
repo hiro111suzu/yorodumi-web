@@ -1,7 +1,18 @@
 <?php
 //. init
 define( 'VIEWER_ID', 'jmol' );
-require( __DIR__ . '/pop_common.php' );
+require( __DIR__. '/pop_common.php' );
+
+_define_term( <<<EOD
+TERM_PROC_SURF
+	Processing surface data
+	表面データの処理中
+TERM_PROC_STR
+	Processing structure data
+	構造データの処理中
+EOD
+);
+
 
 //- 画質
 define( 'VHQ', 'set antialiasDisplay ON; set antialiasTranslucent ON;set ribbonBorder ON;' );
@@ -29,15 +40,13 @@ $_simple->page_conf([
 	//- 下の情報
 	. _div( '#jmolfoot', ''
 		//- 読み込み中
-		. _div( '#loading|.appgbar', _l( 'Loading' ) . LOADING )
+		. _div( '#loading|.appgbar', _l( 'Loading' ). LOADING )
 
 		//- 表面データ
-		. _div( '#calcsurf|.appgbar hide' ,
-			_ej( 'Processing surface data', '表面データの処理中' ) . LOADING )
+		. _div( '#calcsurf|.appgbar hide', TERM_PROC_SURF. LOADING )
 
 		//- 構造データ
-		. _div( '#calcstr|.appgbar hide' ,
-			_ej( 'Processing structure data', '構造データの処理中' ) . LOADING ) 
+		. _div( '#calcstr|.appgbar hide' , TERM_PROC_STR. LOADING )
 	)
 )
 
@@ -59,9 +68,9 @@ $_simple->page_conf([
 		'use'		=> $use ?: 'JAVA HTML5' ,
 		'isSigned'	=> true ,
 		'jarFile'	=> 'JmolAppletSigned.jar' ,
-		'j2sPath'	=> JMOLPATH . '/j2s' ,
-		'jarPath'	=> JMOLPATH . '/java' ,
-		'serverURL' => JMOLPATH . '/php/jsmol.php' ,
+		'j2sPath'	=> JMOLPATH. '/j2s' ,
+		'jarPath'	=> JMOLPATH. '/java' ,
+		'serverURL' => JMOLPATH. '/php/jsmol.php' ,
 
 		'script'	=> ''
 			. 'set ambientPercent 20; set diffusePercent 60;'
@@ -72,7 +81,7 @@ $_simple->page_conf([
 			. 'set picking ident;'
 			. 'set PickCallback "_mousepick";'
 			. 'set languageTranslation OFF;'
-			. $jmol_param[ 'load' ] . ';'
+			. $jmol_param[ 'load' ]. ';'
 			. $jmol_param[ 'init' ]
  			. 'set zshade on; set zshadepower 1;'
 

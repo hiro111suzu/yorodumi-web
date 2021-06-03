@@ -1188,6 +1188,25 @@ _d([
 
 ]);
 
+//... fh search
+
+_d([
+	'F&H Search', 'F&H 検索' ,
+	'Function & Homology similarity search' ,
+	'機能・相同性の類似性検索' ,
+	[
+		'Based on the similarity of Function & Homolog items related to the structure data, similar data are searched from structure databases.',
+	], [
+		'構造データに関連付けられた機能・相同性アイテムの類似性に基づき、類似するデータを構造データベースから検索します。'
+	]
+],[
+	'id' => 'about_fh_search' ,
+	'url' => 'fh-search.php' ,
+	'rel' => 'func_homology' ,
+	'tag' => 'omo ym emn about' ,
+]);
+
+
 //.. viewers
 //... movie
 _d([
@@ -1614,13 +1633,32 @@ _d([
 
 
 //... function & homology
+$func	= TD. 'Gene ontology, Enzyme Commission number, Reactome, etc.';
+$domain	= TD. 'CATH, InterPro, SMART, etc.';
+$compo	= TD. 'UniProt, GenBank, PDB chemical component, etc.';
+
 _d([
 	'Function and homology information' , 
 	'機能・相同性情報' ,
 	'Molecular function, domain, and homology information from related databases.' ,
 	'関連データベースから収集した分子機能・ドメイン・相同性などの情報' ,
-	'To help to understand the molecular function and to find the related structure data, Yorodumi and Yorodumi Search display and utilize the related database information about function and homology. In addition to the information of EC, EMBL, GeneBank, GO, InterPro, UniProt, etc. stored in the EMDB header XML, PDBx/mmCIF and sasCIF original data, information of Pfam, PROSITE, Reactome, UniProkKB, etc. are collected via PDBMLplus, EMDB-PDB fitting data, and/or UniProt.' ,
+	'To help to understand the molecular function and to find the related structure data, Yorodumi and Yorodumi Search display and utilize the related database information about function and homology. In addition to the information of EC, EMBL, GeneBank, GO, InterPro, UniProt, etc. stored in the EMDB header XML, PDBx/mmCIF and sasCIF original data, information of Pfam, PROSITE, Reactome, UniProkKB, etc. are collected via PDBMLplus, EMDB-PDB fitting data, and/or UniProt.' 
+	. BR
+	. _t( 'table', ''
+		.TR_TOP. TH. 'Category'. TH. 'Name of database or definition'
+		.TR.TH. 'Function'. $func
+		.TR.TH. 'Domain/homology'. $domain
+		.TR.TH. 'Component'. $compo
+	)
+	, 
 	'万見と万見検索では、構造データの機能の理解や類似構造データの検索に役立つように、分子機能やホモロジーに関するデータベースの情報を表示・活用しています。EMDBのヘッダXML、PDBx/mmcif、sasCIFの公式のデータに含まれるEC、EMBL、GeneBank、GO、InterPro、UniProtなどの情報に加えて、PDBMLplus経由、EMDB-PDBフィッティングデータ経由、UniProt経由で収集された、Pfam、PROSITE、Reactome、UniProtKBなどの情報が整理されています。'
+	. BR
+	. _t( 'table', ''
+		.TR_TOP. TH. 'カテゴリ'. TH. 'データベース名・定義名'
+		.TR.TH. '分子機能'. $func
+		.TR.TH. 'ドメイン・ホモロジー'. $domain
+		.TR.TH. '構成要素'. $compo
+	)
 ], [
 	'id' => 'func_homology' ,
 	'tag' => 'ym' ,

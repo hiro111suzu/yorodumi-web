@@ -229,9 +229,10 @@ define( 'VW_BTN_LABEL', IC_VIEW. _ej( 'Structure viewer', '構造ビューア' )
 //.. ファイル名
 $_filenames += [
 	//- allpdb ??? たぶんいらない
-	'mmcif'			=> TESTSV
-		?	DN_FDATA 	. '/mmcif/<id>.cif.gz'
-		: '/kf1/PDBj/ftp/rcsb/mmcif/<id>.cif.gz'
+	'mmcif' => TESTSV
+		? DN_FDATA. '/mmcif/<id>.cif.gz'
+		: '/data/pdbj/data/ftp/pub/pdb/data/structures/all/mmCIF/<id>.cif.gz'
+//		: '/kf1/PDBj/ftp/rcsb/mmcif/<id>.cif.gz'
 	,
 ];
 
@@ -243,7 +244,8 @@ $urls = [
 	'pdbjimg'	=> "$j/pdb_images/[id].jpg",
 	'pdbnc'		=> "$j/pdb_nc/pdb[id].ent",
 	'pdb'		=> TESTSV ? "_pdb/dep/pdb[id].ent.gz" : "$j/pdb_all/pdb[id].ent.gz",
-	'mmcif'		=> TESTSV ? "_mmcif/[id].cif.gz"      : "$j/mmcif/[id].cif.gz" ,
+//	'mmcif'		=> TESTSV ? 'txtdisp.php?a=mmcif.[id]' : "$j/mmcif/[id].cif.gz" ,
+	'mmcif'		=> 'txtdisp.php?a=mmcif.[id]' ,
 
 	//- mine
 	'mine'		=> "$j/#!mine/summary/[id]",
@@ -252,8 +254,6 @@ $urls = [
 
 	//- viewer
 	'jmol'		=> "jmol_view.php?id=[id]",
-
-//... EMDB
 
 ];
 

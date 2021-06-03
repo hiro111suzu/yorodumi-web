@@ -1,11 +1,15 @@
 <?php
 
 //. init
-define( 'COLOR_MODE', 'ym' );
+define( 'IMG_MODE', 'em' );
+define( 'COLOR_MODE', 'omo' );
 ini_set( 'memory_limit', '1024M' );
 require( __DIR__. '/common-web.php' );
 
-//_add_lang( 'esearch' );
+//- cache
+define( 'DN_CACHE', DN_DATA. '/fh_search_cache' );
+
+_add_lang( 'fh-search' );
 //_add_fn(   'esearch' );
 //_define_term( <<<EOD
 //EOD
@@ -38,6 +42,9 @@ $o_fh_calc = new cls_fh_calc([
 */
 //. term
 _define_term( <<<EOD
+TERM_NO_ITEM
+	No item found
+	見つかりませんでした
 EOD
 );
 
@@ -52,37 +59,43 @@ if ( G_AJAX == 'similarity' )
 //. ページ作成
 $_simple
 ->page_conf([
-	'title' 	=> _l( 'YM F&H search' ) ,
+	'title' 	=> _ej( 'F&H Search', 'F&H 検索' ),
 	'icon'		=> 'YM' ,
 	'openabout'	=> false ,
 //	'js'		=> [  ] ,
-//	'docid' 	=> 'about_ym' ,
-	'newstag'	=> 'ym' ,
+	'docid' 	=> 'about_fh_search' ,
+	'newstag'	=> 'omo' ,
 //	'auth_autocomp' => true ,
 ])
 
 //.. formエリア & resultエリア
-->hdiv( 'Search query' ,
+->hdiv( 'Query' ,
 	_t( 'form | autocomplete:off | #form1', _table_2col([
 		'ID'	=> _idinput( G_ID, [ 'acomp' => 'kw' ] ) ,
 		'Type'	=> _radiobtns( [ 'name' => 'type', '#item_type', 'on' => G_TYPE ], [
 			'all'	=> 'All' ,
 			'f'		=> 'Function' ,
 			'h'		=> 'Homology' ,
-			'c'		=> 'Components' ,
-			'hc'	=> 'Homology & Components' ,
+			'c'		=> 'Component' ,
+			'hc'	=> 'Homology & Component' ,
 		]) ,
-		'Display mode' => _radiobtns( [ 'name' => 'mode', '#disp_mode', 'on' => G_MODE ], [
-			'icon'	=> 'icons' ,
-			'list'	=> 'list' ,
-		])
-	]) )
+		'Display mode' => ID2
+			? '' 
+			: _radiobtns( [ 'name' => 'mode', '#disp_mode', 'on' => G_MODE ], [
+				'icon'	=> 'icons' ,
+				'list'	=> 'list' ,
+			])
+	])
+	. _input( 'hidden', 'name:id2', ID2 )
+	. _input( 'submit', 'st: width:20em' )
+	)
 	. _p( $o_id->ent_item_list() )
+	. ( ID2 ? ( new cls_entid( ID2 ) )->ent_item_list() : '' )
 //	. _p( '$id: '. ID )
 )
 
 //.. result エリア
-->hdiv( 'Search result',
+->hdiv( ID2 ? 'Comparison' : 'Search result',
 	ID2 ? _comparison() : _get_result() ,
 	[ 'id' => 'result' ]
 )
@@ -155,7 +168,13 @@ function _catalog( $data ) {
 	foreach ( (array)$data as $id => $score ) {
 		$ret .= ( new cls_entid() )->set( $id )->ent_item( G_MODE, [
 			'add_txt' => _levelbar( $score ). ' '
-//			. _pop_ajax( _l( 'Similarity' ), [
+				. _ab([
+					'fh-search' ,
+					'id' => ID ,
+					'id2' => $id ,
+					'type' => G_TYPE ,
+				], _l('Score'). ': '. round( $score, 4 ) )
+/*
 			. _pop_ajax( _l('Score'). ': '. round( $score, 4 ), [
 				'fh-search' ,
 				'ajax' => 'similarity' ,
@@ -168,7 +187,7 @@ function _catalog( $data ) {
 				'id2' => $id ,
 				'type' => G_TYPE ,
 			], 'comparison' ) : '' )
-
+*/
 		]);
 	}
 	return $ret;
@@ -176,7 +195,17 @@ function _catalog( $data ) {
 
 //.. _search
 function _search() {
+	//... キャッシュ
+	$fn_cache = DN_CACHE. '/'. ID. '-'. G_TYPE. '.json.gz';
+	if ( file_exists( $fn_cache ) ) {
+		if ( filemtime( DN_DATA. '/dbid2strids.sqlite' ) < filemtime( $fn_cache ) ) {
+			_testinfo( 'cache' );
+			return _json_load( $fn_cache );
+		}
+	}
+	
 	//... クエリ情報
+	_testinfo( 'on demand' );
 	list( $key_items, $key_score ) = _get_item_score( ID );
 
 	//... 検索
@@ -206,6 +235,7 @@ function _search() {
 			unset( $data[ $str_id ] );
 	}
 	arsort( $data );
+	_json_save( $fn_cache, $data );
 	return $data;
 }
 
@@ -251,6 +281,7 @@ function _filter_item( $items ) {
 			'in' => 'h' ,
 			'pr' => 'h' ,
 			'ct' => 'h' ,
+			'sm' => 'h' ,
 		][ explode( ':', $item, 2 )[0] ] ?: 'c';
 		if ( ! _instr( $categ, G_TYPE ) ) continue;
 		$ret[] = $item;
@@ -263,10 +294,10 @@ function _comparison() {
 	list( $items1, $score1 ) = _get_item_score( ID );
 	list( $items2, $score2 ) = _get_item_score( ID2 );
 	$share = [];
-	$table = TR_TOP.TH. 'Item'
-		.TH. ( new cls_entid( ID ) )->ent_item_img(). BR. $score1
-		.TH. ( new cls_entid( ID2 ) )->ent_item_img(). BR. $score2
-		.TH. 'score'
+	$table = TR_TOP.TH. 'F&H item'
+		.TH. ( new cls_entid( ID ) )->ent_item_img() . ( TEST ? BR. $score1 : '' )
+		.TH. ( new cls_entid( ID2 ) )->ent_item_img(). ( TEST ? BR. $score2 : '' )
+		. ( TEST ? TH. 'R value' : '' )
 	;
 	$sum = 0;
 	foreach ( $items1 as $i ) {
@@ -284,12 +315,14 @@ function _comparison() {
 		$table .= _comparison_row( $i, '-', '@' );
 	}
 	$avg = ( $score1 + $score2 ) / 2;
-	return _t( 'table', $table )
-		.BR. _table_2col([
-			'sum' => $sum ,
-			'avg' => $avg ,
-			'score' => $sum / $avg
+	return ''
+		. _table_2col([
+			'sum' => TEST ? $sum : '',
+			'avg' => TEST ? $avg : '',
+			'Similarity score' => $sum / $avg
 		])
+//		. BR
+		. _t( 'table', $table )
 	;
 }
 
@@ -297,7 +330,10 @@ function _comparison_row( $fh_id, $c1, $c2, $score = false ) {
 	return TR.TH. _obj('dbid')->pop( $fh_id )
 		.TD. $c1
 		.TD. $c2
-		.TD. ( $score ?: _comparison_item_score( $fh_id ) )
+		. ( TEST
+			? TD. ( $score ?: _comparison_item_score( $fh_id ) )
+			: ''
+		)
 	;
 }
 function _comparison_item_score( $fh_id ) {

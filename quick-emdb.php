@@ -291,6 +291,7 @@ if ( is_dir( $dn ) ) {
 		 IC_L. TERM_ABOUT_VALREP )
 	);
 }
+$_simple->time( 'basic-prep' );
 
 //.. output
 function _f( $s ){

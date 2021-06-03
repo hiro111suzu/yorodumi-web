@@ -1149,7 +1149,7 @@ function _cifdic_link( $str, $categ_item ) {
 
 //.. _func_homology
 function _func_homology() {
-	global $main_id, $_has_fh_item;
+	global $main_id, $_has_fh_item, $_simple;
 	$items = _obj('dbid')->strid2keys( $main_id );
 	if ( ! $items ) return;
 	$docpop = _div( '.right', _doc_pop('func_homology') );
@@ -1180,12 +1180,14 @@ function _func_homology() {
 		$tabs[] = [
 			'tab' => $cls_name ,
 			'div' => _long( array_slice( $items_cls[ $cls ], 0, 100 ), 10 )
-				. ( TEST ? BR. _ab(
+				. BR
+				. _ab(
 					[ 'fh-search', 'id' => ID, 'type' => $cls ] ,
-					_fa('search'). _l( 'Similarity search' ) //. ' - '. $cls_name
-				) : '' )
+					_fa('search'). _l( 'Similarity search' ). ' - '. $cls_name
+				)
 		];
 	}
+	$_simple->time( 'fh_item' );
 	return $docpop. _simple_tabs( $tabs );
 }
 
@@ -1851,7 +1853,8 @@ class cls_related {
 	//.. set_omokage
 	function set_omokage( $ida ) {
 		global $o_data;
-		if ( TEST ) return $this;
+//		if ( TEST ) return $this;
+		return $this;
 		//- omokageプライマリ
 		$simlist = '';
 		foreach ( explode( ',', _ezsqlite([
@@ -1879,7 +1882,7 @@ class cls_related {
 	//.. set_smilar
 	function set_similar( $in ) {
 		global $o_data, $_has_fh_item;
-		if ( ! TEST ) return $this;
+//		if ( ! TEST ) return $this;
 
 		//... omokageプライマリ
 		$ida_primary = $in[0]['ida'];
@@ -1922,6 +1925,7 @@ class cls_related {
 						[ 'fh-search', 'id' => DID, 'type' => $cls ] , 
 						_fa('search'). _l( 'Similarity search' ). ' - '. _trep( $cls_name )
 					)
+					. _doc_pop( 'about_fh_search' )
 				,
 				'js'  => "_get_simlist('$cls','". DID. "','#sim_div_$cls')"
 			];

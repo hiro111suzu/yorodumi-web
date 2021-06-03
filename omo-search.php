@@ -110,6 +110,9 @@ TERM_RECEIVED
 TERM_NO_QUERY_DATA
 	Query data not found
 	検索条件データが見つかりません
+TERM_UNDER_MAINTE
+	This system is currently under maintenance
+	現在メンテナンス中です
 EOD
 );
 
@@ -310,7 +313,8 @@ $filters = '';
 
 //.. search query
 $_simple->hdiv( 'Search query' ,
-	_simple_tabs(
+	is_dir( DN_OMO )
+	? _simple_tabs(
 		'Query structure data' ,
 		[ 
 			'tab' => [ 'database', TERM_TAB_DBSTR ] ,
@@ -323,6 +327,8 @@ $_simple->hdiv( 'Search query' ,
 	)
 	. $filters
 	. _t( 'datalist | #acomp_omoid', '' )
+
+	: _p( TERM_UNDER_MAINTE )
 	,
 	[ 'id' => 'query', 'hide' => ! NO_ID || UPLOAD, 'only' => true ]
 );

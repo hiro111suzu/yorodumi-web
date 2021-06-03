@@ -7,7 +7,7 @@ define( 'PRIME', $_GET[ 'prime' ] || $_POST[ 'prime' ] );
 define( 'DEFAULT_ID', PRIME ? '2ht7' : '1a00' );
 require( __DIR__. '/prime.php' );
 require( __DIR__. '/pop_common.php' );
-$url = '';
+$url_struc = '';
 
 //. prime 対応
 $title = '';
@@ -25,7 +25,9 @@ if ( $db == 'pdb' ) {
 if (
 	_before_release_time() &&
 	in_array( $id, _file( DN_PREP. '/newids/latest_new_pdbid.txt'  ) )
-) $url =_url( 'mmcif', $id );
+) {
+	$url_struc =_url( 'mmcif', $id );
+}
 
 //.. sasbdb
 if ( _instr( 'sasbdb', $db ) ) {
@@ -40,13 +42,13 @@ if ( _instr( 'sasbdb', $db ) ) {
 			$atomic = $c->type_of_model == 'atomic';
 			break;
 		}
-		$url = URL_DATA. "/sas/splitcif/$id.cif";
+		$url_struc = URL_DATA. "/sas/splitcif/$id.cif";
 
 	} else {
 		//- SASBDB-ID
 		$j = _json_load2( _fn( 'sas_json', $id ) )->sas_model[0];	
 		$mid = $j->id;
-		$url = URL_DATA. "/sas/splitcif/$mid.cif";
+		$url_struc = URL_DATA. "/sas/splitcif/$mid.cif";
 		$atomic = $j->type_of_model == 'atomic';
 	}
 	$_simple->jsvar([ 'initstyle' => [ 'dummy' => ! $atomic ] ]);
@@ -54,22 +56,22 @@ if ( _instr( 'sasbdb', $db ) ) {
 
 //.. emdb
 if ( $db == 'emdb' ){
-	$url = _fn( 'emdb_med', $id ). '/ym/1.obj';
+	$url_struc = _fn( 'emdb_med', $id ). '/ym/1.obj';
 }
 
 //.. bird
 if ( $db == 'bird' ) {
-	$url = 'txtdisp.php?a=bird_cifcc.'. _numonly( $id );
+	$url_struc = 'txtdisp.php?a=bird_cifcc.'. _numonly( $id );
 }
 
 //.. portable
 if ( PRIME_PORTABLE ) {
 	if ( strlen( $id ) < 4 )
-		$url = "portable_data/". strtolower( $id ). ".cif.gz";
+		$url_struc = "portable_data/". strtolower( $id ). ".cif.gz";
 	else if ( _numonly( $id ) == $id )
-		$url = "portable_data/$id.obj";
+		$url_struc = "portable_data/$id.obj";
 	else
-		$url = "portable_data/$id.json.gz";
+		$url_struc = "portable_data/$id.json.gz";
 }
 
 //. output
@@ -96,7 +98,7 @@ $_simple->page_conf([
 //.. jsvar
 ->jsvar([
 	'ent' => [
-		'url'	=> $url ,
+		'url'	=> $url_struc ,
 	] ,
 	'app' => 'molmil' ,
 ])

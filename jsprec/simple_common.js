@@ -64,7 +64,14 @@ var _localstr = {
 //. [obj] _tab
 var _tab = {
 	$p: $( '.tabp' ) ,
-	
+
+	//.. init, 初期タブにjsがあったら実行
+	init: function() {
+		$('.tab_init_run').each( function(){
+			eval( $(this).attr('onclick') );
+		});
+	} ,
+
 	//.. refresh
 	refresh: function() {
 		this.$p = $( '.tabp' );

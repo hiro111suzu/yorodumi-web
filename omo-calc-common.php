@@ -334,7 +334,7 @@ function _prefilter_sql( $pca, $level ) {
 class cls_omo_small_search {
 	protected $obj_db = [];
 	const PREFILT_LEV = [ 0.85, 0.7, 0.5 ];
-	const SCORE_LIMIT = 0.7;
+	const SCORE_LIMIT = [ 0.7, 0.5, 0.3 ];
 	
 	//... construct
 	function __construct( $db_type = '' ) {
@@ -351,9 +351,13 @@ class cls_omo_small_search {
 
 	
 	//... do
-	function do( $id_query ) {
+	function do( $id_query, $flg_disp = false ) {
+		$msg = '';
 		//- stage 1
 		$query_prof = $this->getprof( $id_query, 'ss' );
+		if ( ! $query_prof ) return [ null, 'no query profile' ];
+		if ( $flg_disp ) _m( 'prof - pca: '. _imp( $query_prof[3] ) );
+
 		foreach ( self::PREFILT_LEV as $level ) {
 			$result = $this->obj_db['ss']->qar([
 				'select' => [ 'id', 'data' ] ,
@@ -361,17 +365,26 @@ class cls_omo_small_search {
 			]);
 			if ( $result ) break;
 		}
+		if ( ! count( $result ) ) return [ null, 'no item @ stage 1' ];
+		if ( $flg_disp ) _m( 'stage 1, num: '. count( $result ) );
+
 
 		//- stage 2
 		$count_ign = _count_ign( $query_prof );
-		$list = [];
-		foreach ( $result as $c ) {
-			$id = $data = null;
-			extract( $c );
-			$s = _getscore( $query_prof, _bin2prof( $data ), $count_ign );
-			if ( $s < self::SCORE_LIMIT ) continue;
-			$list[ $id ] = $s;
+		foreach ( self::SCORE_LIMIT as $limit ) {
+			$list = [];
+			foreach ( $result as $c ) {
+				$id = $data = null;
+				extract( $c );
+				$s = _getscore( $query_prof, _bin2prof( $data ), $count_ign );
+				if ( $s < $limit ) continue;
+				$list[ $id ] = $s;
+			}
+			if ( 10 < count( $list ) ) break;
 		}
+		if ( ! $list ) return [ null, 'no item @ stage 2' ];
+		if ( $flg_disp ) _m( 'stage 2, num: '. count( $list ) );
+		unset( $result );
 		arsort( $list );
 
 		//- stage 3
@@ -381,8 +394,10 @@ class cls_omo_small_search {
 		foreach ( array_keys( array_slice( $list, 0, 20 ) ) as $id ) {
 			$list2[ $id ] = _getscore( $query_prof, $this->getprof( $id, 's' ), $count_ign );
 		}
+		if ( ! $list2 ) return [ null, 'no item @ stage 3' ];
+		if ( $flg_disp ) _m( 'stage 3, num: '. count( $list2 ) );
 		arsort( $list2 );
-		return $list2;
+		return [ $list2, 'ok' ];
 	}
 
 	//... getprof

@@ -669,6 +669,15 @@ Host	宿主
 .	gallery
 Classification	グループ分け
 
+.	fh-search
+Display mode	表示モード
+All	すべて
+Homology	ホモロジー
+All - function	すべて - 分子機能
+Query	検索クエリ
+score	スコア
+Similarity score	類似性スコア
+
 .	doc
 FAQ	ありがちな質問と回答
 Services	サービス一覧

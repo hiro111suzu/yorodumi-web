@@ -256,12 +256,17 @@ if ( MODE == 'omokage' ) {
 	require_once( __DIR__. '/omo-calc-common.php' );
 	$ret = '';
 	$rank = 0;
-	$list = ( new cls_omo_small_search() )->do( _getpost('id') );
+	list( $list, $result ) = ( new cls_omo_small_search() )->do( _getpost('id') );
+	if ( ! $list )
+		die( TEST
+			? $result
+			: _ej( 'Not found', '見つかりませんでした' ) 
+		);
 	foreach ( $list as $ida => $score ) {
 		if ( $score < OMOPRE_SCORE_LIMIT[ $rank ] ) break;
 		if ( ! $ida ) continue;
 		$ret .= _pop_omoitem( $ida, [ 'score' => $score ] );
 		++ $rank;
 	}
-	die( $ret );
+	die( $ret ?: _ej( 'Not found', '見つかりませんでした' ) );
 }

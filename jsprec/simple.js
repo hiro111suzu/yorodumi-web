@@ -10,6 +10,7 @@ $( function() {
 	_extcol.init();	//- 右カラム
 	_acomp.init();	//- 入力ボックスの自動補完定義
 	_vw.init_vwmenu(); 	//- ビューア選択メニュー
+	_tab.init();
 });
 
 //. ウインドウの変化を拾う
