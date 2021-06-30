@@ -589,6 +589,25 @@ foreach ( (array)$json->pdbx_database_remark as $c ) {
 	$o_data->lev1( "Remark {$c->id}||pdbx_database_remark", _long( $c->text ) );
 }
 
+//.. test item
+$o_data->test_item([
+	_ab([ 'json', DID ], 'JSONview' ) ,
+	_ab([ '_categ_size', 'id' => ID ], 'categ size' ) ,
+	$plus
+		? _ab([ 'jsonv_plus', ID ] , 'Plus-json' ) 
+		: _span( '.red bld', 'No plus-json file' )
+	,
+	$main_id->is_em()
+		? _fa( 'folder' ). _ab([ 'dir_pdb_med', ID ], 'media dir' )
+		: ''
+	,
+	_ab([ 'txtdisp'	, 'pdb_kw.'.  ID ], 'search terms' ) 
+	,
+	_ab([ 'jsonview', 'pdb_met.'. ID ], 'met-json' )
+	,
+	_ab([ 'prime'	, 'id' => ID ], 'prime' )
+]);
+
 $_simple->time( 'bascic' );
 
 //. visualization
@@ -599,29 +618,35 @@ $_simple->time( 'vis' );
 $o_data->lev1title( 'downlink', true );
 
 //.. ダウンロード
+$arch = new cls_archive( ID );
 $o_data
-	->lev2( 'PDBx/mmcif format', [
-		_a([ 'mmcif', $id ], IC_DL. "$id.cif.gz" ) ,
-		_ab([ 'txtdisp', 'a' => "mmcif.$id" ], _l( 'Display in browser' ) ) ,
-		_ab([ 'cif_tree', $id ], IC_L. _l( 'Tree view' ) ) ,
+	->lev2( 'PDBx/mmCIF format'	, $arch->td( 'mmcif' ) )
+	->lev2( 'PDB format'		, $arch->td( 'pdb' ) )
+	->end2( 'Download' )
+;
+
+
+$o_data
+	->lev2( 'PDBx/mmCIF format', [
+		_a([ 'mmcif_download', $id ], IC_DL. "$id.cif.gz" ) ,
+		_ab([ 'txtdisp', "mmcif_.$id" ], _l( 'Display in browser' ) ) ,
 		_ab( _url( _ej( 'doc_cif_wwpdb', 'doc_cif_pdbj' ) ), IC_HELP. TERM_CIF_DIC )
 	])
 	->lev2( 'PDB format',
 		$json->pdbx_database_status[0]->pdb_format_compatible == 'Y'
 		? [
-			_a([ 'pdb', $id  ], IC_DL . "pdb$id.ent.gz" ) ,
-			_ab([ 'pdbnc', $id ], _l( 'Display in browser' ) ),
+			_a([ 'pdb_download', $id  ], IC_DL. "pdb$id.ent.gz" ) ,
+			_ab( "txtdisp.php?a=pdb_.$id", _l( 'Display in browser' ) ) ,
 			_ab([ 'doc_pdb_format', '' ], IC_HELP. TERM_DOC_PDB )
 		]
 		: ''
-
-		)
+	)
 	->lev2( 'PDBML Plus', [
-		_a([ 'mlplus_ad', $id  ], IC_DL . "$id-add.xml.gz" ) ,
-		_ab([ 'txtdisp', 'a' => "mlplus_ad.$id" ], _l( 'Display in browser' ) ) ,
+		_a([ 'mlplus_ad', $id ], IC_DL . "$id-add.xml.gz" ) ,
+		_ab([ 'txtdisp', "mlplus_ad.$id" ], _l( 'Display in browser' ) ) ,
 		MLPLUS
 	])
-	->lev2( 'Others'	, _ab([ 'mine-dl', $id ], IC_L. _l( 'Other downloads' ) ) )
+	->lev2( 'Others'	, _ab([ 'mine_download', $id ], IC_L. _l( 'Other downloads' ) ) )
 
 	->end2( 'Download' )
 ;
@@ -816,33 +841,12 @@ if ( $flg_ab )
 
 //.. リンク
 $o_data
-	//- テスト用
-	->lev2( _span( '.red', 'test info' ) , _test( _imp2(
-		_ab([ 'json', DID ], 'JSONview' ) ,
-		_ab([ '_categ_size', 'id' => ID ], 'categ size' ) ,
-		$plus
-			? _ab([ 'jsonv_plus', ID ] , 'Plus-json' ) 
-			: _span( '.red bld', 'No plus-json file' )
-		,
-		$main_id->is_em()
-			? _fa( 'folder' ) . _ab([ 'dir_pdb_med', ID ], 'media dir' )
-			: ''
-		,
-		_ab([ 'txtdisp'	, 'a' => 'pdb_kw.'.ID ], 'search terms' ) 
-		,
-		_ab([ 'jsonview', 'a' => 'pdb_met.'.ID ], 'met-json' )
-		,
-		_ab([ 'prime'	, 'id' => ID ], 'prime' )
-	)))
 	->lev2( 'PDB pages', _imp2([
-		_ab([ 'mine-sum', $id ],	_ic( 'pdbj' ) . 'PDBj' ),
-//		_ab([ 'rcsb'    , $id ],	IC_L. 'RCSB PDB' ),
-//		_ab([ 'pdbe'    , $id ],	IC_L. 'PDBe' ) ,
-		_ab([ 'wwpdb_landing', $id ],	IC_L. 'wwPDB' ) ,
-		_ab([ 'ncbi_str', $id ],	IC_L. 'NCBI' ) ,
+		_ab([ 'mine_summary'	, $id ], _ic( 'pdbj' ) . 'PDBj' ),
+		_ab([ 'wwpdb_landing'	, $id ], IC_L. 'wwPDB' ) ,
+		_ab([ 'ncbi_str'		, $id ], IC_L. 'NCBI' ) ,
 	]))
 	->lev2( TERM_REL_MOM, _mom_items( $kw ) )
-
 	->end2( 'Links' )
 ;
 $_simple->time( 'link' );
@@ -1401,7 +1405,7 @@ if ( $ens ) {
 			$o .=  _p( ''
 				. "$fid "
 				. _bt(
-					_span( '.b_asb', IC_ASB . _l( 'Display' ) ),
+					_span( '.b_asb', _ic( 'asb' ) . _l( 'Display' ) ),
 					"_loadans('$l',this)"
 				)
 				. _bt(

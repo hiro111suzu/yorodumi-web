@@ -1,21 +1,23 @@
 <?php
 require( __DIR__. '/common-web.php' );
-_add_fn( 'txtdisp' );
+
+//. get fle path
+_add_fn( 'disp' );
 
 list( $type, $id ) = explode( '.', _getpost( 'a' ), 2 );
 $type	= $type ?: _getpost( 'type' );
 $id		= $id   ?: _getpost( 'id' );
+
+//- テストサーバーと本番サーバーでパスが違う
+if ( substr( $type, -1 ) == '_' )
+	$type .= TESTSV ? 'fs3' : 'mainsv';
+
 $fn = _fn( $type, $id ) ?: _url( $type, $id ) ?: _getpost( 'path' );
-$ext = '';
-
 if ( $fn == '' || ! file_exists( $fn ) ) {
-
-	if ( file_exists( $path ) ) {
-		$fn = $path;
-	} else {
-		die( 'no file: '. ( $fn ?: 'null' ) );
-	}
+	die( 'no file: '. ( $fn ?: 'null' ) );
 }
+
+//. type
 $ext = strtolower( pathinfo( basename( $fn, '.gz' ), PATHINFO_EXTENSION ) );
 
 $type = [
@@ -31,6 +33,7 @@ $type = [
 	'pdf'	=> 'application/pdf' ,
 ][ $ext ] ?: 'plain' ;
 
+//. output
 header( "Content-type: $type; charset=utf-8" );
 
 if ( _is_gz( $fn ) )

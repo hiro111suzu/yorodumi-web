@@ -21,7 +21,8 @@ define( 'VLQ', 'set antialiasDisplay OFF; set antialiasTranslucent OFF;set ribbo
 $size = (integer)_getpost( 'size' ) ?: 300;
 $use = _getpost_safe( 'use' ) ?: 'JAVA HTML5';
 
-$jmol_param = _jmol_params( $db, $id, [
+$o_jmol = new cls_jmol;
+$jmol_param = $o_jmol->params( $db, $id, [
 	'csmodel' => _getpost_safe( 'csmodel' ) ,
 	'asb'	=> _getpost_safe( 'asb' )
 ]);

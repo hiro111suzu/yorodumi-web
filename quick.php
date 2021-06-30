@@ -4,10 +4,7 @@ ini_set( 'memory_limit', '2048M' );
 define( 'COLOR_MODE', 'ym' );
 require( __DIR__. '/common-web.php' );
 require( __DIR__. '/cls_omoid.php' );
-//if ( TEST )
-//	set_time_limit(120);
 
-//define( 'LABEL_YM_ANNOT', _span( '.annot | ?Yorodumi annotation', '*YM' ) );
 $wikipe_tags = [];
 
 //.. エントリID解決
@@ -25,8 +22,6 @@ define( 'DID'	, $did );
 
 define( 'EPDB', DB == 'pdb' && $main_id->is_em() );
 define( 'IMG_MODE', DB == 'emdb' || EPDB ? 'em' : 'y' );
-
-//_die( $main_id->mainjson() );
 
 //- EMDBか、fitted EMDBのあるPDB
 if ( DB == 'emdb' ) {
@@ -49,8 +44,7 @@ $json = $main_id->mainjson();
 
 $flg_id_hit = false;
 $flg_add_hist = false;
-
-if ( $json != [] ) {
+if ( $json ) {
 	$flg_id_hit = true;
 	$flg_add_hist = true;
 }
@@ -484,6 +478,21 @@ $tab_hist = [
 	'js' => '_randimg.hist()'
 ];
 
+//.. ページ
+$pages = [];
+foreach ([
+	'3DEM' => [ 'emn', 'e_search' ] ,
+	'Structure databases' => [ '', 'taxo' ] ,
+	'Search' => [ 'e_search', 'ysearch', 'omos', 'fh_search' ] ,
+	'Documents' => [ 'help', 'pages' ] ,
+] as $categ => $item ) {
+	$pages[] = $categ. _ul( array_map( '_page_link', $item ), 0 ); //- _page_link( ) 関数利用
+}
+$tab_pages = TEST ? [
+	'tab' => [ 'file-text', 'Pages' ] ,
+	'div' => _ul( $pages )
+]: '';
+
 //.. 生成
 $id_form = ''
 	. _l( 'ID or keywords' ). ': '
@@ -500,13 +509,15 @@ $_simple->hdiv(
 				'div' => $id_form ,
 			],
 			$tab_rand ,
-			$tab_hist
+			$tab_hist ,
+			$tab_pages ,
 		)
 
 		//- ヒットなしのとき
 		: $id_form . _simple_tabs(
 			$tab_rand + [ 'active' => true ],
-			$tab_hist
+			$tab_hist ,
+			$tab_pages
 		)
 	,
 	[ 'hide' => ID_HIT, 'id' => 'open' ]
@@ -535,9 +546,13 @@ if ( ! ID_HIT ) {
 
 //. misc init 続き
 define( 'I_SEL', _ic( 'select' ) );
+define( 'TREP_AUTO', _subdata( 'trep_auto', [
+	'chem'	=> 'pdb' ,
+	'bird'	=> 'pdb' ,
+][ DB ] ?: DB ) ?: [] );
 
-$_has_fh_item = [];
 $_primary_pap_id = '';
+$_has_fh_item = [];
 define( 'FH_CLS_NAME', _subdata( 'trep', 'fhinfo_cls_name' ) );
 
 //. main
@@ -653,7 +668,6 @@ function _seqstr( $in ) {
 		} else {
 			$a[] = $s;
 		}
-				
 		if ( $s == ')' ) {
 			$flg = false;
 			$a[] = _span( '.green', $buf );
@@ -742,7 +756,6 @@ function _trep_rep( $in ) {
 //.. _trep: データ名 itemSomthing -> Item Somthing
 function _trep( $in, $opt = '' ) {
 	global $_trep;
-
 	if ( $in == '' ) return;
 	if ( _instr( '<', $in ) ) return $in;
 
@@ -770,84 +783,9 @@ function _trep( $in, $opt = '' ) {
 
 	//... _l 関数
 	if ( $in != ( $ret = _l( $in ) ) ) return $ret;
-	
-	//... 特殊なタイトル？
-	if ( _instr( ' ', $in ) || _instr( '=', $in ) ) {
-		return _l( ucfirst( trim(
-			strtr( $in, [ '2d_' => '2D ', '3d_' => '3D ', '_' => ' ' ] ) 
-		)));
-	}
 
-	//... EMDB用のルール 
-	if ( DB == 'emdb' ) {
-		$ret = ucfirst( strtolower( preg_replace(
-			[ '/([a-z])([A-Z])/', '/^num /'    , '/ Flag$/'	] ,
-			[ '$1 $2'    		, 'Number of ' , ''			] ,
-			$in
-		)));
-		return strtr( $ret, [ '2d_' => '2D ', '3d_' => '3D ', '_' => ' ' ] );
-	}
-	//... PDB用のルール 
-	if ( DB == 'pdb' || DB == 'chem' || DB == 'bird' ) {
-		if ( substr( $in, -3 ) == '_id' )
-			return _trep( strtr( $in, [ '_id' => '' ] ) ) . '-ID';
-		return ucfirst( _reg_rep( $in, [
-			'/^number_atoms_(.+)$/' 	=>'\1 atoms',
-			'/^(pdbx|diffrn|exptl|struct)_/' => '' ,
-			'/reflns/'					=> 'reflection',
-			'/diffrn/'					=> 'diffraction',
-			'/exptl/' 					=> 'experiment',
-			'/nmr_/'					=> 'NMR_' ,
-			'/em_/' 					=> 'EM_' ,
-			'/2d_/' 					=> '2D_' ,
-			'/3d_/' 					=> '3D_' ,
-			'/xfel/'					=> 'XFEL' ,
-			'/^num_/' 					=> 'Num. of ' ,
-			'/_tls($|\b|_)/'			=> '_TLS$1' ,
-			'/_ls($|\b|_)/' 			=> '_LS$1' ,
-			'/^ls_/'					=> '',
-			'/_restr/' 					=> '_restraints' ,
-			'/concentration/'			=> 'conc.',
-			'/sig(ma|)_?(I|Fsqd|F)/'	=> '&sigma;($2)' ,
-			'/I_over_/'					=> ' I/' ,
-			'/_id_/'					=> ' ID ' ,
-			'/_id$/'					=> ' ID' ,
-			'/_ncs($|_)/'				=> ' NCS$1' ,
-			'/^ncs($|_)/'				=> 'NCS$1' ,
-			'/CC_half/'					=> 'CC<sub>1/2</sub>' ,
-			'/R_(factor|merge|free|work)/' => 'R<sub>$1</sub>' ,
-			'/R(sym|rim|pim|merge)_I/' 	=> 'R$1(I)' ,
-			'/R(sym|rim|pim|merge)/' 	=> 'R<sub>$1</sub>' ,
-			'/percent_/'				=> '% ' ,
-			'/number_/'					=> 'num. ' ,
-			'/aniso_B/'					=> 'B<sub>aniso</sub> ',
-			'/B_iso/'					=> 'B<sub>iso</sub> ',
-			'/correlation_coeff_/'		=> 'cor.coef. ' ,
-			'/^fom(_|$)/'				=> 'FOM ' ,
-			'/Fo_to_Fc/'				=> 'F<sub>o</sub>:F<sub>c</sub>' ,
-			'/^overall_/'				=> '' ,
-			'/_/'						=> ' ' ,
-		]) );
-	}
-
-	//... SASBDB用のルール
-	if ( DB == 'sasbdb' ) {
-		if ( substr( $in, -3 ) == '_id' )
-			return _trep( strtr( $in, [ '_id' => '' ] ) ) . '-ID';
-
-		return ucfirst( preg_replace(
-			[
-				'/^pdbx_/',
-				'/^sas_/' ,
-				'/_/'
-			],[
-				'',
-				'',
-				' '
-			],
-			$in
-		));
-	}
+	//... 自動
+	return TREP_AUTO ? ucfirst( _reg_rep( $in, TREP_AUTO ) ) : $in;
 }
 
 //.. _quick_kv: _kvのquick用
@@ -873,7 +811,11 @@ function _quick_kv( $a, $tag = [] ) {
 			continue;
 		} else {
 			$iconk = _icon_title( "$k||" . $tag[ $k ] );
-			$s = "<b>$iconk</b>: $v";
+			if ( is_object( $v ) ) {
+				_testinfo( $k, "objectを_quik_kvで書こうとした" );
+			} else {
+				$s = "<b>$iconk</b>: $v";
+			}
 		}
 
 		//- 長いデータは単独、短いやつは同じ行
@@ -1523,38 +1465,45 @@ class cls_citation {
 	//.. emdb_json
 	function emdb_json( $j, $citation_id = 0 ) {
 		//- authors
-		$auth = [];
-		foreach ( explode( ',', (string)$j->authors ) as $s )
-			$auth[] = _x( $s );
 		$this->set_main([
-			'journal'	=> $j->journal ,
+			'journal'	=> $j->journal_abbreviation ?: $j->journal,
 			'year'		=> $j->year ,
 			'volume'	=> $j->volume ,
-			'doi' 		=> $j->ref_doi ,
-			'CSD' 		=> $j->ref_csd ,
-			'ISSN' 		=> $j->ref_issn ,
-			'ASTM'		=> $j->ref_astm ,
-			'title' 	=> $j->articleTitle ,
-			'authors'	=> $auth,
-			'page'		=> $j->firstPage || $j->lastPage
-				? [ $j->firstPage, $j->lastPage ] : '' ,
-			'pmid'		=> $j->ref_pubmed ,
+			'doi' 		=> $j->ref_DOI ,
+			'CSD' 		=> $j->ref_CSD ,
+			'ISSN' 		=> $j->ref_ISSN ,
+			'ASTM'		=> $j->ref_ASTM ,
+			'title' 	=> $j->title ,
+			'authors'	=> $j->author ,
+			'page'		=> $this->emdb_xml_page( $j ) ,
+			'pmid'		=> $j->ref_PUBMED ,
 		], $citation_id );
 	}
 
 	//.. emdb_non_journal
 	function emdb_non_journal( $j, $citation_id = 0 ) {
-		//- authors
-		$ret = (array)$j;
-		$auth = [];
-		foreach ( explode( ',', (string)$j->authors ) as $s )
-			$auth[] = _x( $s );
-		$ret['authors'] = $auth;
-		$ret['title'] = $j->thesisTitle;
-		$ret['page'] = $j->firstPage || $j->lastPage
-				? [ $j->firstPage, $j->lastPage ] : '';
-		unset( $ret['firstPage'], $ret['lastPage'], $ret['thesisTitle'] );
+		$ret = [
+			'page'		=> $this->emdb_xml_page( $j ) ,
+			'authors'	=> $j->author ,
+			'title'		=> $j->thesis_title ,
+			'first_page' => null,
+			'last_page'	=> null ,
+			'author'	=> null ,
+		] + (array)$j;
+		foreach ( $ret as $k => $v ) {
+			if ( $k == 'authors' ) continue;
+			if ( is_array( $v ) || is_object( $v ) )
+				unset( $ret[ $k ] );
+		}
 		$this->set_main( $ret, $citation_id );
+	}
+	
+	//.. emdb_xml_page
+	function emdb_xml_page( $j ) {
+		return $j->first_page || $j->last_page
+			? [ $j->first_page, $j->last_page ]
+			: null
+		;
 	}
 
 	//.. pubmed_json
@@ -1723,10 +1672,6 @@ class cls_related {
 
 	//.. by_emn_info: EMNアノテーションから
 	function by_emn_info() {
-		//- fit
-		foreach ( (array)_emn_json( 'fit', DID ) as $i )
-			$this->id_list[ _rep_pdbid( $i ) ][ 'fit' ] = true;
-			
 		//- relatedjson
 		foreach ( (array)_emn_json( 'related', DID ) as $i )
 			$this->id_list[ $i ][ 'r' ] = true;
@@ -1830,7 +1775,7 @@ class cls_related {
 					'select' => 'data' ,
 					'where'  => [ 'id', $empiar_id ] ,
 				]))))
-				. ( TEST ? ' '. _ab([ 'empiar_xml', $empiar_id ], 'xml (test)' ) : '')
+				. ( TEST ? ' '. _ab([ 'txtdisp', "empiar_xml.$empiar_id" ], 'xml (test)' ) : '')
 			;
 		}
 		if ( $output )
@@ -1882,7 +1827,6 @@ class cls_related {
 	//.. set_smilar
 	function set_similar( $in ) {
 		global $o_data, $_has_fh_item;
-//		if ( ! TEST ) return $this;
 
 		//... omokageプライマリ
 		$ida_primary = $in[0]['ida'];
@@ -1947,7 +1891,7 @@ class cls_related {
 
 //. class: cls_data
 //- this->$data にデータをしまっていき、最後にmakeメソッドで$_simple->hdivへ出力
-//- lev1 は直接書き込むので、終了処理が不要->先にタイトルぎめ
+//- lev1 は直接登録するので、終了処理が不要->先にタイトルぎめ
 //- lev2と3は、終了処理が必要、終了処理でタイトルぎめ 
 
 //- タイトル文字列の翻訳は、$_simple->hdivか _simple_tableなどの出力時、このクラスではやらない
@@ -2168,6 +2112,10 @@ class cls_data {
 			)->end2( 'Entry' )
 		;
 	}
-
+	//.. test_item
+	function test_item( $items ) {
+		if ( ! TEST ) return $this;
+		return $this->lev1( _span( '.red', 'test items' ), $items );
+	}
 }
 

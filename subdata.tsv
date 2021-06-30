@@ -31,6 +31,10 @@ specimenConc	mg/mL
 temperature	K
 temperatureMax	K
 temperatureMin	K
+temperature_average	K
+temperature_max	K
+temperature_min	K
+
 tiltAngleMax	%deg;
 tiltAngleMin	%deg;
 tiltAngleIncrement	%deg;
@@ -91,8 +95,7 @@ Rg_from_Guinier	nm
 ..	common
 ...	pdb
 pdbj	https://pdbj.org
-pdbj_help	https://pdbj.org/help/
-pdbj_contact	https://pdbj.org/contact/
+pdbj_img	https://pdbj.org/molmil-images/mine/[id].png
 
 prd_help	https://pdbj.org/showBlogPost?PID=919
 about_valrep	https://www.wwpdb.org/validation/validation-reports
@@ -150,6 +153,7 @@ sam	https://www.uniprot.org/help/sam
 cdd	https://www.ncbi.nlm.nih.gov/Structure/cdd/[id]
 unichem	https://www.ebi.ac.uk/unichem/frontpage/results?kind=InChIKey&queryText=[id]
 bird	quick.php?id=bird-[id]
+empiar_j	https://empiar.pdbj.org/entry/[id]/
 
 ...	misc
 jmol	https://jmol.sourceforge.net/
@@ -167,13 +171,12 @@ omos	omo-search.php?id=[id]
 omov	omoview.php?a=[id]
 jsonview	jsonview.php?a=[id]
 json	jsonview.php?id=[id]
-txtdisp	txtdisp.php?a=[id].[id2]
-empiar_xml	txtdisp.php?path=/data/yorodumi/fdata/empiar/empiar.pdbj.org/pub/empiar/archive/[id]/[id].xml
+txtdisp	txtdisp.php?a=[id]
+disp	disp.php?a=[id]
 
 ..	quick-emdb
 emdb_ent_ebi	https://www.ebi.ac.uk/pdbe/entry/emdb/EMD-[id]
 emdb_ent_emdr	https://www.emdataresource.org/EMD-[id]
-empiar_j	https://empiar.pdbj.org/entry/[id]/
 unp_search	https://www.uniprot.org/uniprot/?query=[id]
 
 json3	jsonview.php?a=json3.[id]
@@ -189,8 +192,17 @@ histogram_log_l	data/emdb/media/[id]/mapi/histlog.png
 emdb_fig	data/emdb/emdb-fig/<id>.jpg
 emdb_fig_gif	data/emdb/emdb-fig/<id>.gif
 
+valrep_emdb_help	https://www.wwpdb.org/validation/2017/EMMapValidationReportHelp
+valrep_emdb_dir_http	https://ftp.pdbj.org/pub/emdb/validation_reports/EMD-[id]/
+
 
 ..	quick-pdb
+mmcif_download	https://data.pdbj.org/pub/pdb/data/structures/all/mmCIF/[id].cif.gz
+pdb_download	https://data.pdbj.org/pub/pdb/data/structures/all/pdb/pdb[id].ent.gz
+
+mine_summary	https://pdbj.org/mine/summary/[id]
+mine_download	https://pdbj.org/mine/resources/[id]
+
 snfg_icon	data/chem/snfg_icon/[id].jpg
 
 cif_tree	https://pdbj.org/displayMMCIFTree?pdbid=[id]
@@ -248,7 +260,6 @@ LipidMaps	http://www.lipidmaps.org/data/LMSDRecord.php?LMID=[id]
 SwissLipids	http://www.swisslipids.org/#/entity/[id]
 ChemicalBook	https://www.chemicalbook.com/ChemicalProductProperty_EN_[id]
 ChemicalBook-j	https://www.chemicalbook.com/ChemicalProductProperty_JP_[id].htm
-// FDA_SRS	http://fdasis.nlm.nih.gov/srs/ProxyServlet?mergeData=true&objectHandle=DBMaint&APPLICATION_NAME=fdasrs&actionHandle=default&nextPage=jsp/srs/ResultScreen.jsp&TXTSUPERLISTID=
 Rhea	http://www.rhea-db.org/searchresults?q=CHEBI:[id]
 Metabolights	http://www.ebi.ac.uk/metabolights/[id]
 NMRShiftDB	http://nmrshiftdb.org/molecule/[id]
@@ -301,9 +312,9 @@ wikipe_img	data/taxo/wicon/[id]
 dir	?path=[id]
 jsonview	jsonview.php?path=[id]
 tsvview	tsvview.php?path=[id]
-txt	txtdisp.php?path=[id]
-py	txtdisp.php?path=[id]
-tsv	txtdisp.php?path=[id]
+txt	disp.php?path=[id]
+py	disp.php?path=[id]
+tsv	disp.php?path=[id]
 sqlite	_mng-sqliteDBs.php?sqlite=&username=s&table=main&db=[id]
 direct	[id]
 
@@ -346,6 +357,8 @@ bird_cifcc	/home/archive/ftp/pdbj/prdcc/PRDCC_<id>.cif
 fsc_img_s	<data>/emdb/media/<id>/fsc/fscs.jpg
 fsc_img_l	<data>/emdb/media/<id>/fsc/fscl.png
 json3	jsonview.php?a=json3.<id>
+dn_valrep_emdb_fs3	<fdata>/emdb-mirror/validation_reports/EMD-<id>
+dn_valrep_emdb_mainsv	/home/data/pdbj/data/ftp/pub/emdb/validation_reports/EMD-<id>
 
 ..	quick-pdb
 unp_json	<data>/unp/<id>.json.gz
@@ -400,16 +413,24 @@ pdb_met	<prep>/met/pdb/<id>.json
 pap_info	<prep>/pap/info/<id>.json.gz
 prd	<data>/prd/<id>.json.gz
 
-..	txtdisp
+..	disp
 unp_json	<data>/unp/<id>.json.gz
 unp_xml	<fdata>/unp/<id>.xml
 emdb_kw	<prep>/keyword/emdb/<id>.txt
-emdb_obs	<fdata>/emdb-mirror/obsoleted/EMD-<id>/header/emd-<id>.xml
+emdb_obs	<emdb_arc>//obsoleted/EMD-<id>/header/emd-<id>.xml
 pdb_kw	<prep>/keyword/pdb/<id>.txt
 sasbdb_kw	<prep>/keyword/sas/<id>.txt
 sascif	<data>/sas/sasbdb/<id>.sascif
 pubmed_xml	<fdata>/pubmed_xml/<id>.xml
 papinfo	<prep>/pap/info/
+empiar_xml	<fdata>/empiar/empiar.pdbj.org/pub/empiar/archive/<id>/<id>.xml
+mmcif_fs3	<fdata>/mmcif/<id>.cif.gz
+pdb_fs3	<fdata>/pdb/dep/pdb<id>.ent.gz
+mmcif_mainsv	/data/pdbj/data/ftp/pub/pdb/data/structures/all/mmCIF/<id>.cif.gz
+pdb_mainsv	/data/pdbj/data/ftp/pub/pdb/data/structures/all/pdb/pdb<id>.ent.gz
+
+emdb_arc_fs3	<fdata>/emdb-mirror
+emdb_arc_mainsv	/data/pdbj/data/ftp/pub/emdb
 
 .	mov_caption
 ..	en
@@ -662,3 +683,267 @@ VJ1	PA1
 AGL	G6D
 DT6	NAG
 9WJ	RAM
+
+.	pages
+..	emn
+name	EM Navigator
+icon	emn
+url	.
+
+..	e_search
+name_j	EMN検索
+name_e	EMN Search
+icon	search
+url	esearch.php
+
+..	e_stat
+name_j	EMN統計
+name_e	EMN Statistics
+url	stat.php
+icon	statistics
+
+..	gallery
+name_e	EMN Gallery
+name_j	EMNギャラリー
+url	gallery.php
+icon	gallery
+
+..	e_pap
+name_e	EMN Papers
+name_j	EMN文献
+url	pap.php?em=1
+icon	article
+
+..	covid19
+name_j	Covid-19情報
+name_e	Covid-19 info
+url	covid19.php
+
+..	ym
+url	quick.php
+icon	miru
+name_j	万見 (Yorodumi)
+name_e	Yorodumi
+
+..	y_search
+name_e	Yorodumi Search
+name_j	万見検索
+url	ysearch.php
+icon	search
+
+..	pap
+name_e	Yorodumi Papers
+name_j	万見文献
+url	pap.php
+icon	article
+
+..	taxo
+name_e	Yorodumi Species
+name_j	万見生物種
+url	taxo.php
+icon	taxo
+
+..	omos
+url	omo-search.php
+icon	omokage
+name_e	Omokage search
+name_j	Omokage検索
+
+..	doc
+news_e	News & docs
+name_j	お知らせ・ヘルプ 
+icon	help
+url	doc.php
+
+..	doc_emn
+name_e	About EM Navigator
+name_j	EM Navigatorについて
+url	doc.php?tag=emn
+icon	help
+
+..	doc_ym
+name_e	About Yorodumi
+name_j	万見について
+url	doc.php?tag=ym
+icon	help
+
+..	doc_omos
+name_e	About Omokage search
+name_j	Omokage検索について
+url	doc.php?tag=omos
+icon	help
+
+..	help
+name_e	Help
+name_j	ヘルプ
+url	doc.php?type=info
+icon	help
+
+..	faq
+name	FAQ
+url	doc.php?type=faq
+icon	help
+
+..	news
+name_e	News
+name_j	お知らせ
+url	doc.php?type=news
+icon	help
+
+..	pages
+name_e	Pages	
+name_j	ページ一覧
+url	doc.php?tag=about
+icon	help
+
+..	pdbj
+url_func	pdbj
+icon	pdbj
+name	PDBj
+blank	1
+
+..	pdbj_contact
+url	https://pdbj.org/contact/
+icon	contact
+name_e	Contact us
+name_j	お問い合わせ
+blank	1
+
+..	pdbj_help
+url	https://pdbj.org/help/
+icon	help
+name_e	PDBj help
+name_j	PDBjヘルプ
+blank	1
+
+..	mng	
+problem	_mng.php?mode=problem
+todolist	_mng-todolist.php
+pdbimg	_mng-pdbimg.php
+categ	_mng.php?mode=categ
+log	_mng.php?mode=logview
+pubmed	_mng-pubmedid2.php
+sqlite	_mng-sqliteDBs.php
+
+prep	_mng-dir.php?path=/data/yorodumi/prepdata
+data	_mng-dir.php?path=/data/yorodumi/emnavi/data
+fdata	_mng-dir.php?path=/data/yorodumi/fdata
+dir	_mng-dir.php
+
+emn	.
+top	.
+ym	quick.php
+stat	stat.php
+pap	pap.php
+cifdic	cifdic.php
+
+.	trep_auto
+..	emdb
+/([a-z])([A-Z])/	$1 $2
+/^num /	Number of_
+/ Flag$/	
+/2d_/	2D_
+/3d_/	3D_
+/_/	" "
+
+..	pdb
+/^number_atoms_(.+)$/	\1 atoms
+/^(pdbx|diffrn|exptl|struct)_/	
+/reflns/	reflection
+/diffrn/	diffraction
+/exptl/	experiment
+/nmr_/	NMR_
+/em_/	EM_
+/2d_/	2D_
+/3d_/	3D_
+/xfel/	XFEL
+/^num_/	Num. of_
+/_tls($|\b|_)/	_TLS$1
+/_ls($|\b|_)/	_LS$1
+/^ls_/	
+/_restr/	_restraints
+/concentration/	conc.
+/sig(ma|)_?(I|Fsqd|F)/	&sigma;($2)
+/I_over_/	_I/
+/_id_/	_ID_
+/_id$/	_ID
+/_ncs($|_)/	_NCS$1
+/^ncs($|_)/	NCS$1
+/CC_half/	CC<sub>1/2</sub>
+/R_(factor|merge|free|work)/	R<sub>$1</sub>
+/R(sym|rim|pim|merge)_I/	R$1(I)
+/R(sym|rim|pim|merge)/	R<sub>$1</sub>
+/percent_/	%_
+/number_/	"num._
+/aniso_B/	B<sub>aniso</sub>_
+/B_iso/	B<sub>iso</sub>_
+/correlation_coeff_/	cor.coef._
+/^fom(_|$)/	FOM_
+/Fo_to_Fc/	F<sub>o</sub>:F<sub>c</sub>
+/^overall_/	
+/_id$/	-ID
+/_/	" "
+
+..	sasbdb
+/^pdbx_/	
+/^sas_/	
+/_/	" "
+
+.	archive
+..	rep
+<url_pdb_all>	https://data.pdbj.org/pub/pdb/data/structures/all
+<url_emdb>	https://ftp.pdbj.org/pub/emdb
+<fdata>	/data/yorodumi/fdata
+<mainsv_pdb_all>	/data/pdbj/data/ftp/pub/pdb/data/structures/all
+<mainsv_emdb>	/data/pdbj/data/ftp/pub/emdb
+<fs3_emdb>	/data/yorodumi/fdata/emdb-mirror
+
+..	mmcif
+fn	<id>.cif.gz
+url	<url_pdb_all>/mmCIF/
+path_mainsv	<mainsv_pdb_all>/mmCIF/
+path_fs3	<fdata>/mmcif/
+
+..	pdb
+fn	pdb<id>.ent.gz
+url	<url_pdb_all>/pdb/
+path_mainsv	<mainsv_pdb_all>/pdb/
+path_fs3	<fdata>/pdb/dep/
+
+..	valrep_emdb_dir
+name_e	Arichive directory
+name_j	アーカイブディレクトリ
+url	<url_emdb>/validation_reports/EMD-<id>
+
+..	valrep_emdb_full
+name_e	Full document
+name_j	文書・詳細版
+fn	emd_<id>_full_validation.pdf.gz
+url	<url_emdb>/validation_reports/EMD-<id>/
+path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
+path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
+
+..	valrep_emdb_sum
+name_e	Summary document
+name_j	文書・要旨
+fn	emd_<id>_validation.pdf.gz
+url	<url_emdb>/validation_reports/EMD-<id>/
+path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
+path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
+
+..	valrep_emdb_xml
+name_e	Data in XML
+name_j	XML形式データ
+fn	emd_<id>_validation.xml.gz
+url	<url_emdb>/validation_reports/EMD-<id>/
+path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
+path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
+
+..	valrep_emdb_cif
+name_e	Data in CIF
+name_j	CIF形式データ
+fn	emd_<id>_validation.cif.gz
+url	<url_emdb>/validation_reports/EMD-<id>/
+path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
+path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
+

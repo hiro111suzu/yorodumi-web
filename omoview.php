@@ -218,6 +218,7 @@ foreach ( $compos as $n => $c ) {
 	}
 	$compos_table[ $n ] = _t( 'table', $s );
 }
+$o_jmol = new cls_jmol;
 
 $_simple->hdiv( 'Structures', ''
 	. _btn( '#jmolshowbtn | !_jmolshow(1)', TERM_START_VIEWER )
@@ -237,7 +238,7 @@ $_simple->hdiv( 'Structures', ''
 		//- Jmol とコントローラー列
 		. _e( 'tr | .jmole' )
 		. _e( 'td | st:text-align:right' )
-		. _div( '#jmolbox0', _jmolobj([
+		. _div( '#jmolbox0', $o_jmol->jsobj([
 			'db'	    => 'vq' ,
 			'id'	    => $o_ids[0]->ida ,
 			'init'	    => 'select 1.0 or 2.0; cpk -' . $psiz[0] . $cmd_common ,
@@ -251,7 +252,7 @@ $_simple->hdiv( 'Structures', ''
 		)
 */
 		. TD
-		. _div( '#jmolbox1', _jmolobj([
+		. _div( '#jmolbox1', $o_jmol->jsobj([
 			'db' 	=> 'vq',
 			'id' 	=> $o_ids[1]->ida ,
 			'init' 	=> 'select 1.0 or 2.0; cpk -' . $psiz[1] . $cmd_common ,

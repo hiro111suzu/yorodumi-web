@@ -189,12 +189,9 @@ function _indivi( $res ) {
 
 	$links2[] = [];
 	if ( TEST ) {
-		$links2[] = _ab([ 'jsonview', 'a' => "pubmed.". ID ], IC_L. 'PubMed-json' );
-		$links2[] = _ab(
-			[ 'txtdisp', 'type' => 'pubmed_xml', 'id' => ID ],
-			IC_L. 'PubMed XML'
-		);
-		$links2[] = _ab([ 'jsonview', 'a' => 'pap_info.'. ID ], IC_L. 'pap_info' );
+		$links2[] = _ab([ 'jsonview', 'pubmed.'    . ID ], IC_L. 'PubMed-json' );
+		$links2[] = _ab([ 'txtdisp' , 'pubmed_xml.'. ID ], IC_L. 'PubMed XML' );
+		$links2[] = _ab([ 'jsonview', 'pap_info.'  . ID ], IC_L. 'pap_info' );
 	}
 
 	//.. abst

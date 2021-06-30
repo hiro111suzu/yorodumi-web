@@ -17,7 +17,10 @@ protected
 	$css_store = [],
 	$js_store = [] ,
 	$jsvar = [] ,
-	$conf = []
+	$conf = [] ,
+	$doctype = '<!DOCTYPE HTML>'
+	. '<meta http-equiv="content-type" content="text/html; charset=UTF-8">'
+	. '<meta http-equiv="X-UA-Compatible" content="IE=edge">'
 ;
 
 //. page_conf
@@ -75,123 +78,6 @@ function out( $a = [] ) {
 		$title = implode( '', $a );
 	}
 
-	//.. icon
-	$favicon = '';	//- favicon
-	$icon_s = '';
-	$icon32 = '';	//- タイトル用アイコン
-	if ( $icon != '' ) {
-		foreach ([ "img/lk-$icon.gif", "img/$icon.gif", "img/$icon" ] as $icon_s ) {
-			if ( ! file_exists( $icon_s ) ) continue;
-			$icon32  = file_exists( $l = strtr( $icon_s, [ '.' => '32.' ] ) )
-				? $l : $icon_s ;
-			if ( $icon == 'emn' ) //- そのうちちゃんとする
-				$icon32 = "img/emn32.png";
-			$favicon = _e( "link | rel:icon | href:$icon_s" );
-			$icon_s = _img( $icon_s );
-			$icon32 = _img( $icon32 );
-			break;
-		}
-	}
-
-
-	//.. ページ一覧
-	//... パンくず
-	$pk = 'li| itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"';
-	$s = _t( 'li', $icon_s
-		. _span( 'itemprop="title"', $title_pk ?: $title )
-	);
-
-	//- トップページでない (EMN /YMでない)
-	if ( ! defined( 'TOP_PAGE' ) ) {
-		$s = _t( 'ul',
-			_t( $pk,
-				COLOR_MODE == 'emn'
-				? _a( '.' ,
-					IC_EMN. _span( 'itemprop="title"', 'EM Navigator' ) ,
-					'itemprop="url"' 
-				)
-				: _a( 'quick.php',
-					IC_YM. _span( 'itemprop="title"', _l( 'Yorodumi' ) ) ,
-					'itemprop="url"' 
-				)
-			) . _t( 'ul', $s ) 
-		);
-	}
-
-	$item_pankuzu = _t( 'nav' , 
-		//- PDBj
-		_t( $pk, _ab(
-			_url( 'pdbj' ),
-			IC_PDBJ. _span( 'itemprop="title"', 'PDBj' ), 
-			'itemprop="url"' ) 
-		)
-		//- 以下
-		. _t( 'ul | .pankuzu', $s )
-	);
-
-	//... サーチ
-	$item_search = _t( 'form |.topline | method:get | action:ysearch.php', ''
-		.LI
-		. _a( 'ysearch.php', _fa( 'search' ). _l( 'Cross-search' ) )
-		. ': '
-		. _input( 'search', '.acomp| name:kw| list:acomp_kw| size:15' )
-	);
-
-	//... その他のページ
-	$y = $e = $h = '';
-	$plus = _fa( 'plus-square', 'large' );
-
-	$p = [];
-	foreach ([
-		'EMN Search'			=> [ 'esearch.php'		, 'search' ] ,
-		'EMN Statistics'		=> [ 'stat.php'			, 'statistics' ] ,
-		'EMN Gallery'			=> [ 'gallery.php'		, 'gallery' ] ,
-		'EM Papers'				=> [ 'pap.php?em=1'		, 'article' ] ,
-		'About EM Navigator'	=> [ 'doc.php?tag=emn'	, 'help' ] ,
-	] as $n => $a ) {
-		$p[] = _a( $a[0], _ic( $a[1] ). _l( $n ), '.nw'  );
-	}
-	$item_emn = _a( '.', IC_EMN. 'EM Navigator' ) .' '. _pop( $plus, _ul( $p ) );	
-
-	$p = [];
-	foreach ([
-		'Yorodumi Search'	=> [ 'ysearch.php'		, 'search' ] ,
-		'Yorodumi Papers'	=> [ 'pap.php'			, 'article' ] ,
-		'Yorodumi Species'	=> [ 'taxo.php'			, 'taxo' ] ,
-		'About Yorodumi'	=> [ 'doc.php?tag=ym'	, 'help' ] ,
-	] as $n => $a ) {
-		$p[] = _a( $a[0], _ic( $a[1] ) . _l( $n ), '.nw'  );
-	}
-	$item_ym = _a( 'quick.php', _ic( 'miru'). _ej( 'Yorodumi', '万見 (Yorodumi)' ) )
-		.' '. _pop( $plus, _ul( $p ) );
-
-	$item_omo = _a( 'omo-search.php', _ic( 'omokage' ). _l( 'Omokage search' ) ) 
-		.' '
-		. _pop( $plus,
-			LI. _a( [ 'doc', 'tag' => 'omo' ], IC_HELP . _l( 'About Omokage search' ) )
-		)
-	;
-
-	$p = [];
-	foreach ([
-		'Help'	=> 'type=info'	,
-		'FAQ'	=> 'type=faq'	,
-		'News'	=> 'type=news'	,
-		'Pages'	=> 'tag=about'	,
-	] as $n => $a )
-		$p[] = _a( "doc.php?$a", IC_HELP. _l( $n ), '.nw' );
-
-	$item_doc = _a( 'doc.php', IC_HELP. _l( 'News & docs' ) )
-		.' '. _pop( _fa( 'plus-square', 'large' ), _ul( $p ) );
-
-	$item_pages = ''
-		. LI. $item_emn
-		. LI. $item_ym
-		. LI. $item_omo
-		. LI. $item_doc
-		. ( TEST ? LI . _a( '_mng.php', 'mng' ) : '' )
-	;
-
 	//.. about
 	if ( $this->about ) {
 		 $this->hdiv(
@@ -221,8 +107,8 @@ function out( $a = [] ) {
 		if ( $news ) {
 			$about .= $this->hdiv(
 				'News',
-				$news . _p( _ab( 'doc.php?type=news', _ej( 'Read more', 'すべてのお知らせ' ) ) ) ,
-				[ 'type' => 'h2',  ] 
+				$news . _p( _page_link( 'news', _ej( 'Read more', 'すべてのお知らせ' ) ) ) ,
+				[ 'type' => 'h2' ] 
 			);
 		}
 	}
@@ -248,8 +134,69 @@ function out( $a = [] ) {
 		);
 	}
 	
+	//.. icon
+	$favicon = '';	//- favicon
+	$icon_s = '';
+	$icon32 = '';	//- タイトル用アイコン
+	if ( $icon != '' ) {
+		foreach ([ "img/lk-$icon.gif", "img/$icon.gif", "img/$icon" ] as $icon_s ) {
+			if ( ! file_exists( $icon_s ) ) continue;
+			$icon32  = file_exists( $l = strtr( $icon_s, [ '.' => '32.' ] ) )
+				? $l : $icon_s ;
+			if ( $icon == 'emn' ) //- そのうちちゃんとする
+				$icon32 = "img/emn32.png";
+			$favicon = _e( "link | rel:icon | href:$icon_s" );
+			$icon_s = _img( $icon_s );
+			$icon32 = _img( $icon32 );
+			break;
+		}
+	}
+
+
+	//.. ページ一覧
+	//... パンくず
+	$pk = 'li| itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"';
+	$s = _t( 'li', $icon_s
+		. _span( 'itemprop="title"', $title_pk ?: $title )
+	);
+
+	//- トップページでない (EMN /YMでない)
+	if ( ! defined( 'TOP_PAGE' ) ) {
+		$s = _t( 'ul', _t( $pk, _page_link( COLOR_MODE == 'emn' ? 'emn' : 'ym' ) )
+			. _t( 'ul', $s )
+		);
+	}
+
+	$item_pankuzu = _t( 'nav' , 
+		_t( $pk, _page_link( 'pdbj' ) )
+		. _t( 'ul| .pankuzu', $s ) //- 以下
+	);
+
+	//... サーチ
+	$item_search = _t( 'form |.topline | method:get | action:ysearch.php', ''
+		. _page_link( 'y_search', _l( 'Cross-search' ) )
+		. ': '
+		. _input( 'search', '.acomp| name:kw| list:acomp_kw| size:15' )
+	);
+
+	//... その他のページ
+	$link_items = [
+		$this->link_tree( 'emn' ,
+			[ 'e_search', 'e_stat', 'gallery', 'e_pap', 'covid19', 'doc_emn' ]
+		), 
+		$this->link_tree( 'ym', [ 'y_search', 'pap', 'taxo', 'doc_ym', ] ) ,
+		$this->link_tree( 'omos', [ 'doc_omos' ] ) ,
+		$this->link_tree( 'doc', [ 'help', 'faq', 'news', 'pages' ] ) ,
+	];
+
 	//.. toplinks
-	$toplinks = _t( 'ul', $item_pankuzu. $item_search . $item_pages . $item_links );
+	$toplinks = _t( 'ul', ''
+		. $item_pankuzu
+		. LI
+		. $item_search
+		. LI. implode( LI, $link_items )
+		. ( TEST ? LI. _mng_input() : null )
+	);
 
 
 	//.. 言語切替ボタン
@@ -263,16 +210,13 @@ function out( $a = [] ) {
 	;
 
 	//.. ボトム
-	$footer = implode( ' ', [
-		$item_emn ,
-		$item_ym ,
-		$item_omo ,
-		$item_doc ,
-		BR,
-		_a( _url('pdbj')		, IC_PDBJ . 'Protein Databank Japan (PDBj)' ) ,
-		_a( _url('pdbj_help')	, IC_HELP. _l( 'PDBj Help' ) ) ,
-		_a( _url('pdbj_contact'), _ic( 'contact' ). _l( 'Contact us' ) ),
-		BR,
+	$footer = implode( BR, [
+		implode( ' ', $link_items ) ,
+		implode( ' ', [
+			_page_link( 'pdbj', 'Protein Databank Japan (PDBj)' ) ,
+			_page_link( 'pdbj_help' ) ,
+			_page_link( 'pdbj_contact' ) ,
+		]) ,
 		_a([ 'doc', 'id' => 'developer' ],
 			_l( 'Developed by' ). ' '. _img( 'img/face.jpg' ). ' H. Suzuki@PDBj' 
 		)
@@ -341,7 +285,7 @@ function out( $a = [] ) {
 				[ 'type' => 'h2' ]
 			)
 
-			//- このオプション
+			//- オプション
 			. $this->hdiv(
 				_ic('opt') . _l( 'Options' ), ''
 				. _ul([
@@ -358,7 +302,7 @@ function out( $a = [] ) {
 					. _sizebtn( 'l' , ' fsizebtn| #fsize3 | !_fsize(3)|' . $da[3] )
 					. _sizebtn( 'll', ' fsizebtn| #fsize4 | !_fsize(4)|' . $da[4] )
 				]) ,
-				[ 'type' => 'h2', 'hide' => true ]
+				[ 'type' => 'h2', 'hide' => false ]
 			)
 		)
 	);
@@ -367,7 +311,7 @@ function out( $a = [] ) {
 	$this->org_testinfo();
 
 	//.. 出力
-	echo DOCTYPE
+	echo $this->doctype
 		. $this->meta_store
 		. _t( 'title', _ifnn( $sub, "$sub - " ) . $title )
 		. $favicon
@@ -402,6 +346,13 @@ function out( $a = [] ) {
 		. $this->js_render( 'simple_common', 'simple', $js, $this->js_store ) // 'simple_mov',
 	;
 }
+//. link_tree
+function link_tree( $link1, $link2 ) {
+	return _page_link( $link1 ). ' '. _pop(
+		IC_PLUS ,
+		_ul( array_map( '_page_link', $link2 ), 0 ) //- _page_link( ) 関数利用
+	);
+}
 
 //. popvw_output
 function popvw_output( $a = [] ) {
@@ -419,7 +370,7 @@ function popvw_output( $a = [] ) {
 
 	$title = $title ?: $o_id->DID. ' - '. VIEWER_NAME. ' - '. _l( 'Yorodumi' );
 
-	die( DOCTYPE
+	die( $this->doctype
 		. $this->meta_store
 		. _t( 'title', strip_tags( $title ) )
 		. ( $icon != '' ? _e( "link | rel:icon | href:$icon" ) : '' ) //- favicon 
@@ -517,7 +468,8 @@ function add_contents( $str ) {
 
 //. time
 function time( $name = 'time' ) {
-	$this->time_log[ $name ] = microtime( TRUE );
+	if ( $_COOKIE['time_log'] )
+		$this->time_log[ $name ] = microtime( TRUE );
 	return $this;
 }
 
@@ -545,33 +497,22 @@ function css( $str ) {
 
 //. css_render
 function css_render() {
-	$rep = TEST
-		//- テスト用
-		? [
-			'in'  => '/\/\/.*([\n\r]+|$)/' ,
-			'out' => ''
-		]
-		//- 公開用
-		: [
-			'in'  => [ '/\/\/.*([\n\r]+|$)/', '/ *([,:;{}]) */', '/[\t\n\r]+/' ] ,
-			'out' => [ '', '\1', '' ]
-		]
-	;
-
 	$code = '';
 	$link = '';
 	foreach ( _armix( func_get_args() ) as $n ) {
 		if ( _instr( '<link', $_css[ $n ] ) ) {
 			$link .= $_css[ $n ];
 		} else {
-			$code .= preg_replace(
-				$rep[ 'in' ], $rep[ 'out' ], $n 
-//				_instr( ':', $n ) ? $n : $_css[ $n ]  //- スニペット名称か、直コードか
-			);
+			$code .= _reg_rep( $n, TEST ? [
+				'/\/\/.*([\n\r]+|$)/' => '' //- コメント消し
+			] : [
+				'/\/\/.*([\n\r]+|$)/' => '' ,
+				'/ *([,:;{}]) */'	=> '$1' , //- 無駄な空白消し
+				'/[\t\n\r]+/'		=> '' 
+			]);
 		}
 	}
 	return "<style>\n$code\n</style>$link\n";
-
 }
 
 //. jsvar

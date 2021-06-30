@@ -55,12 +55,6 @@ define( 'LANG', $lang );
 define( 'L_JA', $lang == 'ja' );
 define( 'L_EN', $lang != 'ja' );
 
-//.. 廃止クッキー
-foreach ([ 'mov_win_size', 'show_menu', 'randimg', 'vhist' ] as $c ) {
-	if ( ! $_COOKIE[ $c ] ) continue;
-	setcookie( $c, '' );
-}
-
 //. include
 require( __DIR__. '/common-mng-web.php' );
 require( __DIR__. '/common-func.php' );
@@ -90,12 +84,12 @@ foreach ( $_GET + $_POST as $s ) {
 define( 'DN_KF1BU'	, '/home/archive/ftp/pdbj/pub/pdb/data/biounit/coordinates/all/' ); //- bio-unit
 //.. term
 _define_term(<<<EOD
-TERM_SELECT_BTN
-	Click this button to select this element in structure viewer
-	クリックすると構造ビューア内でこの要素が選択されます
 TERM_POP_VIEWER
 	Click this button to start structure viewer
 	クリックすると構造ビューアが起動します
+TERM_STR_VIEWER
+	Structure viewer
+	構造ビューア
 TERM_WIKIPE
 	Wikipedia
 	ウィキペディア
@@ -165,13 +159,7 @@ define( 'LABEL_YM_ANNOT',
 	_doc_pop( 'ym_annot', ['label' => _span( '.annot', '*YM' )] )
 );
 
-//.. define: HTML
-//- DOCTYPE & meta tag
-define( 'DOCTYPE',
-	'<!DOCTYPE HTML>'
-	. '<meta http-equiv="content-type" content="text/html; charset=UTF-8">'
-	. '<meta http-equiv="X-UA-Compatible" content="IE=edge">'
-);
+//.. misc html要素
 
 $_ = '&nbsp;';
 
@@ -202,60 +190,11 @@ define( 'JMOLPATH', TESTSV
 define( 'IC_L'		, _ic() );
 define( 'IC_DL'		, _ic( 'download' ) );
 define( 'IC_OPEN'	, _ic( 'open' ) );
-
-define( 'IC_EMN'	, _ic( 'emn' ) );
 define( 'IC_YM'		, _ic( 'miru' ) );
-
-define( 'IC_PDBJ'	, _ic( 'pdbj' ) );
-define( 'IC_RESH'	, _ic( 'resh' ) );
-define( 'IC_CONT'	, _ic( 'contact' ) );
-
-define( 'IC_DET'	, _ic( 'detail' ) );
-define( 'IC_MOV'	, _ic( 'movie' ) );
-define( 'IC_SRC'	, _ic( 'search' ) );
-
-define( 'IC_OMO'	, _ic( 'omokage' ) );
-define( 'IC_ENT'	, _ic( 'entry' ) );
-define( 'IC_ASB'	, _ic( 'asb' ) );
 define( 'IC_HELP'	, _ic( 'help' ) );
 define( 'IC_VIEW'	, _ic( 'view' ) );
 define( 'IC_WIKIPE'	, _ic( 'wikipe' ) );
-
-define( 'OMO_MODE', 8 );
-	//TEST ? 7 : 3 );
-define( 'VW_BTN_LABEL', IC_VIEW. _ej( 'Structure viewer', '構造ビューア' ) );
-
-//. ファイル名 / urls定義
-//.. ファイル名
-$_filenames += [
-	//- allpdb ??? たぶんいらない
-	'mmcif' => TESTSV
-		? DN_FDATA. '/mmcif/<id>.cif.gz'
-		: '/data/pdbj/data/ftp/pub/pdb/data/structures/all/mmCIF/<id>.cif.gz'
-//		: '/kf1/PDBj/ftp/rcsb/mmcif/<id>.cif.gz'
-	,
-];
-
-//.. $urls
-$j = URL_PDBJ;
-$urls = [
-//... PDBj
-	//- 各種ファイル
-	'pdbjimg'	=> "$j/pdb_images/[id].jpg",
-	'pdbnc'		=> "$j/pdb_nc/pdb[id].ent",
-	'pdb'		=> TESTSV ? "_pdb/dep/pdb[id].ent.gz" : "$j/pdb_all/pdb[id].ent.gz",
-//	'mmcif'		=> TESTSV ? 'txtdisp.php?a=mmcif.[id]' : "$j/mmcif/[id].cif.gz" ,
-	'mmcif'		=> 'txtdisp.php?a=mmcif.[id]' ,
-
-	//- mine
-	'mine'		=> "$j/#!mine/summary/[id]",
-	'mine-sum'	=> "$j/#!mine/summary/[id]",
-	'mine-dl'	=> "$j/#!mine/resources/[id]",
-
-	//- viewer
-	'jmol'		=> "jmol_view.php?id=[id]",
-
-];
+define( 'IC_PLUS'	, _fa( 'plus-square', 'large' ) );
 
 //. サブデータ
 if ( TEST ) {
@@ -314,83 +253,18 @@ if ( ! AJAX ) $_simple->jsvar([
 ]);
 
 //. css
-//.. 旧commojn
-//- たぶんもう使っていない
-$_css = [
-	'3d'  => 'border-color: #eee #999 #666 #aaa;' ,
-	'bar' => 'border-top: 1px solid #ddd; border-bottom: 1px solid #888;' ,
-	'br2' => 'border-radius: 3px;' ,
-	'br4' => 'border-radius: 6px;' ,
-//	'ui'  => '<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">' ,
-];
-$_css = [];  //---------
-//- 全共通 削除予定
-//- 急all テスト用に名称仮変更
-$_css[ 'hoge' ] = <<<EOD
-body { background: #ffffff; margin: 0; padding: 0; border-width: 0; }
-button {font-size: medium}
-button, a, select, label, .lk {cursor: pointer}
-button img, button {vertical-align: middle}
-label:hover { color: red; text-decoration:underline}
-li { margin: 0.3em 0 0.3em 1em; padding: 0 }
-p { margin: 0.3em 0  }
-
-.hide { display: none; }
-.nw { white-space: nowrap; }
-.left { float:left }
-.right {float:right }
-.clboth { clear:both }
-.red { color:red }
-.blue { color:blue }
-.gray{ color: #bbb }
-.green { color:green }
-.bld { font-weight:bold }
-.lkicon { padding: 0 2px; margin: 0; border: none; vertical-align: middle; }
-
-.xbtn { margin: 0 2px 0 0; padding: 0px 8px; background: #444; color: white; 
-	font-weight:bold; }
-.xbtn:hover { background: #f44 }
-
-//- ポップアップの中の画像
-.popimg { width: 100px; height: 100px; float:left; }
-
-//- 影
-.sd { box-shadow: 1px 1px 12px #777; }
-.sd2 { box-shadow: 1px 1px 7px #777; }
-//- 角丸
-.br2{ border-radius: 3px; }
-.br4{ border-radius: 5px; }
-
-EOD;
-
 //.. simple fw
-$col_bright = '#eef';
-$col_medium = '#aad';
-$col_dark   = "#66a";
 if ( !defined( 'COLOR_MODE' ) )
 	define( 'COLOR_MODE', '' );
 
+list( $col_bright, $col_medium, $col_dark ) = 
+	COLOR_MODE == 'ym'  ? [ '#dee'   , '#8bb', '#377' ] : (
+	COLOR_MODE == 'emn' ? [ '#d8e8d8', '#9c9', '#585' ] : (
+	COLOR_MODE == 'mng' ? [ '#e8d8d8', '#c99', '#855' ] : (
+	[ '#eef', '#aad', '#66a' ]
+)));
 
-if ( COLOR_MODE == 'ym' ) {
-	$col_bright = '#dee';
-	$col_medium = '#8bb';
-	$col_dark   = "#377";
-}
-
-if ( COLOR_MODE == 'emn' ) {
-	$col_bright = '#d8e8d8';
-	$col_medium = '#9c9';
-	$col_dark   = "#585";
-}
-
-if ( COLOR_MODE == 'mng' ) {
-	$col_bright = '#e8d8d8';
-	$col_medium = '#c99';
-	$col_dark   = "#855";
-}
-
-$col_red	= "#800";
-
+$col_red	= '#800';
 $bg_dark   = "background: $col_dark; color: white";
 $bg_blight = "background: $col_bright";
 $bg_medium = "background: $col_medium";
@@ -478,7 +352,9 @@ td, th { padding: 0.1em 0.5em; border: 1px solid $col_medium;  }
 
 .maintable { width: 100%; }
 .maintable > tbody > tr > th { width: 15%; }
-.maintable > tbody > tr > td { word-wrap: break-word; width: 85%; }
+.maintable > tbody > tr > td { word-wrap: break-word }
+//.maintable > tbody > tr > td { word-wrap: break-word; width: 85%; }
+
 th { text-align:right; $bg_blight; }
 .toprow th { text-align:center; width: auto; }
 .numtable td{ text-align:right }

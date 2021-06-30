@@ -14,6 +14,9 @@ if ( ! defined( 'TEST' ) )
 define( 'DN_EMDB_MED'	, DN_DATA . '/emdb/media' );
 define( 'DN_PDB_MED'	, DN_DATA . '/pdb/media' );
 
+//. _url関数用データ
+$_urls = [];
+
 //. _fn関数用データ
 $_filenames = [
 	//.. EMDB
@@ -897,19 +900,6 @@ class abs_entid {
 		}
 		return $this->title = $t ?: _l( 'Unknown entry' );
 	}
-	
-	//... method
-/*
-	function method() {
-		//- 使われていない様子
-		if ( $this->db == 'emdb' )
-			return 'EM';
-		if ( $this->db == 'sasbdb' || $this->db == 'sasbdb-model' )
-			return 'SAXS/SANS';
-		if ( $this->db == 'pdb' )
-			return implode( ' + ', $this->qinfo()->method );
-	}
-*/
 
 	//... replaced
 	function replaced() {
@@ -926,12 +916,6 @@ class abs_entid {
 		);
 	}
 
-	//... qinfo
-/*
-	function qinfo() {
-		return _json_cache( _fn( 'qinfo', $this->id ) );
-	}
-*/
 	//... add
 	function add() {
 		return _emn_json( 'addinfo', $this->did );
@@ -1046,8 +1030,7 @@ function _ezsqlite_2( $in, $val = '', $where = '' ) {
 */
 //. class sqlite
 class cls_sqlite {
-	//- logは全インスタンス共通
-	protected $pdo, $wh, $sql, $fn_db, $log, $flg_mng, $flg_persistent;
+	protected $pdo, $wh, $sql, $fn_db, $flg_mng, $flg_persistent;
 	function __construct( $s = 'main', $flg = false ) { //- $flg: manageモードか？
 		$this->set( $s );
 		$this->flg_mng = $flg;
@@ -1217,7 +1200,7 @@ class cls_sqlite {
 	//.. log
 	function log( $a, $b, $c ) {
 		global $_simple;
-		if ( FLG_MNG || ! TEST ) return;
+		if ( ! $_COOKIE['sqlite_log'] ) return;
 		$_simple->sqlite_log[] = [ $a, $b, $c ];
 	}
 }

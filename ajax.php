@@ -18,24 +18,6 @@ TERM_SEARCH_FOR
 EOD
 );
 
-
-//. Jmolのロードコマンド生成 使っていない
-// if ( MODE == 'jmolopencmd' ) {
-// 	$db = _getpost( 'db' );
-// 	$id = _getpost( 'id' );
-// 	if ( $db == '' ) {
-// 		extract( $idarray = _getidinfo() );
-// 	}
-// 	if ( $db != '' ) {
-// 		$cmd = _jmolloadcmd( $db, $id, [ 'asb' => _getpost( 'asb' )  ] );
-// 		die( json_encode(
-// 			$db == 'emdb' ? [ 'cmd' => $cmd, 1 ] : [ 'cmd' => $cmd ]
-// 		));
-// 	} else {
-// 		die( json_endoce( 'msg', 'error no id for' . $id ) ); 
-// 	}
-// }
-
 //. id2img
 //- IDを受け取り、画像を返す
 if ( MODE == 'id2img' ) {
@@ -130,7 +112,7 @@ if ( MODE == 'randimg' ) {
 	die( _randimg_quick( $ids, R_MODE ) );
 }
 
-//. randimg coookie
+//. randimg
 if ( MODE == 'randimgck' ) {
 	list( $mode, $ids ) = explode( ';', _getpost( 'ids' ) );
 	die( _randimg_quick( explode( ',', $ids ), $mode ) );

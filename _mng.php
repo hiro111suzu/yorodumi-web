@@ -24,7 +24,7 @@ define( 'PAGE_NAME', [
 	'pubmedid'			=> 'PubMed-ID' ,
 	'pdbimg'			=> 'EM-PDB画像選択' ,
 	'sqliteDBs'			=> 'SQLite DB管理' ,
-	'subdata'			=> 'サブデータ' ,
+//	'subdata'			=> 'サブデータ' ,
 	'categ'				=> 'カテゴリ', 
 	'todolist'			=> 'ToDoリスト',
 	'mom'				=> '今月の分子 情報' ,
@@ -43,14 +43,21 @@ define( 'PAGE_NAME', [
 
 //.. _getpost
 define( 'PAGE', _getpost( 'page' ) ?: 0 );
-
-$m = '_mode_' . _getpost( 'mode' );
-if ( function_exists( $m ) ) {
-	_pg_title( _getpost( 'mode' ) );
-	$m();
+$mode = _getpost( 'mode' );
+$func_mode = "_mode_$mode";
+if ( function_exists( $func_mode ) ) {
+	_pg_title( $mode );
+	$func_mode();
 }
 
-//if ( AJAX )
+//.. クイック選択
+$kw = _getpost( 'kw' );
+if ( $kw ) foreach ( _subdata( 'pages', 'mng' ) as $key => $url ) {
+	if ( _instr( strtolower( $kw ), $key ) )
+		_redirect( $url );
+}
+
+
 //.. auto_run
 $a = _getpost('auto_run');
 if ( $a )
@@ -96,15 +103,14 @@ function _end() {
 			)))
 			. _p( _kv([
 				'stopフラグ' => file_exists( "$dn_marem/stop" ) ? 'あり' : 'なし' ,
-				'sync-map' => file_exists( "$dn_marem/sync-done" ) ? '停止'
-					: ( file_exists( "$dn_marem/sync-doing" ) ? '実行中' : '予約' ) ,
-				'hwork-syncフラグ' => file_exists( "$dn_marem/sync2-done" ) ? '停止'
-					: ( file_exists( "$dn_marem/sync2-doing" ) ? '実行中' : '予約' )
+				'hwork-syncフラグ' => file_exists( "$dn_marem/sync-done" )
+					? '停止'
+					: ( file_exists( "$dn_marem/sync-doing" ) ? '実行中' : '予約' )
 			]))
 			,
 			[ 'type' => 'h2' ]
 		)
-		. $_simple->hdiv( 'fav', _table_2col([
+		. $_simple->hdiv( 'mng page', _table_2col([
 			'dir' => [
 				_dir_link( __DIR__. '/data/' ) ,
 				_dir_link( __DIR__ ) ,
@@ -121,7 +127,8 @@ function _end() {
 				_a( 'view.php', 'Yorodumi' ) ,
 				_a( 'ysearch.php', 'YSearch' ) 
 			] ,
-		]), [ 'type' => 'h2' ] )
+		]). _mng_input()
+		, [ 'type' => 'h2' ] )
 		,
 		[ 'hide' => $flg_hide ] 
 	);

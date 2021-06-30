@@ -7,26 +7,41 @@ require( __DIR__. '/common-web.php' );
 @ data更新
 {http://marem/emnavi/docdb.php
 */
+define( 'TAG_OK', array_fill_keys([
+	'title' ,
+	'abst' ,
+	'main' ,
+	'main_e' ,
+	'main_j' ,
+	'id' ,
+	'tag' ,
+	'rel' ,
+	'link' ,
+	'title' ,
+	'img' ,
+	'wikipe' ,
+	'url' ,
+], true ));
 
 //. doc読み込み
 $_count_id = 0;
 $_doc = [];
 $_done = [];
 $_related = [];
-
+$_rep = $_rep_global = [];
 require( __DIR__. '/_doc_data.php' );
 if ( count( $_doc ) == 0 ) die();
 
 //. リンクチェック
 $_rel_error = [];
 foreach ( $_doc as $id => $d ) {
-	foreach ( $d[ 'rel' ] as $rid ) {
-		if ( $_doc[ $rid ] != '' ) continue;
+	foreach ( (array)$d[ 'rel' ] as $rid ) {
+		if ( $_doc[ $rid ] ) continue;
 		$_rel_error[ $id ][] = $rid;
 	}
 }
 if ( count( $_rel_error ) > 0 )
-	echo( $_rel_error. 'Error in connection of relation' );
+	echo( _imp( $_rel_error ). ': リンクの相手がいない'. "\n" );
 
 //. json書き込み
 $changed = false;
@@ -37,98 +52,77 @@ if ( $_doc != _json_load( $fn ) ) {
 }
 echo( 'データ読み込み: '. ( $changed ? '変更あり' : '変更なし' ) );
 
-/*
-//. sqlite DB
-if ( $changed ) {
+//. function
+//.. _d_obso 取り消し 空関数
+function _d_obso() { return; }
 
-	//.. perp
-	$dbfn  = realpath( 'doc/doc.sqlite' );
-	$columns = implode( ',', [
-		'id UNIQUE COLLATE NOCASE' ,
-		'kw' ,
-		'type' ,
-		'tag' 
-	]);
+//.. _d:  登録 new ver
+function _d2( $in ) {
+	global $_doc, $_count_id, $_type, $_done, $_related, $_rep;
 
-	_del( $dbfn );
-	$pdo = new PDO( "sqlite:$dbfn", '', '' );
-	$pdo->beginTransaction();
-	$res = $pdo->query( "CREATE TABLE main( $columns )" );
-
-	//.. main
-	$res_out = [];
-	foreach ( $_doc as $id => $c ) {
-
-		//- キーワード
-		$kw = [];
-		foreach ( [ 'e', 'j' ] as $l ) {
-			foreach ( (array)$c[ $l ] as $s ) {
-				foreach ( preg_split( '/(<br>|<p>|<li>|<td>|<tr>)/', $s ) as $s2 ) {
-					$kw[] = strip_tags( $s2 );
-				}
-			}
+	$key = 'dummy';
+	$data = [];
+	$lev2 = [];
+	$link_id = 1;
+	foreach ( _doc_prep( $in ) as $line ) {
+		$t_line = trim( $line );
+		if ( !$t_line || substr( $t_line, 0, 2 ) == '//' ) continue;
+		if ( substr( $line, 0, 1 ) != "\t" ) {
+			$key = $t_line;
+			if ( ! TAG_OK[ $t_line ] )
+				echo( "$t_line: 不明なキー !!!!!!!!!!!!!!!!!!\n" );
+			continue;
 		}
-
-		//- クエリ文字列作成
-		$vals = implode( ', ', [
-			//- ID
-			_q( $id ) ,
-
-			//- キーワード
-			_q( implode( '|', array_unique( array_filter( $kw ) ) ) ) ,
-
-			//- タイプ
-			_q( $c[ 'type' ] ) ,
-
-			//- タグ
-			_q( '|' . implode( '|', (array)$c[ 'tag' ] ) . '|' ) ,
-		
-		]);
-		if ( $pdo->query( "REPLACE INTO main VALUES ( $vals )" ) === false ) {
-			$res_out[] = "$id: 失敗 <pre>" . print_r( $er = $pdo->errorInfo(), 1 ) . '</pre>';
+		if ( $key == 'link' ) {
+			//- リンク
+			if ( $t_line == '-' )  {
+				++ $link_id;
+				continue;
+			}
+			list( $sub_key, $sub_line ) = explode( "\t", $t_line, 2 );
+			$data['link'][ trim( $sub_key ). "-$link_id" ] = trim( $sub_line );
+		} else if ( in_array( $key, [ 'id', 'url', 'img' ] ) ) {
+			//- 単独の要素
+			$data[ $key ] = $t_line;
+		} else if ( in_array( $key, [ 'main_e', 'main_j' ] ) ) {
+			//- main
+			$t_line = _pre( $t_line, true );
+			if ( substr( $line, 0, 2 ) == "\t\t" ) {		//- 箇条書き、レベル2
+				$lev2[ $key ][] = $t_line;
+			} else {
+				if ( $lev2[ $key ] ) { //- レベル2、終了
+					$data[ $key ][] = $lev2[ $key ];
+					$lev2[ $key ] = [];
+				}
+				$data[ $key ][] = $t_line;
+			}
+		} else {
+			//- その他
+			$data[ $key ][] = $t_line;
 		}
 	}
-	//- DB終了
-	$pdo->commit();
-}
+	//-  箇条書き、レベル2の残り
+	foreach ( [ 'main_e', 'main_j' ] as $key ) {
+		if ( ! $lev2[ $key ] ) continue;
+		$data[ $key ][] = $lev2[ $key ];
+	}
 
-//. テスト出力
+	$id = $url = $img = $link = $rel = $tag = $wikipe = null;
+	$title = $abst = $main_e = $main_j = $main = null;
+	extract( $data );
 
-//.. 指定doc
-$id = _getpost( 'show' );
-if ( $id != '' ) {
-	$_simple->hdiv( "doc-ID: $id",
-		_doc_hdiv( $id, [ 'lang' => 'e' ] ) .
-		_doc_hdiv( $id, [ 'lang' => 'j' ] )
-	);
-}
+	//- 整理
+	$title_e = $title[0];
+	$title_j = $title[1] ?: $title[0];
+	$abst_e = $abst[0];
+	$abst_j = $abst[1] ?: $abst[0];
 
-//.. その他のdoc
-$data = [];
-foreach ( $_doc as $id => $doc ) {
-	$data[ $doc[ 'type' ] ][] = _a(
-		"?show=$id",
-		$doc[ 'e' ][ 't' ] ?: $doc[ 'j' ][ 't' ]
-	);
-}
-$out = '';
-foreach ( $data as $type => $items ) {
-	$out .= $_simple->hdiv( $type, _imp2( $items ), [ 'type' => 'h2' ] );
-}
-$_simple->hdiv( 'All docs', $out );
-*/
-
-//. function
-//.. _d:  登録
-function _d( $d, $opt ) {
-	global $_doc, $_count_id, $_type, $_done, $_related;
-
-	$id = $url = $img = '';
-	$link = $rel = $tag = $wikipe = [];
-	extract( $opt );
+	//- 空白区切りでも配列にする
+	$tag = array_filter( explode( ' ', implode( ' ', (array)$tag ) ) );
+	$rel = array_filter( explode( ' ', implode( ' ', (array)$rel ) ) );
 
 	//... ドキュメントID、無ければ適当に割り振る
-	if ( $id == '' ) {
+	if ( ! $id ) {
 		$id = $_count_id;
 		++ $_count_id;
 	}
@@ -138,21 +132,23 @@ function _d( $d, $opt ) {
 		die( "$id: IDが重複" );
 	$_done[ $id ] = true;
 
+	echo( "----- $id: $title_e\n" );
+
 	//... link
-	$le = $lj = [];
-	foreach ( (array)$link as $a ) {
-		if ( $a[0] == '' && $a[1] != '' ) {
-			//- 最初がヌル、日本語だけ
-			$lj[] = _ab( $a[1], IC_L . $a[2] );			
-		} else if ( count( $a ) == 4 ) {
-			//- 値が4つ、URLも別々
-			$le[] = _ab( $a[0], IC_L . $a[1] );
-			$lj[] = _ab( $a[2], IC_L . $a[3] );
-		} else {
-			//- 値が2つ、両言語で同じ
-			//- 値が3つ、URLは両言語で共通
-			$le[] = _ab( $a[0], IC_L . $a[1] );
-			$lj[] = _ab( $a[0], IC_L . ( $a[2] ?: $a[1] ) );
+	$link_e = $link_j = [];
+	foreach ( range( 1, 20 ) as $num ) {
+		if ( $link[ "u-$num" ] ) { //- 英語 - 日本語のURLしかない場合はなし
+			$link_e[] = _ab(
+				$link["u-$num"],
+				IC_L. ( $link["t-$num"] ?: $link["u-$num"] )
+			);
+		}
+		if ( $link[ "uj-$num" ] || $link[ "u-$num" ] ) { //- 日本語
+			$link_j[] = _ab(
+				$link["uj-$num"] ?: $link["u-$num"] ,
+				IC_L
+				. ( $link["tj-$num"] ?: $link["t-$num"] ?: $link["uj-$num"] ?: $link["u-$num"] )
+			);
 		}
 	}
 
@@ -173,20 +169,17 @@ function _d( $d, $opt ) {
 
 	//... news
 	if ( $_type == 'news' ) {
-		$s1 = substr( $d[0], 0, 10 );
-		$s2 = substr( $d[0], 10 );
-		$d[0] = _datestr( $s1, 'e' ) . '. '
-			. ( $s2 ?: strip_tags( $d[2] ) );
-		$d[1] = _datestr( $s1, 'j' ) . ': '
-			. ( substr( $d[1], 10 ) ?: $s2 ?: strip_tags( $d[3] ) ?: strip_tags( $d[2] ) );
+		$date = substr( $title_e, 0, 10 );
+		$title_e = _datestr( $date, 'e' ). '. '. strip_tags( $abst_e );
+		$title_j = _datestr( $date, 'j' ). ': '. strip_tags( $abst_j );
 	}
 
 	//... rel 相互に関連付ける
 	foreach ( (array)$rel as $i ) {
-		if ( $i == '' ) continue;
+		if ( ! $i ) continue;
 		if ( is_array( $_doc[ $i ] ) ) //- すでにあるデータなら追記
 			$_doc[ $i ][ 'rel' ] =
-				array_unique( (array)array_merge( $_doc[$i]['rel'] , [$id] ) );
+				array_unique( (array)array_merge( $_doc[$i]['rel'] ?: [] , [$id] ) );
 		else
 			$_related[ $i ] = $id;
 	}
@@ -197,31 +190,94 @@ function _d( $d, $opt ) {
 //		$rel += $_doc[ $id ][ 'rel' ]
 
 	//... output
-	$_doc[ $id ] = [
+	$_doc[ $id ] = array_filter([
 		'e' => [
-			't' => $q . $d[0] ,
-			's' => $a . $d[2] ,
-			'c' => _prep( $d[4] ) ,
-			'l' => _imp2( $le ) ,
+			't' => $q. $title_e ,
+			's' => $a. $abst_e ,
+			'c' => _prep_ul( $main_e ?: $main ) ,
+			'l' => _imp2( $link_e ) ,
 		] ,
 		'j' => [
-			't' => $q . ( $d[1] ?: $d[0] ) ,
-			's' => $a . ( $d[3] ?: $d[2] ) ,
-			'c' => _prep( $d[5] ) ,
-			'l' => _imp2( $lj ) ,
+			't' => $q. $title_j ,
+			's' => $a. $abst_j ,
+			'c' => _prep_ul( $main_j ?: $main ) ,
+			'l' => _imp2( $link_j ) ,
 		] ,
-		'tag'	=> is_array( $tag ) ? $tag : explode( ' ', $tag ) ,
+		'tag'	=> $tag ,
 		'type'	=> $_type ,
 		'rel'	=> array_merge( (array)$rel, (array)$_related[ $id ] ),
 		'url'	=> $url ,
 		'img'	=> $fn_img ,
 		'wikipe' => $wikipe ,
-	];
-
+	]);
+	$_rep = []; //- rep リセット
 }
 
-//.. _prep: 配列を箇条書きに
-function _prep( $in ) {
+//.. _table_prep
+function _table_prep( $in ) {
+	global $_rep;
+	$id = 0;
+	foreach ( explode( '-----', $in ) as $block ) {
+		++ $id;
+		$data = [];
+		$flg_1st = true;
+		$key = 'dummy';
+		foreach ( _doc_prep( $block ) as $line ) {
+			$t_line = trim( $line );
+			if ( !$t_line || substr( $t_line, 0, 2 ) == '//' ) continue;
+			if ( substr( $line, 0, 1 ) != "\t" ) {
+				$key = $t_line;
+			} else {
+				$data[ $key ][] = $t_line;
+			}
+		}
+		$table = null;
+		$flg_1st = true;
+		foreach ( $data as $th => $td ) {
+			if ( [ $th, $td ] == [ '_', ['_'] ] ) {
+				$flg_1st = false;
+				continue;
+			}
+			if ( $th == '_' )
+				$th = '';
+			$table .= $flg_1st
+				? TR_TOP.TH. $th. TH. implode( TH, $td )
+				: TR.    TH. $th. TD. implode( TD, $td )
+			;
+			$flg_1st = false;
+		}
+		$_rep[ "%table-$id%" ] = _t( 'table', $table );
+	}
+}
+
+//.. _rep
+function _rep( $in, $flg_global = false ) {
+	global $_rep, $_rep_global;
+	$rep = [];
+	$rep_multi = [];
+	$key = 'dummy';
+	foreach ( explode( "\n", $in ) as $line ) {
+		$t_line = trim( $line );
+		if ( substr( $line, 0, 1 ) != "\t" )
+			$key = $t_line;
+		else {
+			$rep[ "%$key%" ] = $t_line;
+			$rep_multi[ "%$key%" ][] = $line;
+		}
+	}
+	//- 複数行データ対応
+	foreach ( $rep_multi as $key => $val ) {
+		if ( 1 < count( $val ) )
+			$rep[ $key ] = implode( "\n", $val );
+	}
+	if ( $flg_global )
+		$_rep_global = $rep;
+	else
+		$_rep = $rep;
+}
+
+//.. _prep_ul: 配列を箇条書きに
+function _prep_ul( $in ) {
 	global $out;
 	if ( $in == '' ) return;
 	if ( is_string( $in ) )
@@ -229,13 +285,39 @@ function _prep( $in ) {
 
 	$ret = '';
 	foreach ( $in as $c ) {
-		$ret .= _prep( $c );
+		$ret .= _prep_ul( $c );
 	}
 	return _t( 'ul | .doc_ul', $ret );
+}
+
+//.. _doc_prep: 文書 前処理
+function _doc_prep( $in ) {
+	global $_rep, $_rep_global;
+//	print_r( $_rep_global );
+	return explode( "\n", _reg_rep(
+		strtr( $in, array_merge( $_rep, $_rep_global ) ) //- repによる変換
+		,
+		[
+			'/[\n\r]+[\t ]+NR\t/'		=> '' , //- 改行消し
+			'/[\n\r]+[\t ]+BR\t/'		=> '<br>' , //- 改行タグ入れ
+			'/< *(.+?) *\|>/'			=> _ab( '$1', '$1' ) , //- link url表示
+			'/< *(.+?) *\|[\n\r\t ]*(.+?) *>/' => _ab( '$1', '$2' ) , //- link
+		]
+	));
 }
 
 //.. _q: クオート処理
 function _q( $s ) {
 	return "'" . strtr( $s, [ "'" => "''" ] ) . "'";
+}
+
+//.. _pre
+function _pre( $in, $rev = false ) {
+	return strtr( $in, $rev ? [ '_n_' => "\n" ] : [ "\n" => '_n_' ] );
+}
+
+//.. _lnk
+function _lnk( $url, $title ) {
+	return "u\t$url\n\tt\t$title";
 }
 

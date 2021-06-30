@@ -73,6 +73,17 @@ TERM_MOM
 	Molecule of the Month
 	今月の分子
 
+TERM_SPIKE
+	Spike glycoprotein
+	スパイク糖タンパク質
+
+TERM_POLYPRO
+	RNA polymerase/Protease, etc
+	RNAポリメラーゼ・プロテアーゼなど
+
+TERM_RECEPTOR
+	Virus receptor (human)
+	ウイルス受容体（ヒト）
 EOD
 );
 /*
@@ -211,7 +222,8 @@ $_simple
 //.. 構造データエリア
 ->hdiv( TERM_COVID19_STR, _div( '.clearfix', ''
 	. _pop(
-		'https://pdbj.org/images/coronavirus_feature-page.png' ,
+//		'https://pdbj.org/images/coronavirus_feature-page.png' ,
+		'https://pdbj.org/cms-data/images/coronavirus_feature-page.png' ,
 		TERM_COV2_REGEND ,
 		[
 			'type' => 'img',
@@ -236,9 +248,9 @@ $_simple
 		]) ,
 		'Type'		=> _radiobtns( [ 'name' => 'type', 'on' => G_TYPE ], [
 			'all'	=> 'All' ,
-			'spike'	=> 'Spike glycoprotein' ,
-			'rnap'	=> 'RNA polymerase' ,
-			'ace2'	=> 'Virus receptor (human)'
+			'spike'	=> TERM_SPIKE , 
+			'rnap'	=> TERM_POLYPRO ,
+			'ace2'	=> TERM_RECEPTOR ,
 		]) ,
 	]). _input( 'submit', 'st: width:20em' ) ))
 	. CATALOG
@@ -259,30 +271,12 @@ $_simple
 	]), [ 'type' => 'h2' ] )
 	. $_simple->hdiv( TERM_PDBJ_PAGES, _ul([
 		_ab( 'https://pdbj.org/featured/covid-19', TERM_PDBJ_PAGETITLE ) ,
-		_ab(
-			'https://bmrbdep.pdbj.org/top_search/all?query=entity_natural_src.ncbi_taxonomy_id%3A2697049+OR+entity_src_gen.pdbx_gene_src_ncbi_taxonomy_id%3A2697049+OR+sciSpeciesType.ncbiTaxId%3A2697049' ,
-			TERM_BMRB_PAGETITLE
-		) ,
-
+		_ab( 'https://bmrbj.pdbj.org/top_search/covid-19', TERM_BMRB_PAGETITLE ) ,
 		TERM_MOM. _ul([
-/*
-			_ab( URL_MOM_PROTEASE,
-				_img( 'https://numon.pdbj.org/momimages/mom242_01.png' )
-				. TERM_COV_PROTEASE 
-			) ,
-			_ab( URL_MOM_SPIKE,
-				_img( 'https://numon.pdbj.org/momimages/mom246_01.png' )
-				. TERM_COV_SPIKE 
-			) ,
-			_ab( URL_MOM_POLYM,
-				_img( 'https://numon.pdbj.org/momimages/mom249_01.png' )
-				. TERM_COV_POLYM
-			) ,
-*/
 			_mom_link( 242 ) ,
 			_mom_link( 246 ) ,
 			_mom_link( 249 ) ,
-			
+			_mom_link( 256 ) ,
 		])
 	]), [ 'type' => 'h2' ] )
 )

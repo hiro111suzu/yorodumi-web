@@ -2,9 +2,6 @@
 //. 
 require( __DIR__. '/common-web.php' );
 
-define( 'WWW', is_dir( '/var/www/html/emnavi' ) );
-
-
 $linkarray = [
 	'[EMN]'		=> _ab( './', '[EMN]' ) ,
 	'[YM]'		=> _ab( 'view.php', '[YM]' ) ,
@@ -27,14 +24,14 @@ foreach ( $_GET as $name=>$value ) {
 
 //
 $lk = '';
-if ( ! WWW ) foreach ( glob( 'mng-*' ) as $fn )
+if ( TESTSV ) foreach ( glob( 'mng-*' ) as $fn )
 	$lk .= _ab( $fn, IC_L . strtr( $fn, [ '.php' => '' ] )  ). ' ';
 
 
 $lk .= _ab( 'prime.php?prime_test=on', 'Prime testmode' );
 
 echo ''
-, _ab( './', IC_EMN . 'EMN top' )
+, _page_link( 'emn' )
 , ' '
 , _ab( 'view.php', IC_YM . 'YM' )
 , ' '
@@ -65,6 +62,9 @@ echo ''
 //, _tr( 'emlocal'		, '[YM] emlocal mode'		, 1 )
 //, _tr( 'abst'			, '[EMN] citation: show abstract' , 1 )
 //, _tr( 'searchparam'	, '[EMN] search: show params' , 1 )
+, _tr( 'sqlite_log'		, 'sqlite_log'					, 1 )
+, _tr( 'time_log'		, 'time_log'					, 1 )
+
 ;
 
 if ( count( $ck ) > 0 ) foreach ( $ck as $name=>$value ) {

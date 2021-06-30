@@ -26,7 +26,7 @@ if (
 	_before_release_time() &&
 	in_array( $id, _file( DN_PREP. '/newids/latest_new_pdbid.txt'  ) )
 ) {
-	$url_struc =_url( 'mmcif', $id );
+	$url_struc =_url( 'disp', "arch.mmcif.$id" );
 }
 
 //.. sasbdb
@@ -61,7 +61,7 @@ if ( $db == 'emdb' ){
 
 //.. bird
 if ( $db == 'bird' ) {
-	$url_struc = 'txtdisp.php?a=bird_cifcc.'. _numonly( $id );
+	$url_struc = _fn( 'disp', 'bird_cifcc.'. _numonly( $id ) );
 }
 
 //.. portable

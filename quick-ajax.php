@@ -18,6 +18,10 @@ _add_fn( 'quick-pdb' ); //- PDB共通で
 _add_url( 'quick-ajax' );
 
 _define_term(<<<EOD
+TERM_SELECT_BTN
+	Click this button to select this element in structure viewer
+	クリックすると構造ビューア内でこの要素が選択されます
+
 TERM_SEQSEL
 	*Select sequence letters by mouse to focus corresponding region in structure viewer
 	*配列文字列をマウスで選択すると、構造ビューア中で該当する部位がフォーカスされます

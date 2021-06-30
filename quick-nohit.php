@@ -19,7 +19,6 @@ TERM_ENT_SEQ
 TERM_OBS_EMDB
 	Obsolete EMDB entry
 	取り消されたEMDBエントリ
-
 EOD
 );
 
@@ -159,7 +158,7 @@ if ( $unrel_type == 'prerel' ) {
 			'Details'	=> $json->det ,
 			'New ID'	=> $rep ,
 			'Downloads' => _quick_kv([
-				'TEST' => _test( _ab(['txtdisp', 'a' => 'emdb_obs.'. ID ], 'XML') ) ,
+				'TEST' => _test( _ab(['disp', 'emdb_obs.'. ID ], 'XML') ) ,
 				'Header file' => _ab( $ftpu. "/header/emd-$id.xml", "emd-$id.xml" ) ,
 				'FTP directory'	=> _ab( $ftpu, $ftpu )
 			]) ,

@@ -13,7 +13,6 @@ _add_unit( 'quick-emdb' );
 //$ftpdir = _url( 'ftpdir' );
 
 define( 'URL_HTTP_DL', _url( 'url_http_dl', ID ) );
-
 define( 'MAP_EX'	 , $main_id->ex_map() );
 define( 'MOV_EX'	 , $main_id->ex_mov() );
 define( 'MOLDATA_EX' , $main_id->ex_polygon() );
@@ -28,9 +27,9 @@ define( 'TERM_REC_MET', _met_pop([
 	'2' => 'electron crystallography' 
 ][ $main_id->add()->met ], 'm' ) ); //- metではicosがない、英語で返す必要がある
 
-define( 'TERM_CRYOEM', $main_id->add()->cryo ?
-	_met_pop( 'cryo EM', 'm' )
-	: ''
+define( 'TERM_CRYOEM', $main_id->add()->cryo
+	? _met_pop( 'cryo EM', 'm' )
+	: null
 );
 
 define( 'TERM_STAIN', $main_id->add()->stained
@@ -79,9 +78,10 @@ $_simple->time( 'emdb init' );
 UniProt検索リンク 管理用
 由来情報
 */
-$flg_unp_links = ( TEST && 
-	_tsv_load( DN_PREP. '/unp/emdb_unpids_annot.tsv')[ ID ] == '_' )
-;
+$flg_unp_links = (
+	TEST && 
+	_tsv_load( DN_PREP. '/unp/emdb_unpids_annot.tsv' )[ ID ] == '_'
+);
 $abst_names = [];
 $unp_link_test = [];
 $src = [];
@@ -165,25 +165,19 @@ foreach ( $src as $k => $v ) {
 //.. citation
 $citation = new cls_citation();
 //- primary
-$journal     = $json1->deposition->primaryReference->journalArticle;
-$non_journal = $json1->deposition->primaryReference->nonJournalArticle;
 if ( ! $citation->pubmed_json( $main_id->add()->pmid ) ) {
-	$non_journal
-		? $citation->emdb_non_journal( $non_journal )
-		: $citation->emdb_json( $journal )
-	;
+	$citation->emdb_json(
+		$json3->crossreferences->primary_citation->journal_citation
+	);
 }
+
 //- secondary
 $cnt = 1;
-foreach ( (array)$json1->deposition->secondaryReference as $x ) {
-	$journal     = $x->journalArticle;
-	$non_journal = $x->nonJournalArticle;
-	if ( ! $citation->pubmed_json(
-		$journal->ref_pubmed . $non_journal->ref_pubmed , $cnt
-	) ) {
-		$non_journal
-			? $citation->emdb_non_journal( $non_journal, $cnt )
-			: $citation->emdb_json( $journal, $cnt )
+foreach ( (array)$json3->crossreferences->secondary_citation as $j ) {
+	if ( ! $citation->pubmed_json( $j->journal_citation->ref_PUBMED ) ) {
+		$j->non_journal_citation
+			? $citation->emdb_non_journal( $j->non_journal_citation, $cnt )
+			: $citation->emdb_json( $j->journal_citation, $cnt )
 		;
 	}
 	++ $cnt;
@@ -274,23 +268,6 @@ if ( TEST ) {
 	}
 }
 
-//.. validation report EMDB
-$v = "validation_reports/EMD-$id";
-$dn = TESTSV
-	? DN_FDATA. "/emdb-mirror/$v"
-	: "/home/archive/ftp/pdbj/pub/emdb/$v"
-;
-if ( is_dir( $dn ) ) {
-//	$ftp = "http://ftp.pdbj.org/pub/emdb/$v";
-	$l = 'validation_rep.php?id=e'. ID.'&type=';
-	$valrep = _imp(
-		_ab( $l. 'pdf'	, IC_DL . _ej( 'Summary', '簡易版' ) ) ,
-		_ab( $l. 'full'	, IC_DL . _ej( 'Full report', '詳細版' ) ) ,
-		_ab( $l. 'xml'	, IC_DL . 'XML'  ) ,
-		_ab( 'https://www.wwpdb.org/validation/2017/EMMapValidationReportHelp',
-		 IC_L. TERM_ABOUT_VALREP )
-	);
-}
 $_simple->time( 'basic-prep' );
 
 //.. output
@@ -315,8 +292,6 @@ $o_data->basicinfo([
 	'Sample'			=> $sample_name. $compo. _hdiv_focus( 'sample' ),
 	'Keywords'			=> _keywords( $json3->admin->keywords ) ,
 	'func_homology'		=> _func_homology(),
-	'F&H annot'			=> $fh_annot ,
-	'EMN category'		=> _emn_categ() ,
 	'Biological species' => _imp2( $src_items ) ,
 
 	'Method'			=> _imp2([ TERM_REC_MET, TERM_CRYOEM, TERM_STAIN,
@@ -327,9 +302,21 @@ $o_data->basicinfo([
 	'Funding support' 	=> $funding ,
 	'Citation'			=> $citation->output() ,
 //	'Validation Report' => _validation_rep( $fit_pdb ) ,
-	'Validation Report' => $valrep ,
-	'History'			=> _history_table( $history )
-]);
+	'History'			=> _history_table( $history ) ,
+	'F&H annot'			=> $fh_annot ,
+	'EMN category'		=> _emn_categ() ,
+])
+->test_item([
+	_ab([ 'json', DID ], 'jsonview' ) ,
+	_ab([ 'json3', ID ], 'json3' ) ,
+	_ab([ 'jsonview', 'emdb_add.'. ID ], 'add-json' ) ,
+	_ab([ 'disp', 'emdb_kw.'. ID ], 'search terms' ) ,
+	_ab([ 'dir_emdb_med', ID ], _fa( 'folder' ) . 'media dir' ),
+	_ab([ '_mng-dir', 'fn' => 'emdb_ftp|'. ID ], 'FTP dir on fs3' )
+])
+;
+
+//.. end
 $_simple->time( 'basic' );
 
 unset( $citation, $history, $compo, $funding );
@@ -378,10 +365,9 @@ $o_data->lev1title( 'downlink', true );
 
 //.. ダウンロード
 $files = [
-	$caps[ 'map' ] => [] ,
-	$caps[ 'header' ] => [] ,
+	'map' => [] ,
+	'header' => [] ,
 ];
-
 foreach ( _emn_json( 'filelist', DID ) as $type => $c ) {
 	 foreach ( $c as $a ) {
 		extract( (array)$a ); //- $name , $size
@@ -391,49 +377,46 @@ foreach ( _emn_json( 'filelist', DID ) as $type => $c ) {
 	}
 }
 $f = _url( 'ftpdir', ID );
-$files['Archive directory'] = [
+$files['archive_dir'] = [
 	_ab( URL_HTTP_DL, IC_L. URL_HTTP_DL ). ' (HTTP)',
 	_ab( $f, IC_L. $f ). " (FTP)"
 ];
 
-$caps = _ej([
-	'map'		=> 'Map data',
-	'header'	=> 'Header (meta data in XML format)',
-	'fsc'		=> 'FSC (resolution estimation)',
-	'images'	=> 'Images',
-	'masks'		=> 'Masks (Map data of sub-region, etc)',
-	'other'		=> 'Others',
-	'slices'	=> 'Slices',
-], [
-	'map'		=> 'マップデータ',
-	'header'	=> 'ヘッダ（付随情報, XML型式）',
-	'fsc'		=> 'FSC (解像度算出)',
-	'images'	=> '画像',
-	'masks'		=> 'マスクデータ（部分マップなど）',
-	'other'		=> 'その他',
-	'slices'	=> '断面図',
-]);
-
 $add = [
-	'map'		=> _hdiv_focus('map') ,
-//	'header'	=> _ab( hdiv_focus('map') ,
-	'masks'		=> _hdiv_focus('supplemental') ,
-	'other'		=> _hdiv_focus('supplemental') ,
+	'map'	=> _hdiv_focus('map') ,
+	'masks'	=> _hdiv_focus('supplemental') ,
+	'other'	=> _hdiv_focus('supplemental') ,
 ];
 
 foreach ( $files as $type => $lnk ) {
 	if ( $lnk )
 		$lnk[] = $add[ $type ];
-	$o_data->lev2( $caps[ $type ] ?: $type, _ul( (array)$lnk ) );
+	$o_data->lev2( "filedesc_$type" ?: $type, _ul( (array)$lnk ) );
 }
 
-if ( TEST ) {
-	$o_data->lev2(
-		'FTP dir local' ,
-		_ab([ '_mng-dir', 'fn' => 'emdb_ftp|'. ID ], 'FTP dir local' )
-	);
-}
 $o_data->end2( 'Download' );
+
+//.. download2
+//... validation report EMDB
+/*
+テーブル
+name , dl, size, disp, 
+
+*/
+/*
+if ( is_dir( _fn( TESTSV ? 'dn_valrep_emdb_fs3' : 'dn_valrep_emdb_mainsv' ) ) ) {
+	$arch = new cls_archive( ID );
+	$valrep = _ul([
+		$arch->kv( 'valrep_emdb_sum' ) ,
+		$arch->kv( 'valrep_emdb_full' ) ,
+		$arch->kv( 'valrep_emdb_xml' ) ,
+		$arch->kv( 'valrep_emdb_cif' ) ,
+		$arch->kv( 'valrep_dir' ) ,
+		_ab( 'valrep_emdb_help', IC_HELP. TERM_ABOUT_VALREP )
+	], 0 );
+}
+*/
+
 
 //.. 関連構造データ
 ( new cls_related([ 'is_em' => true ]) )
@@ -472,21 +455,10 @@ foreach ( (array)$json3->sample->supramolecule as $c ) {
 
 //... output
 $o_data
-	->lev2( 'test', _test( _imp2([
-		_ab([ 'json', DID ], 'jsonview' ) ,
-		_ab([ 'json3', ID ], 'json3' ) ,
-		( file_exists( _fn( 'emdb_json20', ID ) )
-			? _ab([ 'jsonview', 'emdb_json20.'. ID ], 'JSON-v20' ) : ''
-		),
-		_ab([ 'txtdisp', 'a' => 'emdb_kw.'. ID ], 'search terms' ) ,
-		_ab([ 'dir_emdb_med', ID ], _fa( 'folder' ) . 'media dir' )
-		
-	])))
 	->lev2( 'EMDB pages', _imp2([
 		_ab([ 'emdb_ent_ebi' , $id ], IC_L. 'EMDB (EBI/PDBe)' ) ,
 		_ab([ 'emdb_ent_emdr', $id ], IC_L. 'EMDataResource' ),
 	]))
-//	->lev2( 'EM raw data', implode( BR, $emp_link ) )
 	->lev2( TERM_REL_MOM, _mom_items( $kw ) )
 
 	->end2( 'Links' )
@@ -510,7 +482,7 @@ $o_data->lev1( 'File', MAP_EX
 		'type'		=> $map->data_type ,
 //		'label'		=> $map->label ,
 	]
-	: _trep( _x( $json1->deposition->status ) )
+	: _trep( $json3->admin->current_status->code )
 );
 
 //.. projection / slices
@@ -1305,7 +1277,8 @@ foreach ( (array)$json1->experiment->vitrification as $n1 => $c1 ) {
 $o_data->end2( 'Sample preparation' );
 
 //.. Imaging
-$flg_multi = count( $json1->experiment->imaging ) > 1;
+$flg_multi = count( $json3->structure_determination[0]->microscopy ) > 1;
+
 $num = 1;
 foreach ( $json1->experiment->imaging as $n1 => $o_img ) {
 

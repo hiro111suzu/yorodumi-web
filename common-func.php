@@ -213,12 +213,10 @@ function _t( $tag, $str = '' ) {
 
 //.. _e: 空タグ
 function _e( $tag ) {
-	return '<'
-		. implode( ' ',	_reg_rep(
-			preg_split( '/ *\| */', trim( $tag ), 0, PREG_SPLIT_NO_EMPTY ) ,
-			TAG_REP
-		)). '>'
-	;
+	return '<'. implode( ' ',	_reg_rep(
+		preg_split( '/ *\| */', trim( $tag ), 0, PREG_SPLIT_NO_EMPTY ) ,
+		TAG_REP
+	)). '>';
 }
 
 //.. _meta:
@@ -256,11 +254,11 @@ function _a_flg( $flg, $url, $str, $opt = '' ) {
 
 //.. _local_link サイト内リンク
 function _local_link( $in ) {
-	global $urls;
+	global $_urls;
 	if ( $in == '' )
 		return '========'; //- 問題対策 _mng-docs.phpでの問題
 	if ( is_string( $in ) )
-		return $urls[ $in ] ?: $in;
+		return $_urls[ $in ] ?: $in;
 	if ( array_keys( $in ) == [0, 1] ) //- _url関数の短縮
 		return _url( $in[0], $in[1] );
 	$php = $in[0] ? $in[0]. '.php' : '';
@@ -466,6 +464,12 @@ function _xbtn( $js = '', $o = '' ) {
 	return _t( "button| !$js| .xbtn| $o", 'X' );
 }
 
+//.. _disp
+/*
+function _disp( $type, $id, $title = null ) {
+	return _ab([ 'disp', "$type.$id" ], _fa('file-text'). _l( $title ) );
+}
+*/
 
 //. sqlite系
 //.. _kwprep: 検索キーワードの変換
@@ -568,20 +572,20 @@ function _add_lang( $in ) {
 
 //.. _url: 各種URLを返す
 function _url( $type, $i = '', $i2 = '' ) {
-	global $urls, $id;
-	return strtr( $urls[ $type ], [
-		'[id]'		=> $i ?: $id ,
-		'[id2]'		=> $i2 
+	global $_urls, $id;
+	return strtr( $_urls[ $type ], [
+		'[id]'	=> $i ?: $id ,
+		'[id2]'	=> $i2 
 	]);
 }
 
 //.. _add_url
 function _add_url( $in ) {
-	global $urls;
-	if ( $urls['loaded'][ $in ] ) return;
-	$urls['loaded'][ $in ] = true;
-	$urls = array_merge(
-		$urls ,
+	global $_urls;
+	if ( $_urls['loaded'][ $in ] ) return;
+	$_urls['loaded'][ $in ] = true;
+	$_urls = array_merge(
+		$_urls ,
 		is_array( $in ) ? $in : _subdata( 'url', $in )
 	);
 }
@@ -596,7 +600,7 @@ function _fn( $type, $i = '', $s1 = '', $s2 = '' ) {
 		'<data>'	=> DN_DATA ,
 		'<fdata>'	=> DN_FDATA ,
 		'<prep>'	=> DN_PREP ,
-		'<omokage>'	=> defined( 'DN_OMO' ) ? DN_OMO : '../omokage'
+		'<omokage>'	=> defined( 'DN_OMO' ) ? DN_OMO : '../omokage',
 	]);
 }
 
@@ -987,7 +991,7 @@ function _simple_tabs() {
 }
 
 //.. _simple_table
-function _simple_table( $ar ) {
+function _simple_table( $ar, $opt = null ) {
 	if ( ! is_array( $ar ) ) return $ar;
 	$s = '';
 	foreach ( $ar as $key => $val ) {
@@ -1214,7 +1218,7 @@ function _btn_popviewer( $did, $param = [] ) {
 	//- param: jmol/molmil [ cmd, param ], btn_label, ...
 	$jmol = $molmil = [];
 	$btn_type = $btn_cls = $btn_pop = '';
-	$btn_label = VW_BTN_LABEL;
+	$btn_label = IC_VIEW. TERM_STR_VIEWER; //- デフォルト値
 	extract( $param );
 	$mapflg = substr( $did, 0, 1 ) == 'e' ? ',map:1' : '';
 	return _t(
@@ -1239,198 +1243,23 @@ function _btn_popmov( $id ) {
 	return _btn( "!_pmov.open('$id')", _ic( 'play' ). _l( 'Movie' ) );
 }
 
-//.. _jmolobj
-
-//- jsオブジェクト文字列を作って返す
-function _jmolobj( $a ) {
-	extract( $a ); //- $hq, $size, $use, $init, $jmolid, $autostart, $db, $id
-	$q = $hq
-		? 'set antialiasDisplay ON; set antialiasTranslucent ON;set ribbonBorder ON;'
-		: 'set antialiasDisplay OFF; set antialiasTranslucent OFF;set ribbonBorder OFF;'
-	;
-	$size = $size ?: 250;
-	$jmolid = $jmolid ?: '0';
-
-	$obj = json_encode([
-		'width'		=> $size ,
-		'height'	=> $size ,
-		'color'		=> 'white' ,
-		'use'		=> $use ?: 'JAVA HTML5' ,
-		'isSigned'	=> true ,
-		'jarFile'	=> 'JmolAppletSigned.jar' ,
-		'j2sPath'	=> JMOLPATH. '/j2s' ,
-		'jarPath'	=> JMOLPATH. '/java' ,
-		'serverURL' => JMOLPATH. '/php/jsmol.php' ,
-
-
-		'script'	=> ''
-			. 'set ambientPercent 20; set diffusePercent 70;'
-			. 'set specular ON; set specularPower 80; set specularExponent 5;'
-			. 'set specularPercent 70;'
-			. $q
-			. 'set MessageCallback "_jmolmsg";'
-			. 'set languageTranslation OFF;'
-			. ( $id != ''
-				? _jmolloadcmd( $db, $id )
-				: ''
-			)
-			. $init
-	]);
-
-	if ( $autostart )
-		return _t( 'script',
-			'Jmol._alertNoBinary = false;' .
-			"Jmol.getApplet('jmol$jmolid', $obj);" 
-		);
-	else
-		return 
-			'Jmol.setDocument(0);' .
-			'Jmol._alertNoBinary = false;' .
-			"Jmol.getApplet('jmol$jmolid', $obj);"
-		;
-}
-
-//.. _jmol_loadcmd
-define( 'INIT_STYLE_CHAIN',''
-	. 'define _nonpoly ligand or solvent or ((dna or rna) and hetero);'
-	. 'define _carbon_etc (carbon | (*.P & ! ligand) | (backbone & (dna|rna)) );'
-	. "select !unk; cartoon ONLY; "
-	. "select connected(0,0) and (!hetero);cpk 70%; backbone 200;"
-	. 'select (unk and !sidechain); wireframe 0.3;cpk 50%; backbone 200; color chain;'
-	. "select !unk; color chain; color (! _carbon_etc) CPK; "
-	. 'select _nonpoly; wireframe 0.25; spacefill 33%; color CPK; '
-	. 'hide water;'
-	. 'select all;'
-);
-
-define( 'INIT_STYLE_MONO',
-	strtr( INIT_STYLE_CHAIN, [ 'color chain;' => 'color monomer;' ] )
-);
-
-function _jmolloadcmd( $db, $id, $opt = [] )  {
-	return implode( ';', _jmol_params( $db, $id, $opt ) );
-}
-
-//.. _jmol_params
-function _jmol_params( $db, $id, $opt = [] ) {
-	if ( $db == '' ) return;
-	$d = URL_DATA;
-	$zs = 'set zshade on; set zshadepower 1;';
-
-	//... chem
-	if ( $db == 'chem' ) {
-		return [
-			'load'	=> "load \"$d/chem/cif/$id.cif.gz\"" ,
-			'init'	=> 'select all; wireframe 0.25; spacefill 33%; color CPK; rotate best;$zs'
-		];
-	}
-
-	//... EMDB
-	if ( $db == 'emdb' ) {
-		$dn = "emdb/media/$id/ym";
-		$insideout = file_exists( DN_DATA. "/$dn/insideout1" ) ? 'insideout' : '';
-		return [
-			'load' 	=> "load \"$d/$dn/pg1.pdb\"" ,
-			'init'	=> "isosurface s1 $insideout file \"$d/$dn/o1.zip|o1.jvxl\";"
-				. " isosurface s1 OPAQUE [x77ee77];$zs"
-		];
-	}
-
-	//... VQ
-	if ( $db == 'vq' ) {
-		//- vq idは ida形式 1oel-1, e1003, s100
-		$f = substr( $id, 0, 1 );
-		if ( $f == 'e' ) {
-			$id = _numonly( $id );
-			$u1 = URL_DATA. "/emdb/vq/$id-30.pdb";
-			$u2 = URL_DATA. "/emdb/vq/$id-50.pdb";
-		} else if ( $f == 's' ) {
-			$id = _numonly( $id );
-			$u1 = URL_DATA. "/sas/vq/$id-vq30.pdb";
-			$u2 = URL_DATA. "/sas/vq/$id-vq50.pdb";
-		} else {
-			$u1 = URL_DATA. "/pdb/vq/$id-30.pdb";
-			$u2 = URL_DATA. "/pdb/vq/$id-50.pdb";
-		}
-		return [
-			'load' => "load append \"$u1\";load append \"$u2\";" ,
-			'init' => $zs
-			
-		];
-	}
-
-
-	//... SASBDB
-	if ( $db == 'sasbdb-model' ) {
-		$j = _json_load2( _fn( 'sas_json', _sas_info( 'mid2id', $id ) ) )->sas_model;
-
-		//- ダミー原子なら CPK
-		$init = 'spacefill only; color CPK;';;
-		foreach ( $j as $c ) {
-			if ( $c->id != $id ) continue;
-			if ( $c->type_of_model == 'atomic' )
-				$init = INIT_STYLE_CHAIN;
-			break;
-		}
-		$u = URL_DATA. "/sas/splitcif/$id.cif";
-		return [
-			'load' 	=> "load \"$u\"" ,
-			'init'	=> $init. $zs
-		];
-	}
-
-	if ( $db == 'sasbdb' ) {
-		$j = _json_load2( _fn( 'sas_json', $id ) )->sas_model[0];
-		$mid = $j->id;
-		$init = ( $j->type_of_model == 'atomic' )
-			? INIT_STYLE_CHAIN
-			: 'spacefill only; color CPK;'
-		;
-		$u = URL_DATA. "/sas/splitcif/$mid.cif";
-		return [
-			'load' 	=> "load \"$u\"" ,
-			'init'	=> $init. $zs
-		];
-	}
-
-	//... PDB
-
-	if ( $opt[ 'csmodel' ] ) {
-		return [
-			'load' => "load \"csmodel.php?id=$id". _ifnn( $opt[ 'asb' ], '-\1' ). '"',
-			'init' => $init. '; trace 1000 only;  color chain; model all;'.  $zs
-		];
-	}
-
-
-	$filt = [];
-	if ( $opt[ 'asb' ] != '' )
-		$filt[] = 'biomolecule '. $opt[ 'asb' ];
-	if ( $opt[ 'bb' ] )
-		$filt[] = '*.CA,*.P';
-	$filt = count( $filt ) == 0
-		? ''
-		: ' filter "'. implode( ',', $filt ). '"'
-	;
-
-	if ( $db == 'pdb-mono' )
-		$init = INIT_STYLE_MONO;
-	else if ( $db == 'pdb-chain' )
-		$init = INIT_STYLE_CHAIN;
-	else
-		$init = _inlist( $id, 'large' ) || _inlist( $id, 'multic' )
-			? INIT_STYLE_CHAIN
-			: INIT_STYLE_MONO
-		;
-
-	return [
-		'load' 	=> "load \"". _url( 'mmcif', $id ). "\"" ,
-		'init'	=> $init. $zs
-	];
-
-}
-
 //. リンク系
+//.. _page_link
+function _page_link( $type, $opt = [] ) {
+	$name = $name_e = $name_j = $url = $url_func = $icon = $blank = null;
+	extract( _subdata( 'pages', $type ) ?: [ 'name' => '---' ] );
+	extract( is_string( $opt ) ? [ 'name' => $opt ] : $opt  ); //- 各要素をoptで上書き可能
+	return _a(
+		$url ?: _url( $url_func )
+		, 
+		( $icon ? _ic( $icon ) : IC_L )
+		. _span( 'itemprop:title', $name ?: _ej( $name_e, $name_j ) )
+		,
+		'itemprop:url'
+		. ( $blank ? '| target:_blank ' : null )
+	);
+}
+
 
 //.. _dblink
 function _dblink( $db, $id, $opt = [] ) {
@@ -1692,7 +1521,7 @@ function _set_categ( $id ) {
 
 //.. _get_chemlinks
 function _get_chemlinks( $id, $inchikey = '' ) {
-	global $urls;
+	global $_urls;
 	_add_url( 'quick-chem' );
 
 	$idmap = json_decode( _ezsqlite([
@@ -1715,8 +1544,8 @@ function _get_chemlinks( $id, $inchikey = '' ) {
 		$o = [];
 		$flg_first = true;
 		foreach ( $exid_set as $exid ) {
-			$d = L_JA && $urls[ "$exdb-j" ] ? "$exdb-j" : $exdb;
-			if ( ! $urls[ $d ] ) {
+			$d = L_JA && $_urls[ "$exdb-j" ] ? "$exdb-j" : $exdb;
+			if ( ! $_urls[ $d ] ) {
 				if ( TEST ) $no_url[] = "[$exdb]";
 				continue;
 			}
@@ -1876,6 +1705,22 @@ function _pop_omoitem( $ida, $info = [] ) {
 	);
 }
 
+//.. _mng_input: mng リンク
+function _mng_input() {
+	if ( ! TEST ) return;
+	$links = [];
+	$suggest = '';
+	foreach ( _subdata( 'pages', 'mng' ) as $key => $url ) {
+		$suggest .= _e( "option| value:$key" );
+		$links[] = _a( $url, $key );
+	}
+	return _t( 'form| .red| action:_mng.php| method:get', ''
+		. _a( '_mng.php', 'mng' ). _input( 'search', 'name:kw| list:mng_list| size: 8' ) 
+		. _t( 'datalist| #mng_list', $suggest )
+		. _pop( IC_PLUS, _imp( $links ) )
+	);
+}
+
 //. doc
 //.. _doc_hdiv
 //- hdivで返す
@@ -1922,6 +1767,7 @@ function _doc_hdiv( $docid, $opt = [] ) {
 	//- wikipe
 	$wikipe = [];
 	foreach ( is_array( $doc[ 'wikipe' ] ) ? $doc[ 'wikipe' ] : [ $doc[ 'wikipe' ] ] as $w ) {
+		if ( ! $w ) continue;
 		$s = _obj('wikipe')->get( $w )->show()
 			?: _test( _span( '.red', "no wikipe data: $w" ) )
 		;
@@ -2435,7 +2281,7 @@ class cls_entid extends abs_entid {
 			} else {
 				return  file_exists( $f = _fn( 'pdb_img', $id ) )
 					? $f
-					: _url( 'pdbjimg', $id )
+					: _url( 'pdbj_img', $id )
 				;
 			}
 

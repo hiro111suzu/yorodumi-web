@@ -131,20 +131,22 @@ $_simple->hdiv(
 			'action'	=> 'quick.php' ,
 			'acomp' 	=> 'em'
 		]). _div( '#idimg', '' ) ,
-		_ab( 'esearch.php'		, IC_SRC. TERM_EMN_SEARCH ) ,
-		_ab( 'omo-search.php'	, IC_OMO. TERM_OMO_SEARCH ) ,
-		_ab( 'quick.php'		, IC_YM . TERM_YORODUMI ) ,
+		_page_link( 'e_search'	, TERM_EMN_SEARCH ) ,
+		_page_link( 'omos'		, TERM_OMO_SEARCH ) ,
+		_page_link( 'ym'		, TERM_YORODUMI ) ,
 		implode( ' ', [
-			_ab( 'gallery.php'	, _ic( 'gallery' )		. _l( 'Gallery' ) ) ,
-	 		_ab( 'stat.php'		, _ic( 'statistics' )	. _l( 'Statistics' ) ) ,
-			_ab( 'pap.php?em=1'	, _ic( 'article' )		. TERM_EM_PAPERS )  ,
-			_ab( 'taxo.php'		, _ic( 'taxo' )			. _l( 'Species' ) )
+			_page_link( 'gallery'	, _l( 'Gallery' ) ) ,
+	 		_page_link( 'e_stat'	, _l( 'Statistics' ) ) ,
+			_page_link( 'e_pap'		, TERM_EM_PAPERS )  ,
+			_page_link( 'taxo'		, _l( 'Species' ) ) ,
+			_page_link( 'covid19' ) ,
 		]) ,
-		TEST ? implode( ' ', [
-			_ab( '_mng.php', 'mng' ) ,
-			_ab( '_mng.php?mode=problem', 'problem' ) ,
-			_ab( '_mng-dir.php', 'dir' ) ,
-		]): ''
+//		TEST ? implode( ' ', [
+//			_ab( '_mng.php', 'mng' ) ,
+//			_ab( '_mng.php?mode=problem', 'problem' ) ,
+//			_ab( '_mng-dir.php', 'dir' ) ,
+//		]): ''
+		_mng_input() ,
 	], 0 )
 );
 

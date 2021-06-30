@@ -193,20 +193,26 @@ $o_data->lev1( 'Citation',
 //.. contact author
 $ca = [];
 foreach ( (array)$json->pdbx_contact_author as $j) {
-	$ad = _imp([
-		$j->address_1 ,
-		$j->address_2 ,
-		$j->address_3
-	]);
 	$ca[] = implode( ' ', array_filter([
 		$j->name_salutation ,
 		$j->name_first ,
 		$j->name_mi,
 		$j->name_last
 	]) )
-	. _ifnn( $ad, ' (\1)' );
+	. _kakko( _imp([
+		$j->address_1 ,
+		$j->address_2 ,
+		$j->address_3
+	]));
 }
-$o_data->lev1( 'Contact author', implode( "\n", $ca ) );
+$o_data->lev1( 'Contact author', _ul( $ca ) );
+
+//.. test item
+$o_data->test_item([
+	_ab([ 'json', DID ], 'JSONview' ) ,
+	_ab([ 'txtdisp', 'sascif.'. DID ], 'sasCIF' ) ,
+	_ab([ 'txtdisp', 'sasbdb_kw.'. ID ], 'search terms' ) ,
+]);
 
 //. viewer
 _viewer();
@@ -233,13 +239,7 @@ foreach ( (array)$json->sas_model as $j ) {
 ->end();
 
 //.. リンク
-$o_data->lev2( 'test', TEST
-		? [
-			_ab( _url( 'json', DID ), 'JSONview' ) ,
-			_ab( _url( 'txtdisp', 'sascif', DID ), 'sasCIF' ) ,
-			_ab( 'txtdisp.php?a=sasbdb_kw.' .ID, 'search terms' ) ,
-		]: ''
-	)
+$o_data
 	->lev2( TERM_REL_MOM, _mom_items(  ) )
 	->end2( 'External links' )
 ;

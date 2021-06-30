@@ -272,7 +272,9 @@ FTP directory	FTPディレクトリ
 Supplemental images	添付画像
 Supplemental data	添付データ
 Annotation	注釈
+
 Archive directory	アーカイブディレクトリ
+
 
 ..	map
 Projections & Slices	投影像・断面図
@@ -672,7 +674,7 @@ Classification	グループ分け
 .	fh-search
 Display mode	表示モード
 All	すべて
-Homology	ホモロジー
+Homology	相同性
 All - function	すべて - 分子機能
 Query	検索クエリ
 score	スコア
@@ -803,7 +805,7 @@ Molecular function 	分子機能
 Biological process 	生物学的過程
 Domain  	ドメイン
 Homologous superfamily 	相同スーパーファミリー
-conserved site	保存部位, 
+conserved site	保存部位
 active site	活性部位
 binding site	結合部位
 ptm                	翻訳後修飾

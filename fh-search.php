@@ -231,7 +231,7 @@ function _search() {
 			'select' => SCORE_COLUMN ,
 			'where'  => [ 'strid', $str_id ]
 		]) + $key_score ) / 2 );
-		if ( $data[ $str_id ] < 0.0001 )
+		if ( $data[ $str_id ] < 0.001 )
 			unset( $data[ $str_id ] );
 	}
 	arsort( $data );

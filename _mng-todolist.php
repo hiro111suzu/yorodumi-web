@@ -55,6 +55,7 @@ $data = [
 	'Done' => [] ,
 ];
 foreach ( $ids as $id ) {
+	$contour = _json_load2([ 'emdb_json3', $id ])->map->contour[0];
 	$mov_json = _json_load([ 'movinfo', $id ]);
 	$add_json = _json_load([ 'emdb_add', $id ]);
 	$status = STATUS_JSON[ "emdb-$id" ];
@@ -102,6 +103,10 @@ foreach ( $ids as $id ) {
 		'sym'	=> //$add_json['sym'] ,
 			_hard( $add_json['sym'], $add_json['sym'] == 'I' ) ,
 		'reso'	=> $add_json['reso'] ? $add_json['reso']. ' &Aring;': '' ,
+		'level' => _kv([
+			$contour->source ?: 'XML' => $contour->level ,
+			'mov2' => _json_load([ 'movinfo', $id ])[2]['threshold']
+		 ])
 	];
 
 	//.. pdb

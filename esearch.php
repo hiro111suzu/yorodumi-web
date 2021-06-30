@@ -37,6 +37,9 @@ TERM_O_FOR_ALL
 TERM_WEEKS_BEFORE
 	weeks ago
 	週前
+TERM_HAVE_EMPIAR
+	having EMPIAR entry
+	EMPIARに登録がある
 EOD
 );
 
@@ -62,6 +65,7 @@ define( 'G_PAGE'	, _getpost( 'pagen' )  ?: '0' );
 define( 'G_SORTBY'	, _getpost( 'sortby' ) ?: '-rdate' ); 
 define( 'G_FORMAT'	, G_AJAX ? '' : _getpost( 'format' ) );
 define( 'G_MAXNUM'	, _getpost( 'maxnum' ) ?: 100000000 );
+define( 'G_FILT_EMP' , (bool)_getpost( 'filt_emp' ) );
 
 //- テーブルモードのソート条件
 define( 'G_TSORT'	, _getpost( 'tsort' )  ?: 'db_id' );
@@ -98,6 +102,9 @@ foreach ( array_keys( TABLE_DATA ) as $i ) {
 	if ( _getpost( "c_$i" ) )
 		$a[] = $i;
 }
+if ( G_FILT_EMP && ! in_array( 'empiar', $a ) )
+	$a[] = 'empiar';
+
 
 //- デフォルトの値
 if ( count( $_GET + $_POST ) < 2 && $a == [ 'db_id' ] )
@@ -201,6 +208,10 @@ if ( G_DB != 'BOTH' ) {
 	$where[] = _sql_eq( 'database', G_DB );
 	$term[ 'database' ] = G_DB;
 }
+if ( G_FILT_EMP ) {
+	$where[] = 'empiar IS NOT NULL';
+}
+
 
 //.. 新規・更新エントリ
 if ( G_NEW ) {
@@ -284,6 +295,8 @@ if ( G_DISPMODE == 'icon' || G_DISPMODE == 'list' ) foreach ( $result as $entry 
 			foreach ( (array)$val as $num => $name )
 				$val[ $num ] = _ab( "?author=$name", $name );
 			$icon = _fa( 'user' );
+		} else if ( $key == 'empiar' ) {
+			$val = _empiar_link( $val );
 		}
 		$data[
 			$icon ?: TABLE_DATA[ $key ][ NAME_LANG ] 
@@ -311,6 +324,8 @@ if ( G_DISPMODE == 'icon' || G_DISPMODE == 'list' ) foreach ( $result as $entry 
 			$cell = _ab( _url( 'doi', $cell ), $cell  );
 		} else if ( $column == 'pmid' ) {
 			$cell = _ab( _url( 'pubmed', $cell ), $cell  );
+		} else if ( $column == 'empiar' ) {
+			$cell = _empiar_link( $cell );
 		}
 
 		//- ソートカラムかどうか
@@ -425,7 +440,10 @@ function _make_form() {
 				'BOTH'	=> _l( 'EMDB & PDB' ),
 				'EMDB'	=> 'EMDB' ,
 				'PDB'	=> 'PDB' ,
-			]). _div( '.right small', _doc_pop( 'emn_source' ) )
+			])
+			. SEP
+			. _chkbox( TERM_HAVE_EMPIAR, "name:filt_emp", G_FILT_EMP )
+			. _div( '.right small', _doc_pop( 'emn_source' ) )
 		,
 		'Data entries' =>
 			_radiobtns( [ 'name' => 'new', 'on' => G_NEW ], [
@@ -550,3 +568,11 @@ function _id_hit() {
 	);
 }
 
+//. function: _empiar_link
+function _empiar_link( $in ) {
+	$ret = [];
+	foreach ( (array)explode( '|', $in ) as $e ) {
+		$ret[] = _ab([ 'empiar_j', $e ], $e );
+	}
+	return _imp( $ret );
+}

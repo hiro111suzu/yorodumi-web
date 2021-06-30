@@ -62,6 +62,15 @@ HOLD1	公開保留（1年間）	On hold for 1 year
 HOLD2	公開保留（2年間）	On hold for 2 years
 HOLD4	公開保留（4年間）	On hold for 4 years
 
+..	file
+filedesc_map	マップデータ	Map data
+filedesc_header	ヘッダ（付随情報, XML型式	Header (meta data in XML format)
+filedesc_fsc	FSC (解像度算出)	FSC (resolution estimation)
+filedesc_images	画像	Images
+filedesc_masks	マスクデータ（部分マップなど）	Masks (Map data of sub-region, etc)
+filedesc_other	その他	Others
+filedesc_slices	断面図	Slices
+filedesc_archive_dir	アーカイブディレクトリ	Archive directory
 ..	map
 format	形式
 symmetry	対称性
@@ -102,6 +111,7 @@ helicalArray	らせん状配列	helical array
 organ	器官
 tissue	組織
 cell	細胞
+Organelle	細胞器官
 
 ..	sample compo
 expSystemStrain	株	Strain
@@ -142,6 +152,7 @@ quantBitNumber	ビット深度	Bit depth
 samplingSize	サンプリングサイズ
 odRange	ODレンジ	OD range
 URLRawData	生データのURL	URL of raw data
+Scanner	スキャナー
 
 ..	proc
 Image processing	画像解析
@@ -757,7 +768,7 @@ h	らせん対称	helical
 .	fhinfo_cls_name
 all	機能・相同性	Function / homology
 f	分子機能	Function
-h	ドメイン・ホモロジー	Domain/homology
+h	ドメイン・相同性	Domain/homology
 c	構成要素	Component
 
 .	symmetry_term
