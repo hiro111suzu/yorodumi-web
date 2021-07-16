@@ -1635,6 +1635,8 @@ rel
 	func_homology
 tag
 	omo ym emn about
+img
+	about_fh_search.jpg
 EOD
 );
 
@@ -1971,8 +1973,8 @@ abst
 id
 	emdb
 link
-	u	https://www.ebi.ac.uk/pdbe/emdb/
-	t	The Electron Microscopy Data Bank (PDBe)
+	u	https://www.ebi.ac.uk/emdb/
+	t	The Electron Microscopy Data Bank - EBI
 	-
 	u	https://www.emdataresource.org/
 	t	EMDataResource
@@ -1983,7 +1985,7 @@ rel
 tag
 	db
 url
-	https://www.ebi.ac.uk/pdbe/emdb/
+	https://www.ebi.ac.uk/emdb/
 EOD
 );
 
