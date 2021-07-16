@@ -113,7 +113,7 @@ foreach ( $o_newent->qar([ 'select' => [ 'date', 'num' ] ]) as $a ) {
 	$j = json_decode( $a['num'] );
 	$n[ $a[ 'date' ] ] = [ $j->EMDB, $j->PDB ];
 }
-$_simple->jsvar([ 'ent_num' => $n ]);
+_simple()->jsvar([ 'ent_num' => $n ]);
 
 //. ajax newdata
 if ( G_AJAX == 'outer' )
@@ -122,9 +122,8 @@ if ( G_AJAX == 'outer' )
 if ( G_AJAX == 'tab' )
 	die( _newstr_inner( G_TAB ) );
 
-
 //. browse data
-$_simple->hdiv(
+_simple()->hdiv(
 	TERM_BROWSE_DATA ,
 	_ul([
 		TERM_KW_OR_ID. ' '. _idinput( '', [
@@ -141,11 +140,6 @@ $_simple->hdiv(
 			_page_link( 'taxo'		, _l( 'Species' ) ) ,
 			_page_link( 'covid19' ) ,
 		]) ,
-//		TEST ? implode( ' ', [
-//			_ab( '_mng.php', 'mng' ) ,
-//			_ab( '_mng.php?mode=problem', 'problem' ) ,
-//			_ab( '_mng-dir.php', 'dir' ) ,
-//		]): ''
 		_mng_input() ,
 	], 0 )
 );
@@ -162,7 +156,7 @@ foreach ( range( 0, 10 ) as $n ) {
 }
 
 //.. 出力
-$_simple->hdiv(
+_simple()->hdiv(
 	TERM_RECENT_REL , 
 	TERM_REL_DATE. ': '
 	. _selopt( '#reldate| name:reldate', $menu, G_DATE )
@@ -191,14 +185,14 @@ foreach ( (array)_json_load( DN_DATA. '/emn/empapers.json' ) as $num => $d ) {
 		[ 'hide' => $num > 1 ] ,
 	);
 }
-$_simple->hdiv(
+_simple()->hdiv(
 	_ic( 'article' ). TERM_RECENT_PAPERS ,
 	( $out ?: MSG_NODATA )
 	. _p( _ab([ 'pap', 'em' =>1 ], TERM_ALL_PAPERS ) )
 );
 
 //. output
-$_simple
+_simple()
 ->time( 'all' )
 //- google webmasters tool
 ->meta( 'google-site-verification', '73k4FEnUyMEJOFcr30o5izcD2su_NNxmEc9T59fanEg' )

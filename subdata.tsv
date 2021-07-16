@@ -97,7 +97,7 @@ Rg_from_Guinier	nm
 pdbj	https://pdbj.org
 pdbj_img	https://pdbj.org/molmil-images/mine/[id].png
 
-prd_help	https://pdbj.org/showBlogPost?PID=919
+prd_help	https://pdbj.org/news/919
 about_valrep	https://www.wwpdb.org/validation/validation-reports
 
 ...	db
@@ -152,8 +152,9 @@ orcid	https://orcid.org/[id]
 sam	https://www.uniprot.org/help/sam
 cdd	https://www.ncbi.nlm.nih.gov/Structure/cdd/[id]
 unichem	https://www.ebi.ac.uk/unichem/frontpage/results?kind=InChIKey&queryText=[id]
-bird	quick.php?id=bird-[id]
 empiar_j	https://empiar.pdbj.org/entry/[id]/
+bird	quick.php?id=bird-[id]
+chem	quick.php?id=chem-[id]
 
 ...	misc
 jmol	https://jmol.sourceforge.net/
@@ -182,7 +183,7 @@ unp_search	https://www.uniprot.org/uniprot/?query=[id]
 json3	jsonview.php?a=json3.[id]
 
 ftpdir	ftp://ftp.pdbj.org/pub/emdb/structures/EMD-[id]
-url_http_dl	http://ftp.pdbj.org/pub/emdb/structures/EMD-[id]
+emdb_arc_http	http://ftp.pdbj.org/pub/emdb/structures/EMD-[id]
 dl-map	http://ftp.pdbj.org/pub/emdb/structures/EMD-[id]/map/emd_[id].map.gz
 
 histogram_s	data/emdb/media/[id]/mapi/hists.png
@@ -191,10 +192,6 @@ histogram_log_s	data/emdb/media/[id]/mapi/histlogs.png
 histogram_log_l	data/emdb/media/[id]/mapi/histlog.png
 emdb_fig	data/emdb/emdb-fig/<id>.jpg
 emdb_fig_gif	data/emdb/emdb-fig/<id>.gif
-
-valrep_emdb_help	https://www.wwpdb.org/validation/2017/EMMapValidationReportHelp
-valrep_emdb_dir_http	https://ftp.pdbj.org/pub/emdb/validation_reports/EMD-[id]/
-
 
 ..	quick-pdb
 mmcif_download	https://data.pdbj.org/pub/pdb/data/structures/all/mmCIF/[id].cif.gz
@@ -275,7 +272,6 @@ pirsr	https://proteininformationresource.org/cgi-bin/pirrule?id=[id]
 ndb_doc	http://ndbserver.rutgers.edu/ndbmodule/[id].html
 
 ..	quick-nohit
-emdb_ftp	ftp://ftp.pdbj.org/pub/emdb/obsoleted/EMD-[id]/
 pdbj_obs 	https://pdbj.org/mine/obsolete/[id]
 
 prerel_json	jsonview.php?a=file.pdb/prerel.[id]
@@ -375,7 +371,6 @@ evcode_json	<data>/pdb/evcode.json
 	
 ..	esearch
 table_data	<data>/emn/tabledata.json
-latest_data	<data>/emn/latestdata.json
 
 ..	taxo
 taxo_icon_json	<data>/taxo/taxoicon.json
@@ -897,18 +892,82 @@ cifdic	cifdic.php
 <mainsv_pdb_all>	/data/pdbj/data/ftp/pub/pdb/data/structures/all
 <mainsv_emdb>	/data/pdbj/data/ftp/pub/emdb
 <fs3_emdb>	/data/yorodumi/fdata/emdb-mirror
+<fs3_valrep_pdb>	/home/archive/ftp/pdbj-pre/pub/pdb/validation_reports
+<mainsv_valrep_pdb>	/home/data/pdbj/data/ftp/pub/pdb/validation_reports
+<url_valrep_pdb>	https://data.pdbj.org/pub/pdb/validation_reports
 
 ..	mmcif
+name_e	PDBx/mmCIF format
+name_j	PDBx/mmCIF形式
 fn	<id>.cif.gz
 url	<url_pdb_all>/mmCIF/
 path_mainsv	<mainsv_pdb_all>/mmCIF/
 path_fs3	<fdata>/mmcif/
+doc	file_mmcif
+
+..	mmjson
+name_e	PDBx/mmJSON format
+name_j	PDBx/mmJSON形式
+fn	<id>.json.gz
+url	https://data.pdbj.org/pdbjplus/data/pdb/mmjson/
+url_disp	https://pdbj.org/display/pdb/mmjson-all/<id>
+doc	file_mmjson
+
+..	pdbml
+name_e	PDBML format
+name_j	PDBML形式
+fn	<id>.xml.gz
+url	<url_pdb_all>/mmCIF/
+path_mainsv	<mainsv_pdb_all>/mmCIF/
+path_fs3	<fdata>/mmcif/
+doc	file_mmcif
 
 ..	pdb
+name_e	PDB format
+name_j	PDB形式
 fn	pdb<id>.ent.gz
 url	<url_pdb_all>/pdb/
 path_mainsv	<mainsv_pdb_all>/pdb/
 path_fs3	<fdata>/pdb/dep/
+doc	file_pdb
+
+..	valrep_pdb_full
+name_e	Full document
+name_j	文書・詳細版
+fn	<id>_full_validation.pdf.gz
+url	<url_valrep_pdb>/<id_dir>/<id>/
+path_mainsv	<mainsv_valrep_pdb>/<id_dir>/<id>/
+path_fs3	<fs3_valrep_pdb>/<id_dir>/<id>/
+
+..	valrep_pdb_sum
+name_e	Summary document
+name_j	文書・要旨
+fn	<id>_validation.pdf.gz
+url	<url_valrep_pdb>/<id_dir>/<id>/
+path_mainsv	<mainsv_valrep_pdb>/<id_dir>/<id>/
+path_fs3	<fs3_valrep_pdb>/<id_dir>/<id>/
+doc	file_pdb_valrep
+
+..	valrep_pdb_xml
+name_e	Data in XML
+name_j	XML形式データ
+fn	<id>_validation.xml.gz
+url	<url_valrep_pdb>/<id_dir>/<id>/
+path_mainsv	<mainsv_valrep_pdb>/<id_dir>/<id>/
+path_fs3	<fs3_valrep_pdb>/<id_dir>/<id>/
+
+..	valrep_pdb_cif
+name_e	Data in CIF
+name_j	CIF形式データ
+fn	<id>_validation.cif.gz
+url	<url_valrep_pdb>/<id_dir>/<id>/
+path_mainsv	<mainsv_valrep_pdb>/<id_dir>/<id>/
+path_fs3	<fs3_valrep_pdb>/<id_dir>/<id>/
+
+..	valrep_pdb_dir
+name_e	Arichive directory
+name_j	アーカイブディレクトリ
+url	<url_valrep_pdb>/<id_dir>/<id>
 
 ..	valrep_emdb_dir
 name_e	Arichive directory
@@ -930,6 +989,7 @@ fn	emd_<id>_validation.pdf.gz
 url	<url_emdb>/validation_reports/EMD-<id>/
 path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
 path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
+doc	file_emdb_valrep
 
 ..	valrep_emdb_xml
 name_e	Data in XML
@@ -947,3 +1007,44 @@ url	<url_emdb>/validation_reports/EMD-<id>/
 path_mainsv	<mainsv_emdb>/validation_reports/EMD-<id>/
 path_fs3	<fs3_emdb>/validation_reports/EMD-<id>/
 
+..	emdb_obs_dir
+name_e	Arichive directory
+name_j	アーカイブディレクトリ
+url	<url_emdb>/obsoleted/EMD-<id>
+
+..	emdb_obs_xml
+name_e	Header (meta information)
+name_j	ヘッダ (付随情報)
+fn	emd-<id>.xml
+url	<url_emdb>/obsoleted/EMD-<id>/header/
+path_mainsv	<mainsv_emdb>/obsoleted/EMD-<id>/header/
+path_fs3	<fs3_emdb>/obsoleted/EMD-<id>/header/
+
+.	status_code
+..	en
+POLC	waiting for a policy decision
+AUTH	processed, waiting for author review and approval
+REFI	re-refined entry
+HOLD	hold until a certain date
+HPUB	hold until publication
+WAIT	processing started, waiting for author input to continue processing
+REPL	author sent new coordinates, entry to be reprocessed
+PROC	to be processed
+AUCO	author corrections pending review
+TRSF	entry tansferred to another data repository
+OBSLTE	obsolete entry
+WDRN	deposition withdrawn
+
+..	ja
+POLC	方針の決定待ち
+AUTH	編集処理済、登録者の確認・同意待ち
+REFI	再精密化構造、論文の公開まで処理を中断
+HOLD	編集処理完了、指定の時期まで公開待ち
+HPUB	編集処理完了、論文の公開まで公開待ち
+WAIT	編集処理開始、登録者からの連絡待ち
+REPL	登録者より新しい座標を受理、再処理が必要
+PROC	編集処理前
+AUCO	登録者による修正待ち
+TRSF	他のデータベースに移行されたエントリ
+OBSLTE	公開停止エントリ
+WDRN	登録取り消し

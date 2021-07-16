@@ -25,7 +25,7 @@ if ( $data )
 	_add_table( $header, $data );
 
 //. output
-$_simple->out([
+_simple()->out([
 	'title' => 'TSV view' ,
 	'sub'	=> 'TSV file viewer' ,
 	'icon'	=> 'json' ,
@@ -34,8 +34,7 @@ $_simple->out([
 //. function
 //.. _data2table
 function _add_table( $header, $data ) {
-	global $_simple;
-	$_simple->hdiv(
+	_simple()->hdiv(
 		$header,
 		_t( 'table', TR. implode( TR, $data ) ) 
 //		[ 'type' => 'h2' ]

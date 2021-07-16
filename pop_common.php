@@ -83,7 +83,7 @@ if ( _getpost_safe( 'ajax' ) == 'gmenu' ) {
 
 //. 共通部、書き出し
 //.. meta
-$_simple->meta(
+_simple()->meta(
 	'viewport' ,
 	[
 		'width=device-width' ,

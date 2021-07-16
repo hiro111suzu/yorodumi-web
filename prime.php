@@ -25,12 +25,11 @@ if ( $_GET[ 'kw' ] != '' ) {
 //. function _prime_init
 //- ajaxのときは呼ばれない
 function _prime_init() {
-	global $_simple, $title, $o_id;
+	global $title, $o_id;
 	$title = _ej( 'YorodumiPrime', '万見プライム' )
 		. _span( '.wide_only', " - " . ( $a[ 'title' ] ?: $o_id->DID ) )
 	;
-
-	$_simple->jsvar([
+	_simple()->jsvar([
 		'postv' => [ 'prime' => 1, 'top' => _getpost( 'id' ) == '' ? 1 : 0 ] ,
 		'prime' => 1, 
 		'shomenu' => 1 ,

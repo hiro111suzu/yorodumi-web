@@ -1,9 +1,9 @@
 <?php
-$_simple->time( 'quick common' );
+_simple()->time( 'quick common' );
 
 //PDB
 require( __DIR__. '/common-pdbdet.php' );
-$_simple->time( 'pdb-det' );
+_simple()->time( 'pdb-det' );
 
 //. init
 //- ムービー
@@ -87,7 +87,7 @@ foreach ( (array)$plus->exptl_crystal_grow as $c ) {
 		unset( $c->temp_unit );
 	}
 }
-$_simple->time( 'load plus' );
+_simple()->time( 'load plus' );
 
 //.. json 修正
 _cif_rep( $json );
@@ -253,7 +253,7 @@ $json_reid = _json_reid([
 
 ]);
 
-$_simple->time( 'json-reid' );
+_simple()->time( 'json-reid' );
 
 //.. asymid2chainid / chainid2asymid
 $asymid2chainid = (array)$json->_yorodumi->id_asym2chain;
@@ -589,6 +589,12 @@ foreach ( (array)$json->pdbx_database_remark as $c ) {
 	$o_data->lev1( "Remark {$c->id}||pdbx_database_remark", _long( $c->text ) );
 }
 
+//.. 水素
+if ( TEST ) foreach ( $json->atom_type as $c ) {
+	if ( $c->symbol == 'H' )
+		$o_data->lev1( "hydrogen atom", 'yes' );
+}
+
 //.. test item
 $o_data->test_item([
 	_ab([ 'json', DID ], 'JSONview' ) ,
@@ -608,24 +614,30 @@ $o_data->test_item([
 	_ab([ 'prime'	, 'id' => ID ], 'prime' )
 ]);
 
-$_simple->time( 'bascic' );
+_simple()->time( 'bascic' );
 
 //. visualization
 _viewer();
-$_simple->time( 'vis' );
+_simple()->time( 'vis' );
 
 //. ダウンロードとリンク
 $o_data->lev1title( 'downlink', true );
 
 //.. ダウンロード
 $arch = new cls_archive( ID );
+foreach ([ 'mmcif', 'pdb', 'mmjson' ] as $type )
+	_archive_tr( $arch->get( "$type" ) );
 $o_data
-	->lev2( 'PDBx/mmCIF format'	, $arch->td( 'mmcif' ) )
-	->lev2( 'PDB format'		, $arch->td( 'pdb' ) )
-	->end2( 'Download' )
-;
+->lev2( 'Others', _ab([ 'mine_download', $id ], IC_L. _l( 'Other downloads' ) ). TD. TD. TD )
+->end2( 'Download' );
 
+//.. Validation report
+foreach ([ 'sum', 'full', 'xml', 'cif', 'dir', ] as $type )
+	_archive_tr( $arch->get( "valrep_pdb_$type" ), [ 'no_file_no_link' => true ] );
+$o_data->end2( 'Validation report' );
 
+//.. 旧版
+/*
 $o_data
 	->lev2( 'PDBx/mmCIF format', [
 		_a([ 'mmcif_download', $id ], IC_DL. "$id.cif.gz" ) ,
@@ -650,8 +662,8 @@ $o_data
 
 	->end2( 'Download' )
 ;
-$_simple->time( 'downloads' );
-
+*/
+_simple()->time( 'downloads' );
 //.. related
 /*
 http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx_v40.dic/Items/_pdbx_database_related.db_name.html
@@ -819,16 +831,8 @@ foreach ( (array)preg_split( '/[;,]/', $json->struct_keywords[0]->text ) as $t )
 	$kw[] = trim( $t );
 //_testinfo( $kw );
 
-$kw[] = [ 
-	'ribosome-c'	=> 'ribosome' ,
-	'70s'			=> '70S Ribosomes' ,
-	'80s'			=> 'ribosome' ,
-	'amyloid' 		=> 'amyloid' ,
-][ _ezsqlite([
-	'dbname' => 'main' ,
-	'select' => 'categ' ,
-	'where'  => [ 'db_id', DID ]
-]) ];
+//- categ
+$kw[] = _categ2momkw();
 
 //- antibody
 $flg_ab = _ezsqlite([
@@ -849,7 +853,7 @@ $o_data
 	->lev2( TERM_REL_MOM, _mom_items( $kw ) )
 	->end2( 'Links' )
 ;
-$_simple->time( 'link' );
+_simple()->time( 'link' );
 
 //. assembly pre
 
@@ -1542,7 +1546,7 @@ foreach ( (array)$json->struct_biol as $c ) {
 }
 $o_data->lev1( 'Details', $out );
 unset( $out );
-$_simple->time( 'assembly' );
+_simple()->time( 'assembly' );
 
 
 //. entity pre
@@ -2394,7 +2398,7 @@ if ( count( $ent_out ) == 1 && $ent_out[ 'Others' ] != '' )  {
 }
 
 unset( $sorted, $ent_out, $single_categ, $singles );
-$_simple->time( 'entity' );
+_simple()->time( 'entity' );
 
 
 //. 実験情報
@@ -3374,4 +3378,4 @@ function _sin( $deg ) {
 	return sin( deg2rad( $deg ) );
 }
 
-$_simple->time( 'exp.det' );
+_simple()->time( 'exp.det' );

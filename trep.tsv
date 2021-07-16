@@ -63,14 +63,16 @@ HOLD2	公開保留（2年間）	On hold for 2 years
 HOLD4	公開保留（4年間）	On hold for 4 years
 
 ..	file
+EMDB archive	EMDBアーカイブ
 filedesc_map	マップデータ	Map data
-filedesc_header	ヘッダ（付随情報, XML型式	Header (meta data in XML format)
+filedesc_header	ヘッダ (付随情報)	Header (meta data)
 filedesc_fsc	FSC (解像度算出)	FSC (resolution estimation)
 filedesc_images	画像	Images
-filedesc_masks	マスクデータ（部分マップなど）	Masks (Map data of sub-region, etc)
+filedesc_masks	マスクデータ	Masks
 filedesc_other	その他	Others
 filedesc_slices	断面図	Slices
 filedesc_archive_dir	アーカイブディレクトリ	Archive directory
+
 ..	map
 format	形式
 symmetry	対称性

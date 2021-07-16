@@ -45,7 +45,7 @@ EOD
 //. news
 $_type = 'news';
 //.. 2020-08-12 New page for Covid-19 info
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2020-08-12
 abst
@@ -82,7 +82,7 @@ pap_t
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2020-03-05
 abst
@@ -142,7 +142,7 @@ Page
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2019-07-05
 abst
@@ -165,7 +165,7 @@ EOD
 
 
 //.. 2019-01-31 EMDB-ID
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2019-01-31
 abst
@@ -184,9 +184,8 @@ rel
 tag
 	emn ym
 link
-	u	https://www.ebi.ac.uk/pdbe/emdb
-	t	EMDB site at PDBe
-	tj	PDBeのEMDBサイト
+	u	https://www.emdataresource.org/news/emdb_id_expansion_soon.html
+	t	EMDB Accession Codes are Changing Soon!
 	-
 	%link_pdbj_contact%
 EOD
@@ -194,7 +193,7 @@ EOD
 
 
 //.. 2018-02-20 PDBj workshop
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2018-02-20
 abst
@@ -217,7 +216,7 @@ EOD
 );
 
 //.. 2017-10-04 nobel prize
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2017-10-04
 abst
@@ -244,7 +243,7 @@ EOD
 
 
 //.. 2017-07-12 PDB大規模アップデート
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2017-07-12
 abst
@@ -276,7 +275,7 @@ EOD
 );
 
 //.. 2017-06-16 omokage filter
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2017-06-16
 abst
@@ -296,7 +295,7 @@ EOD
 );
 
 //.. 2016-09-15 new em navigator & yorodumi
-_d2( <<<EOD
+_d( <<<EOD
 title
 	2016-09-15
 abst
@@ -316,7 +315,7 @@ EOD
 );
 
 //.. 2016-08-31 new em navigator & yorodumi
-_d2( <<<EOD
+_d( <<<EOD
 title
 	2016-08-31
 abst
@@ -338,7 +337,7 @@ EOD
 );
 
 //.. 2016-04-13 omokage got faster
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2016-04-13
 abst
@@ -358,7 +357,7 @@ EOD
 );
 
 //.. 2016-03-03 IPR seminar
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2016-03-03
 abst
@@ -379,7 +378,7 @@ EOD
 
 
 //.. 2015-12-04 omokage paper
-_d2( <<<EOD
+_d( <<<EOD
 title
 	2015-12-04
 abst
@@ -403,7 +402,7 @@ EOD
 );
 
 //.. 2015-11-28 sasbdb
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2015-11-28
 abst
@@ -429,7 +428,7 @@ EOD
 );
 
 //.. 2014-12-10 large
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2014-12-10
 abst
@@ -452,7 +451,7 @@ EOD
 );
 
 //.. 2014-09-22 omokage search
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2014-09-22
 abst
@@ -469,7 +468,7 @@ EOD
 );
 
 //.. 2013-03-30 stat page
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2013-03-30
 abst
@@ -489,7 +488,7 @@ EOD
 );
 
 //.. xml 1.9
-_d2(<<<EOD
+_d(<<<EOD
 title
 	2013-01-16
 abst
@@ -515,7 +514,7 @@ $_type = 'faq';
 
 //.. 全部
 //... 色付け
-_d2( <<<EOD
+_d( <<<EOD
 title
 	How do you make the images for the structure data? What do their colors mean?
 	構造データの画像はどうやって作っているのですか？色はどういう意味があるのですか？
@@ -536,7 +535,7 @@ EOD
 );
 
 //... アップデート
-_d2( <<<EOD
+_d( <<<EOD
 title
 	When the data are updated?
 	データの更新はいつですか？
@@ -563,7 +562,7 @@ EOD
 
 //.. em
 //... 3DEM and cryoEM
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Is 3DEM same as electron cryo microscopy (cryoEM)?
 	3DEMとは、低温電子顕微鏡法（クライオ電顕、cryoEM）のことですか？
@@ -622,7 +621,7 @@ USA
 	PDBj
 	%ftp_j%
 イギリス
-	EBI PDBe
+	EBI
 	%ftp_e%
 アメリカ
 	wwPDB & RCSB PDB
@@ -630,7 +629,7 @@ USA
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Where is the official data of EMDB?
 	EMDBの公式データはどこにありますか？
@@ -655,7 +654,7 @@ EOD
 );
 
 //... ED map と同じ？
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Is an EM map electron-density map?
 	マップデータとは電子密度マップのことですか？
@@ -681,7 +680,7 @@ EOD
 );
 
 //... フォーマットは？
-_d2(<<<EOD
+_d(<<<EOD
 title
 	What is the format for the maps?
 	マップデータのフォーマットは何ですか？
@@ -716,7 +715,7 @@ soft_link
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Which software is suitable to view EMDB maps?
 	どのソフトを使えば、EMDBのマップデータを見られますか？
@@ -748,7 +747,7 @@ EOD
 
 //.. emdb
 //... EMD
-_d2(<<<EOD
+_d(<<<EOD
 title
 	What is EMD?
 	「EMD」とは何ですか？
@@ -772,7 +771,7 @@ EOD
 
 //.. em navi
 //... EM Navigatorで使っているデータは
-_d2( <<<EOD
+_d( <<<EOD
 title
 	What are the data sources of EM Navigator?
 	EM Navigatorの情報源は？
@@ -805,7 +804,7 @@ EOD
 );
 
 //... ムービーの利用
-_d2( <<<EOD
+_d( <<<EOD
 title
 	Can I use the movies and their snapshots in the EM Navigator for papers or presentations?
 	EM Navigator上のムービーやムービーのスナップショットを、プレゼンテーションや論文などに利用できますか？
@@ -844,7 +843,7 @@ EOD
 );
 
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	How do you make the movies in EM Navigator?
 	EM Navigatorのムービーはどうやって作っているのですか？
@@ -877,7 +876,7 @@ EOD
 
 //... EMDB エントリの画像はどうやって
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	How do you make the images of EMDB entries in Yorodumi, Omokage, etc.?
 	万見やOmokageのEMDBの画像は、どうやって作っていますか？
@@ -915,7 +914,7 @@ EOD
 );
 
 //... PDBエントリの画像はどうやって
-_d2(<<<EOD
+_d(<<<EOD
 title
 	How do you make the images of PDB entries in Yorodumi, Omokage, etc.?
 	万見やOmokageのPDBの画像は、どうやって作っていますか？
@@ -962,7 +961,7 @@ EOD
 //$dot = _span( '.red', '.' );
 //$mail = 'hirofumi ' . _img( 'img/am.jpg' ) . " protein{$dot}osaka-u{$dot}ac{$dot}jp";
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Who make these documents? Who develop EM Navigator, Yorodumi, Omokage search, etc?
 	この文書を書いているのは誰ですか？EM Navigator、万見、Omokage検索などの開発者は？
@@ -986,7 +985,86 @@ link
 EOD
 );
 
-//... ネタ
+//.. PDB
+//... PDB coordinate formats
+_table_prep(<<<EOD
+Format
+	mmCIF compatible
+	Format based on
+	Provider
+	Comment
+PDBx/mmCIF
+	-
+	CIF > STAR > plain text
+	wwPDB
+	Officail data format
+PDB
+	no
+	plain text
+	wwPDB
+	Legacy officail
+PDBML
+	yes
+	XML > plain text
+	wwPDB
+	For programers & develpers
+PDBx/mmJSON
+	yes
+	JSON > plain text
+	PDBj
+	For programers & develpers
+-----
+形式
+	mmCIF互換情報
+	ファイル形式のベース
+	提供組織
+	コメント
+PDBx/mmCIF
+	-
+	CIF > STAR > プレーンテキスト
+	wwPDB
+	公式フォーマット
+PDB
+	no
+	プレーンテキスト
+	wwPDB
+	過去の公式フォーマット
+PDBML
+	yes
+	XML > プレーンテキスト
+	wwPDB
+	プログラマー・開発者向け
+PDBx/mmJSON
+	yes
+	JSON > プレーンテキスト
+	PDBj
+	プログラマー・開発者向け
+EOD
+);
+
+_d(<<<EOD
+id
+	format_pdb
+title
+	What is difference in PDB coordinate formats?
+	PDBの座標データの形式は、どのような違いがあるのですか？
+abst
+	As follows
+	以下の通りです
+main_e
+	%table-1%
+main_j
+	%table-2%
+tag
+	pdb
+rel
+	file_mmcif file_pdb file_mmjson
+
+EOD
+);
+
+
+//.. ネタ
 /*
 コンタクト
 ムービーのアドレス
@@ -1020,18 +1098,238 @@ write isosurface "foo.jvxl";
 //. misc doc
 $_type = 'info';
 
+//.. file
+//... emdb map
+_d(<<<EOD
+id
+	file_emdb_map
+title
+	EMDB map data format
+	EMDBマップデータ形式
+abst
+	3D density map data in CCP4 format
+	CCP4形式の3次元密度分布マップデータ
+tag
+	emn emdb emmap
+rel
+	emdb
+
+link
+	u	https://ftp.pdbj.org/pub/emdb/doc/Map-format/current/EMDB_map_format.pdf
+	t	EMDB Map Distribution Format Description
+	-
+	u	https://www.ccp4.ac.uk/html/maplib.html
+	t	Format technical details
+	-
+	u	https://en.wikipedia.org/wiki/CCP4_(file_format)
+	t	CCP4 - Wikipedia
+rel
+	map_format soft4map same_edmap
+EOD
+);
+//... emdb header
+_d(<<<EOD
+id
+	file_emdb_header
+title
+	EMDB header
+	EMDBヘッダ
+abst
+	Meta information in XML format
+	XML形式のメタ情報(付随情報)データ
+tag
+	emn emdb
+link
+	u	https://ftp.pdbj.org/pub/emdb/doc/XML-schemas/emdb-schemas/v3/current_v3/doc/Untitled.html
+	t	EMDB Schema v3
+	-
+	u	https://ftp.pdbj.org/pub/emdb/doc/XML-schemas/emdb-schemas/v1/v1_9/doc_v1_9_6/Untitled.html
+	t	EMDB Schema v1.9
+	-
+	t	Documentation directory
+	tj	文書ディレクトリ
+	u	https://ftp.pdbj.org/pub/emdb/doc/XML-schemas/emdb-schemas/
+rel
+	emdb
+
+EOD
+);
+
+//... EMDB mask
+_d(<<<EOD
+id
+	file_emdb_masks
+title
+	Mask map
+	マスクマップ
+abst
+	Map data of mask pattern, sub-region, segmentation, etc
+	マスクパターン、部分マップ、セグメンテーションマップなど
+tag
+	emn emdb
+rel
+	emdb
+EOD
+);
+
+//... FSC
+_d(<<<EOD
+id
+	file_emdb_fsc
+title
+	FSC data file
+	FSCデータファイル
+abst
+	Fourier shell correlation data in XML format for resolution estimation
+	XML形式のフーリエシェル相関データ、解像度の算出に利用
+tag
+	emn emdb
+link
+	t	Fourier shell correlation - Wikipedia
+	u	https://en.wikipedia.org/wiki/Fourier_shell_correlation
+	-
+	t	FSC-schema
+	u	https://ftp.pdbj.org/pub/emdb/doc/XML-schemas/FSC-schema/current/
+rel
+	emdb
+EOD
+);
+
+//... EMDB validaton report
+_d(<<<EOD
+id
+	file_emdb_valrep
+title
+	EMDB validaton report
+	EMDB検証レポート
+abst
+	Validaton report of EMDB entry by wwPDB and EMDB
+	wwPDBとEMDBによるEMDBエントリの検証レポート
+tag
+	emn emdb
+link
+	u	https://www.wwpdb.org/validation/2017/EMMapValidationReportHelp
+	t	User guide to the EmDataBank map validation reports
+rel
+	emdb
+
+EOD
+);
+
+//... mmcif
+_d(<<<EOD
+id
+	file_mmcif
+title
+	PDBx/mmCIF format
+	PDBx/mmCIF形式
+abst
+	Officail data format for PDB entries, in CIF text format, having atomic coordinates and meta information
+	PDBの公式データフォマット。原子座標と付随情報を含む。STAR形式に基づくテキストデータ。
+tag
+	pdb
+link
+	t	PDBx/mmCIF Dictionary Resources
+	tj	PDBx/mmCIF辞書関連情報
+	u	https://mmcif.wwpdb.org/
+	uj	https://mmcif.pdbj.org/
+	-
+	u	https://en.wikipedia.org/wiki/Crystallographic_Information_File
+	t	Crystallographic Information File
+rel
+	pdb
+
+EOD
+);
+
+//... PDB format
+_d(<<<EOD
+id
+	file_pdb
+title
+	PDB format
+	PDB形式
+abst
+	Legacy officail data format for PDB entries, contains atomic coordinates
+	以前のPDBの公式データフォマット、原子座標データを含む
+tag
+	pdb
+link
+	t	Atomic Coordinate Entry Format Version 3.3
+	u	https://www.wwpdb.org/documentation/file-format-content/format33/v3.3.html
+rel
+	pdb
+
+EOD
+);
+
+//... mmcif
+_d(<<<EOD
+id
+	file_mmjson
+title
+	PDBx/mmJSON format
+	PDBx/mmJSON形式
+abst
+	JSON representation of the PDBx/mmCIF data developed by PDBj
+	PDBx/mmCIF"をJSON形式で表現した、PDBjが開発したファイルフォーマット
+tag
+	pdb
+link
+	t	mmJSON - PDBj help
+	tj	mmJSON - PDBjヘルプ
+	u	https://pdbj.org/help/mmjson
+
+rel
+	pdb
+
+EOD
+);
+
+
+//... PDB validation report
+_d(<<<EOD
+id
+	file_pdb_valrep
+title
+	wwPDB validaton report
+	wwPDB検証レポート
+abst
+	Validaton report of PDB entry by wwPDB
+	wwPDBによるPDBエントリの検証レポート
+tag
+	pdb
+link
+	u	https://www.wwpdb.org/validation/validation-reports
+	t	wwPDB: Validation Reports
+	-
+	tj	検証レポートには、どんな種類がありますか？ - validation FAQ
+	uj	https://pdbj.org/help/dafaq_type01
+	t	wwPDB: validation report FAQs
+	u	https://www.wwpdb.org/validation/2016/FAQs#different_types
+rel
+	pdb file_emdb_valrep
+
+EOD
+);
+
+
 //.. about
 //... emn
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EM Navigator
 abst
 	3D electron microscopy data browser
 	3次元電子顕微鏡データブラウザ
 main_e
-	Browser for 3D electron microscopy (3D-EM) data of biological molecules and assemblies
+	EM Navigator is a browser for 3D electron microscopy (3D-EM) data of biological molecules and assemblies.
+	It provides EMDB-PDB cross-search, statistical information, and links to similar structures.
+	You can easily check the latest EM structural data and structural papers.
 main_j
 	生体分子や生体組織の3次元電子顕微鏡データを、気軽にわかりやすく眺めるためのウェブサイト 
+	EMDB-PDBの横断検索や統計情報のサービス、類似構造へのリンクなどをを提供しています
+	最新のEM構造データや構造論文を手早くチェックできます
 id
 	about_emn
 tag
@@ -1043,14 +1341,8 @@ url
 EOD
 );
 
-/*
-最新のEM構造データや構造論文を気軽にチェックできます
-EMDB-PDBの横断検索や統計情報のサービスを提供しています
-類似する構造データのアクセスが容易です
-*/
-
 //... emn search
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EMN Search
 	EMN検索
@@ -1073,7 +1365,7 @@ EOD
 );
 
 //... 3DEM papers
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EMN Papers
 	EMN文献
@@ -1098,7 +1390,7 @@ EOD
 );
 
 //... gallery
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EMN Gallery
 	EMNギャラリー
@@ -1129,7 +1421,7 @@ tmp_vs_res
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EMN Statistics
 	EMN統計情報
@@ -1162,7 +1454,7 @@ EOD
 );
 
 //... Yorodumi
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi
 	万見 (Yorodumi)
@@ -1189,7 +1481,7 @@ EOD
 
 
 //... ym search *
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi Search
 	万見検索
@@ -1209,7 +1501,7 @@ EOD
 
 
 //... structure papers
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi Papers
 	万見文献
@@ -1234,7 +1526,7 @@ EOD
 );
 
 //... taxonomy
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi Speices
 	万見生物種
@@ -1242,7 +1534,7 @@ abst
 	Taxonomy data in EMDB/PDB/SASBDB
 	EMDB/PDB/SASBDBの生物種情報
 main_e
-	Taxonomy database of sample sources of data in EMDB/PDB/SASBDB'
+	Taxonomy database of sample sources of data in EMDB/PDB/SASBDB
 main_j
 	EMDB/PDB/SASBDBの構造データの試料情報、由来する生物種に関するデータベース
 id
@@ -1257,20 +1549,20 @@ EOD
 );
 
 //... omokage search
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Omokage search
 	Omokage検索
 abst
 	Search structure by SHAPE
 	「カタチ」で構造検索
-main_j
+main_e
 	"Omokage search" is a shape similarity search service for 3D structures of macromolecules. By comparing <b>global shapes</b>, and ignoring details, similar-shaped structures are searched.
 	The search is performed ageinst >200,000 structure data, which consists of EMDB map data, PDB coordinates (deposited units (asymmetric units, usually), PDB biological units, and SASBDB mdoels).
 	For the search query, you can use either a data in the PDB/EMDB/SASBDB or your original model.
 	Supported formats are PDB (atomic model, SAXS bead model, etc.) and CCP4/MRC map (3D density map).
 	Shape comparison is performed by iDR profile method, which uses 1D-distance profiles of super-simplified models generated by vector quantizaion in <i>Situs</i> package.
-main_e
+main_j
 	Omokage検索は、生体超分子の形状類似性検索サービスです。細部を無視した<b>全体の形状のみの比較</b>により、類似データを検索します。
 	検索の対象となるデータセットは、EMDBのマップデータ、PDBの登録構造（通常は非対称単位、AU）、PDBの生物学的単位(BU)、SASBDBの登録モデルで、合計約20万の構造データからの検索となります。
 	EMDB・PDB・SASBDBの登録データ、あるいは利用者所有のオリジナルの構造を使った検索が可能です。
@@ -1288,7 +1580,7 @@ EOD
 );
 
 //... doc
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi Docs
 	万見文書
@@ -1305,7 +1597,7 @@ EOD
 );
 
 //... covid-19
-_d2( <<<EOD
+_d( <<<EOD
 title
 	Covid-19 info
 	Covid-19情報
@@ -1324,7 +1616,7 @@ EOD
 );
 
 //... fh search
-_d2(<<<EOD
+_d(<<<EOD
 title
 	F&H Search
 	F&H 検索
@@ -1371,7 +1663,7 @@ EOD
 
 //... movie
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Movie viewer
 	ムービービューア
@@ -1419,7 +1711,7 @@ EOD
 );
 _table_prep( TABLE_MOUSE_TOUCH );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Jmol/JSmol
 abst
@@ -1466,7 +1758,7 @@ EOD
 );
 _table_prep( TABLE_MOUSE_TOUCH );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Molmil
 abst
@@ -1518,7 +1810,7 @@ touch_j
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	SurfView
 abst
@@ -1597,7 +1889,7 @@ SASBDB
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Comparison of 3 databanks
 	3つのデータバンクの比較
@@ -1654,7 +1946,7 @@ SASBDB
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	ID/Accession-code notation in Yorodumi/EM Navigator
 	万見/EM NavigatorにおけるID/アクセスコードの表記
@@ -1670,7 +1962,7 @@ EOD
 );
 
 //... EMDB
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EMDB
 abst
@@ -1696,7 +1988,7 @@ EOD
 );
 
 //... PDB
-_d2(<<<EOD
+_d(<<<EOD
 title
 	PDB
 abst
@@ -1717,7 +2009,7 @@ EOD
 );
 
 //... PDBj
-_d2(<<<EOD
+_d(<<<EOD
 title
 	PDBj
 abst
@@ -1748,7 +2040,7 @@ EOD
 );
 
 //... SASBDB
-_d2(<<<EOD
+_d(<<<EOD
 title
 	SASBDB
 abst
@@ -1774,7 +2066,7 @@ EOD
 );
 
 //... gmfit
-_d2(<<<EOD
+_d(<<<EOD
 title
 	gmfit
 abst
@@ -1856,7 +2148,7 @@ _
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	3D electron microscopy (3DEM)
 	3次元電子顕微鏡(3DEM)
@@ -1877,7 +2169,7 @@ EOD
 );
 
 //... cryo EM
-_d2(<<<EOD
+_d(<<<EOD
 title
 	electron cryo microscopy (cryoEM)
 	低温電子顕微鏡（クライオ電顕、cryoEM）
@@ -1901,7 +2193,7 @@ EOD
 );
 
 //.. old movie
-_d2(<<<EOD
+_d(<<<EOD
 title
 	"Movies out of date"
 	「古いムービー」
@@ -1924,7 +2216,7 @@ EOD
 
 //.. misc
 //... polysac
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Carbohydrate representation
 	糖鎖の表現
@@ -1961,7 +2253,7 @@ EOD
 );
 
 //... met
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Experimental methods, equipments, and software data
 	実験手法・装置(施設・設備・機器)・ソフトウェアのデータ
@@ -2011,7 +2303,7 @@ Component
 EOD
 );
 
-_d2( <<<EOD
+_d( <<<EOD
 title
 	Function and homology information
 	機能・相同性情報
@@ -2031,7 +2323,7 @@ id
 tag
 	ym
 rel
-	mlplus about_ysearch about_ym
+	about_fh_search mlplus about_ysearch about_ym
 EOD
 );
 
@@ -2070,7 +2362,7 @@ gmfit
 EOD
 );
 
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Re-ranking by gmfit
 	gmfitで並べなおし
@@ -2091,7 +2383,7 @@ EOD
 );
 
 //.. new EMN
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Changes in new EM Navigator and Yorodumi
 	新しいEM Navigatorと万見の変更点
@@ -2128,7 +2420,7 @@ EOD
 
 //.. 情報源
 //... PDBMLplus
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Information from PDBMLplus
 	PDBML-plusからの情報
@@ -2153,7 +2445,7 @@ EOD
 );
 
 //... YM annot
-_d2(<<<EOD
+_d(<<<EOD
 title
 	Yorodumi annotation
 	万見注釈
@@ -2171,6 +2463,7 @@ EOD
 
 //. legacy 廃止
 //... Yorodumi legacy
+/*
 _d_obso(<<<EOD
 title
 	Yorodumi (legacy version)
@@ -2188,10 +2481,10 @@ rel
 	emdb pdb about_ym
 EOD
 );
-
+*/
 //... emn legacy *
 /*
-_d2(<<<EOD
+_d(<<<EOD
 title
 	EM Navigator (legacy version)
 	EM Navigator (旧版)
@@ -2221,7 +2514,7 @@ EOD
 
 //. テンプレ
 /*
-_d2(<<<EOD
+_d(<<<EOD
 title
 abst
 main_e

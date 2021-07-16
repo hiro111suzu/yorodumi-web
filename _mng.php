@@ -67,9 +67,8 @@ if ( $a )
 if ( php_sapi_name() != 'cli' )
 	register_shutdown_function( '_end' );
 function _end() {
-	global $_simple;
 	if ( _getpost( 'ajax' ) ) return;
-	$flg_hide = $_simple->contents != '';
+	$flg_hide = _simple()->contents != '';
 
 	//.. ダッシュボード
 	//- 実行中タスク
@@ -90,12 +89,12 @@ function _end() {
 	$dn_marem = DN_PREP. '/marem';
 	$fn_log = max( glob( "$dn_marem/log/*movrec.tsv" ) );
 
-	$_simple->hdiv( 'ダッシュボード', ''
-		. $_simple->hdiv( '実行中タスク', 
+	_simple()->hdiv( 'ダッシュボード', ''
+		. _simple()->hdiv( '実行中タスク', 
 			$running ? _table_2col( $running ) : 'なし' ,
 			[ 'type' => 'h2' ]
 		)
-		. $_simple->hdiv( 'marem', ''
+		. _simple()->hdiv( 'marem', ''
 			. _p( basename( $fn_log, '-1-movrec.tsv' ) )
 			. _ul( array_reverse( array_slice(
 				_file( $fn_log ),
@@ -110,7 +109,7 @@ function _end() {
 			,
 			[ 'type' => 'h2' ]
 		)
-		. $_simple->hdiv( 'mng page', _table_2col([
+		. _simple()->hdiv( 'mng page', _table_2col([
 			'dir' => [
 				_dir_link( __DIR__. '/data/' ) ,
 				_dir_link( __DIR__ ) ,
@@ -151,16 +150,16 @@ function _end() {
 		else
 			$p_mng[] = $l;
 	}
-	$_simple->hdiv( 'すべての管理ページ'
+	_simple()->hdiv( 'すべての管理ページ'
 		, ''
-		. $_simple->hdiv( '管理'    , _ul( $p_mng, 0 ), [ 'type' => 'h2' ] )
-		. $_simple->hdiv( 'IDリスト', _ul( $p_ids, 0 ), [ 'type' => 'h2' ] )
+		. _simple()->hdiv( '管理'    , _ul( $p_mng, 0 ), [ 'type' => 'h2' ] )
+		. _simple()->hdiv( 'IDリスト', _ul( $p_ids, 0 ), [ 'type' => 'h2' ] )
 		,
 		[ 'hide' => $flg_hide ] 
 	);
 
 	//.. 終了
-	$_simple->out([
+	_simple()->out([
 		'title' => _pg_title( _getpost( 'mode' ) ) ,
 		'sub'	=> $subtitle ,
 		'icon' => 'lk-opt' ,
@@ -173,25 +172,8 @@ function _daystr( $in ) {
 	return "$in " . [ '日', '月', '火', '水', '木', '金', '土' ][ date( 'w', strtotime( $in ) ) ];
 }
 
-//.. _pager
-function _pager( $a ) {
-	global $opg;
-	$total = 0;
-	$range = 100;
-	extract( $a );
-	$opg = new cls_pager([
-		'total'	=> $total ,
-		'page'	=> PAGE ,
-		'range'	=> $range ,
-		'pvar'	=> [ 'ajax' => true, 'mode' => _getpost( 'mode' ) ] ,
-		'div'	=> '#oc_div_list'
-	]);
-	
-}
-
 //.. _out: ページャが必要な場合の出力
 function _out( $out, $ar = [] ) {
-	global $_simple, $opg;
 	$title = 'items';
 	$total = 0;
 	$range = 100;
@@ -208,7 +190,7 @@ function _out( $out, $ar = [] ) {
 	}
 	if ( _getpost( 'ajax' ) )
 		die( $out );
-	$_simple->hdiv( $title, $out, [ 'id' => 'list' ] );
+	_simple()->hdiv( $title, $out, [ 'id' => 'list' ] );
 }
 
 //.. _pg_title
@@ -223,19 +205,18 @@ function _pg_title( $fn = '' ) {
 //. mode functions
 //.. _mode_problem
 function _mode_problem() {
-	global $_simple;
 	$dn = DN_PREP . '/problem';
 	define( 'ALL', _getpost( 'all' ) != '' );
 	$_known = [];
 	if ( ! ALL ) {
 		foreach ( _file( "$dn/_known.txt" ) as $l )
 			$_known[] = $l;
-		$_simple->hdiv( 'mode', 
+		_simple()->hdiv( 'mode', 
 			_p( '.red', '既知の問題は表示していない' )
 			. _p( _a( '?mode=problem&all=1', 'すべて表示' ))
 		);
  	} else {
-		$_simple->hdiv( 'mode', _p( _a( '?mode=problem', '既知の問題は隠す' )) );
+		_simple()->hdiv( 'mode', _p( _a( '?mode=problem', '既知の問題は隠す' )) );
 	
 	}
 	$data = [];
@@ -292,14 +273,13 @@ function _mode_problem() {
 			;
 */
 		}
-		$_simple->hdiv( "$name ($p_count)", _ul( $out, 0 ) );
+		_simple()->hdiv( "$name ($p_count)", _ul( $out, 0 ) );
 	}
-	$_simple->hdiv( "以下は問題なし ($no_prob_count)", _ul( $no_prob, 0 ), [ 'hide' => true ] );
+	_simple()->hdiv( "以下は問題なし ($no_prob_count)", _ul( $no_prob, 0 ), [ 'hide' => true ] );
 }
 
 //.. _mode_categ
 function _mode_categ() {
-	global $_simple;
 	define( 'FN_TSV', DN_EDIT. '/categ.tsv' );
 	define( 'TSV', _tsv_load2( FN_TSV ) );
 	$set_id = [];
@@ -311,11 +291,12 @@ function _mode_categ() {
 		if ( $k != 'categ' ) continue;
 		if ( _instr( 'pmid', $id ) ) {
 			$ids = [];
-			foreach ( explode( ',', _ezsqlite([
-				'dbname' => 'pmid2did' ,
-				'select' => 'ids' ,
+			foreach ( _ezsqlite([
+				'dbname' => 'pmid' ,
+				'select' => 'strid' ,
 				'where'  => [ 'pmid', strtr( $id, [ 'pmid' => '' ] ) ] ,
-			]) ) as $id ) {
+				'flg_all' => true
+			]) as $id ) {
 				$ids[] = substr( $id, 0, 1 ) == 'e'
 					? _numonly( $id )
 					: $id
@@ -334,7 +315,7 @@ function _mode_categ() {
 		file_put_contents( FN_TSV, _reg_rep(
 			file_get_contents( FN_TSV ), $set 
 		) );
-		$_simple->hdiv( 'カテゴリをセット', _ul( array_values( $set ) ) );
+		_simple()->hdiv( 'カテゴリをセット', _ul( array_values( $set ) ) );
 	}
 
 
@@ -362,7 +343,7 @@ function _mode_categ() {
 	}
 
 	$submit = $out ? _input( 'submit' ) : '';
-	$_simple->hdiv( 'カテゴリ未定エントリ'. _kakko( count( $out ) ),
+	_simple()->hdiv( 'カテゴリ未定エントリ'. _kakko( count( $out ) ),
 		_t( 'form | method:get | action:', ''
 			. $submit
 			. _ul( $out, 0 )
@@ -374,7 +355,6 @@ function _mode_categ() {
 
 //.. _mode_log: 開発log
 function _mode_log() {
-	global $_simple;
 	//- init
 	define( 'RANGE', 20 );
 
@@ -391,7 +371,7 @@ function _mode_log() {
 			$cnt += count( $v );
 			$out2[] = _kv([ $k => _imp( $v ) ]);
 		}
-		$out .= $_simple->hdiv(
+		$out .= _simple()->hdiv(
 			_daystr( basename( $pn, '.json' ) ). _kakko( $cnt ) ,
 			_ul( $out2, 0 ) ,
 			[ 'type' => 'h2', 'hide' => true ] 
@@ -408,7 +388,6 @@ function _mode_log() {
 
 //.. _mode_logview 管理log
 function _mode_logview() {
-	global $_simple;
 	//- file
 	$dn = DN_PREP . '/mnglog';
 
@@ -425,7 +404,7 @@ function _mode_logview() {
 	$out = '';
 	$cnt = 0;
 	foreach ( (array)_json_load2( $fn ) as $n1 => $a1 ) {
-		$out .= $_simple->hdiv(
+		$out .= _simple()->hdiv(
 			"#$n1: ". $a1->name
 			. _kakko( count( $a1->job ) . ' items' )
 			. " @ " . strtr( $a1->time, [ "$date " => '' ] ) ,
@@ -434,7 +413,7 @@ function _mode_logview() {
 		);
 		++ $cnt;
 	}	
-	$_simple->hdiv( "Log on $date, $cnt jobs)", $out );
+	_simple()->hdiv( "Log on $date, $cnt jobs)", $out );
 
 
 	//- links
@@ -447,14 +426,13 @@ function _mode_logview() {
 
 	$out = '';
 	foreach ( $data as $y => $d )
-		$out .= $_simple->hdiv( $y, _imp( $d ), [ 'type' => 'h2', 'hide' => true ] );
+		$out .= _simple()->hdiv( $y, _imp( $d ), [ 'type' => 'h2', 'hide' => true ] );
 
-	$_simple->hdiv( 'Other logs',	$out );
+	_simple()->hdiv( 'Other logs',	$out );
 }
 
 //.. _mode_hourly: hourly log
 function _mode_hourly() {
-	global $_simple;
 	//- file
 	$dn = DN_PREP . '/hourly_log';
 
@@ -474,7 +452,7 @@ function _mode_hourly() {
 			if ( _headmatch( 'task: ', $line ) )
 				$t[] = substr( $line, 6 );
 		}
-		$out .= $_simple->hdiv(
+		$out .= _simple()->hdiv(
 			_imp( $t ) ,
 			'@' . date( 'Y-m-d H-i-s', $time ) .
 			_t( 'pre', implode( "\n", $cont ) )
@@ -483,7 +461,7 @@ function _mode_hourly() {
 		);
 		++ $cnt;
 	}	
-	$_simple->hdiv( "Log of hourlyjobs ($cnt jobs)", $out );
+	_simple()->hdiv( "Log of hourlyjobs ($cnt jobs)", $out );
 
 }
 
@@ -542,7 +520,6 @@ function _mode_ids_pdb_fit_prerel() {
 
 //.. _mode_ids_pdb_num: 数値のみのPDB-ID
 function _mode_ids_pdb_num() {
-	global $_simple;
 	$out = '';
 	foreach ( _file( DN_DATA . '/ids/pdb.txt' ) as $id ) {
 		if ( ! ctype_digit( $id ) ) continue;
@@ -551,7 +528,7 @@ function _mode_ids_pdb_num() {
 			. ( new cls_entid() )->set_emdb( $id )->ent_item_list()
 		;
 	}
-	$_simple->hdiv( 'IDが数字のみのPDB', $out );
+	_simple()->hdiv( 'IDが数字のみのPDB', $out );
 }
 
 //.. _mode_ids_emdb_obs
@@ -567,7 +544,6 @@ function _mode_ids_emdb_obs() {
 
 //.. _mode_ids_emdb_sup: サプリのあるデータ
 function _mode_ids_emdb_sup() {
-	global $_simple;
 	define( 'RANGE', 50 );
 	$data =[];
 	foreach ( _idlist( 'emdb' ) as $id ) {
@@ -588,7 +564,7 @@ function _mode_ids_emdb_sup() {
 	}
 	ksort( $data );
 	foreach ( $data as $type => $ids ) {
-		$_simple->hdiv( $type, _ent_catalog( array_unique( $ids ), [ 'mode' => 'icon' ] ) );
+		_simple()->hdiv( $type, _ent_catalog( array_unique( $ids ), [ 'mode' => 'icon' ] ) );
 	}
 }
 

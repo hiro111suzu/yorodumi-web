@@ -635,10 +635,3 @@ function org_testinfo() {
 
 //. end of class
 }
-
-//. ラッパー関数
-//.. _testinfo
-function _testinfo( $info, $info2 = '' ) {
-	global $_simple;
-	$_simple->testinfo_add( $info, $info2 );
-}

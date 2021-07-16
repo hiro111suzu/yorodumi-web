@@ -845,6 +845,18 @@ function _mkdir( $d ) {
 }
 
 //. simpleFW
+//.. _simple
+$_simple = new cls_simple;
+function _simple() {
+	global $_simple;
+	return $_simple;
+}
+
+//.. _testinfo
+function _testinfo( $info, $info2 = '' ) {
+	_simple()->testinfo_add( $info, $info2 );
+}
+
 //.. _cssid
 //- cssに使うユニークな数字を返す
 function _cssid() {
@@ -1398,7 +1410,6 @@ function _fa( $name, $cls = 'dark large' ) {
 
 //.. _pap_item 論文リストのアイテム
 function _pap_item( $a, $opt = [] ) {
-	global $_simple;
 	extract( $a ); //-  $pmid $journal, $date, $data, $if
 	$u = ( _instr( 'pap.php', $_SERVER[ 'PHP_SELF' ] ) ? '' : 'pap.php')
 		. ( COLOR_MODE == 'emn' ? '?em=1&' : '?em=0&' )
@@ -1409,7 +1420,7 @@ function _pap_item( $a, $opt = [] ) {
 	$is = "<i>$journal</i>$if, {$data[ 'issue' ]}";
 	$ts = '<b>'. $data[ 'title' ]. '</b>';
 	
-	return $_simple->hdiv( $ts, ''
+	return _simple()->hdiv( $ts, ''
 		. _p( '.pp_sub', ''
 			. _ab( "$u&id=$pmid", _ic( 'article' ). $is )
 			. BR
@@ -1625,11 +1636,12 @@ function _input_emdb_unp( $id, $pmid = '' ) {
 		define( 'EMDB_UNP_TSV', _tsv_load( DN_EDIT. '/unpid_emdb_annot.tsv' ) );
 
 	$menu = [ '-' => '-', 'x' => 'x' ];
-	foreach ( (array)explode( ',', _ezsqlite([
-		'dbname' => 'pmid2did' ,
-		'select' => 'ids' ,
-		'where'  => [ 'pmid', $pmid ?: $id ]
-	])) as $i ) {
+	foreach ( (array)_ezsqlite([
+		'dbname' => 'pmid' ,
+		'select' => 'strid' ,
+		'where'  => [ 'pmid', $pmid ?: $id ] ,
+		'flg_all' => true
+	]) as $i ) {
 		if ( in_array( substr( $i, 0, 1 ), [ 'e', 'S' ] ) ) continue;
 		$menu[ $i ] = $i;
 	}
@@ -1725,7 +1737,6 @@ function _mng_input() {
 //.. _doc_hdiv
 //- hdivで返す
 function _doc_hdiv( $docid, $opt = [] ) {
-	global $_simple;
 	$lang = $nourl = $type = $hide = null;
 	extract( $opt );
 	$lang = $lang ?: _ej( 'e', 'j' );
@@ -1777,7 +1788,7 @@ function _doc_hdiv( $docid, $opt = [] ) {
 
 	//- 文章
 	if ( $doc[ $lang ] == '' ) {
-		return $_simple->hdiv(
+		return _simple()->hdiv(
 			TERM_DOC_NOT_FOUND ,
 			"ID: $docid - $lang" ,
 			$o
@@ -1785,7 +1796,7 @@ function _doc_hdiv( $docid, $opt = [] ) {
 	} else {
 		$t = $s = $c = $l = '';
 		extract( $doc[ $lang ] );
-		return $_simple->hdiv(
+		return _simple()->hdiv(
 			//- タイトル
 			$t
 			//- 中身
@@ -1839,9 +1850,9 @@ function _doc_div( $docid ) {
 	if ( ! $doc[ 'e' ] ) {
 		return TEST ? "Doc '$docid' not found" : '' ;
 	} else {
-		$t = $s = $c = $l = ''; //- title, subtitle(?), $contents, $l?
+		$t = $s = $c = $l = ''; //- title, subtitle(?), contents, link
 		extract( $doc[ L_EN ? 'e' : 'j' ] );
-		return implode( array_filter([
+		return implode( BR, array_filter([
 			//- タイトル
 			'<b>'. ( $url ? _ab( $url, $t ) : $t ). '</b>' ,
 
@@ -1856,11 +1867,14 @@ function _doc_div( $docid ) {
 				)
 				: ''
 			,
+			//- リンク
+			$c ? null : $l //- コンテンツのないドキュメントはリンクを表示
+			,
 			//- 詳細へのリンク
 			_ab([ 'doc', 'id' => $docid ],
 				IC_HELP. _ej( 'Read more', '詳細を読む' )
 			)
-		]), BR );
+		]) );
 	}
 }
 
@@ -2186,9 +2200,9 @@ class cls_entid extends abs_entid {
 
 		//- ビューアボタン
 		$btns = '';
+
 		//- pap link
 		if (
-			TEST && 
 			! _instr( 'pap.php', $_SERVER[ 'PHP_SELF' ] ) &&
 			in_array( $this->db, [ 'emdb', 'pdb', 'sasbdb' ] )	
 		) {

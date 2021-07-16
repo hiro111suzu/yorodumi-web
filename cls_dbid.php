@@ -104,6 +104,15 @@ function title( $title, $key, $flg_array = false ) {
 		;
 	}
 
+	//... chemcomp
+	if ( $db == 'chem' && substr( $t1, 0, 5 ) == 'Chem-' ) {
+		$t1 = _ezsqlite([
+			'dbname' => 'chem' ,
+			'select' => 'name' ,
+			'where'  => [ 'id', strtoupper( $id ) ] ,
+		]);
+	}
+
 	//... $t2がない
 	if ( !$t2 ) {
 		return $flg_array ? (
@@ -158,7 +167,7 @@ function link( $key = '' ) {
 			 	count( explode( '.', $this->id ) ) == 4 ? 'cath' : 'cath_tree' ,
 			 	$this->id
 			 )
-		] 
+		]
 	);
 }
 

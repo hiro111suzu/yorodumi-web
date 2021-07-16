@@ -24,7 +24,11 @@ if ( $db == 'pdb' ) {
 //- 公開前データをテスト版で見る
 if (
 	_before_release_time() &&
-	in_array( $id, _file( DN_PREP. '/newids/latest_new_pdbid.txt'  ) )
+	_ezsqlite([
+		'dbname' => 'pdb' ,
+		'select' => 'rdate' ,
+		'where'  => [ 'id', $id ]
+	]) == _release_date()
 ) {
 	$url_struc =_url( 'disp', "arch.mmcif.$id" );
 }

@@ -4,10 +4,10 @@
 require( __DIR__. '/_mng.php' );
 define( 'LIM_ID', 32000000 );
 //define( 'LIM_ID', 31000000 );
-
 define( 'FN_TSV',   DN_EDIT. '/pubmed_id.tsv' );
-define( 'FN_BLIST', DN_EDIT. '/pubmed_blacklist.json' );
 define( 'FN_WLIST', DN_EDIT. '/pubmedid_whitelist.txt' );
+define( 'FN_BLIST', DN_PREP. '/pubmed/pubmed_blacklist.json' );
+define( 'FN_FOUND', DN_PREP. '/pubmed/pubmed_found.json.gz' );
 
 //. get
 $reset = BR. _a( '?', 'リセット' );
@@ -16,7 +16,7 @@ $reset = BR. _a( '?', 'リセット' );
 if ( $_GET['set'] ) {
 	list( $pmid, $ids ) = explode( ',', $_GET['set'], 2 );
 	$ids = explode( ',', $ids );
-	$_simple->hdiv( 'set', _imp( $ids ). " = $pmid". $reset );
+	_simple()->hdiv( 'set', _imp( $ids ). " = $pmid". $reset );
 	$set = [];
 	foreach ( $ids as $id ) {
 		if ( substr( $id, 0, 1 ) == 'e' )
@@ -35,7 +35,7 @@ if ( $_GET['set'] ) {
 if ( $_GET['blist'] ) {
 //	list( $pmid, $ids ) = explode( '|', $_GET['set'] );
 //	$ids = explode( ',', $ids );
-	$_simple->hdiv( 'black list', $_GET['blist']. $reset );
+	_simple()->hdiv( 'black list', $_GET['blist']. $reset );
 	_json_save(
 		FN_BLIST,
 		_uniqfilt(
@@ -49,7 +49,7 @@ if ( $_GET['blist_all'] ) {
 	$o = [];
 	foreach ( explode( ',', $pmid_list ) as $p )
 		$o[] = "$p,$ids";
-	$_simple->hdiv( 'blacklist まとめて', _ul( $o ). $reset );
+	_simple()->hdiv( 'blacklist まとめて', _ul( $o ). $reset );
 	_json_save(
 		FN_BLIST,
 		_uniqfilt(
@@ -75,7 +75,7 @@ foreach ( (array)_json_load( DN_PREP. '/pubmed_tobe_checked.json' ) as $idset =>
 	;
 }
 if ( $out ) 
-	$_simple->hdiv( '要チェック Pubmed-ID', _ul( $out, 10000 ) );
+	_simple()->hdiv( '要チェック Pubmed-ID', _ul( $out, 10000 ) );
 unset( $out );
 
 //. data 読み込み
@@ -89,7 +89,7 @@ define( 'BLIST', _json_load( FN_BLIST ) );
 
 //. main
 $out = '';
-foreach ( _json_load( DN_PREP. '/pubmed_found.json.gz' ) as $title => $data ) {
+foreach ( _json_load( FN_FOUND ) as $title => $data ) {
 	$ids = $auth = $pmids_t = $pmids_a = [];
 	extract( $data ); //- $ids, $auth, $pmids_t, $pmids_a
 
@@ -157,7 +157,7 @@ foreach ( _json_load( DN_PREP. '/pubmed_found.json.gz' ) as $title => $data ) {
 	
 	//- output
 	if ( ! $table ) continue;
-	$out .= $_simple->hdiv( $title,
+	$out .= _simple()->hdiv( $title,
 		''
 			. _p( _imp( $auth ) )
 			. _ent_catalog(  $ids, [ 'mode' => 'icon' ] )
@@ -165,4 +165,35 @@ foreach ( _json_load( DN_PREP. '/pubmed_found.json.gz' ) as $title => $data ) {
 		, [ 'type' => 'h2' ]
 	) ;
 }
-$_simple->hdiv( 'data', $out ?: 'なし' );
+_simple()->hdiv( 'data', $out ?: 'なし' );
+
+//. blacklistチェック
+$all_items = [];
+foreach ( _json_load( FN_FOUND ) as $c ) {
+	extract( $c ); //- ids, auth, $pmids_t, $pmids_a
+	$ids = implode( ',', $ids );
+	foreach ( $pmids_a + $pmids_t as $pmid ) {
+		$all_items[ "$pmid,$ids" ] = true;
+	}
+}
+
+$blist_result = [];
+$new_list =[];
+foreach ( _json_load( FN_BLIST ) as $item ) {
+	if ( $all_items[ $item ] ) {
+		++ $blist_result[ 'active' ];
+		$new_list[] = $item;
+	} else {
+		++ $blist_result[ 'obso' ];
+	}
+}
+if ( $_GET['clean_blist'] ) {
+	_json_save( FN_BLIST, $new_list );
+}
+
+_simple()->hdiv(
+	'blacklist item',
+	_kv( $blist_result )
+	.BR. _ab( '?clean_blist=1', 'clean' )
+);
+

@@ -49,7 +49,7 @@ if ( _getpost( 'ajax' ) ) {
 }
 
 //. ディレクトリ表示
-$_simple->hdiv( 'Directory path', _ul([
+_simple()->hdiv( 'Directory path', _ul([
 	'Favorite: ' . _imp2([
 		_dirlink( DN_DATA , 'data' ),
 		_dirlink( DN_PREP , 'prep' ),
@@ -68,14 +68,14 @@ $_simple->hdiv( 'Directory path', _ul([
 ]));
 
 if ( $message )
-	$_simple->hdiv( 'Message', $message );
+	_simple()->hdiv( 'Message', $message );
 
-$_simple->hdiv( 'File items', _item_table(), [ 'id' => 'main' ] );
+_simple()->hdiv( 'File items', _item_table(), [ 'id' => 'main' ] );
 
 //. output
 
 //.. css
-$_simple->css( <<<EOD
+_simple()->css( <<<EOD
 #item_table, #item_table tr, #item_table td {
 	border: none;
 	padding: 0 0.2em;

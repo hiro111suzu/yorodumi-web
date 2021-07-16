@@ -25,31 +25,6 @@ EOD
 //. PDB-prerel
 if ( $unrel_type == 'prerel' ) {
 	//- ステータスコード
-	$statc2stat = L_EN ? [
-		'POLC' => 'waiting for a policy decision',
-		'AUTH' => 'processed, waiting for author review and approval',
-		'REFI' => 're-refined entry',
-		'HOLD' => 'hold until a certain date',
-		'HPUB' => 'hold until publication',
-		'WAIT' => 'processing started, waiting for author input to continue processing',
-		'REPL' => 'author sent new coordinates, entry to be reprocessed',
-		'PROC' => 'to be processed',
-		'AUCO' => 'author corrections pending review',
-		'TRSF' => 'entry tansferred to another data repository' ,
-		'OBSLTE' => 'Obsolete entry',
-	] : [
-		'POLC' => '方針の決定待ち',
-		'AUTH' => '編集処理済、登録者の確認・同意待ち',
-		'REFI' => '再精密化構造、論文の公開まで処理を中断',
-		'HOLD' => '編集処理完了、指定の時期まで公開待ち',
-		'HPUB' => '編集処理完了、論文の公開まで公開待ち',
-		'WAIT' => '編集処理開始、登録者からの連絡待ち',
-		'REPL' => '登録者より新しい座標を受理、再処理が必要',
-		'PROC' => '編集処理前',
-		'AUCO' => '登録者による修正待ち',
-		'TRSF' => '他のデータベースに移行されたエントリ', //- ないけども
-		'OBSLTE' => '公開停止エントリ',
-	];
 	$_subtitle = TERM_UNREL_PDB;
 
 	//.. basic
@@ -67,7 +42,8 @@ if ( $unrel_type == 'prerel' ) {
 		]) ),
 
 		'Title'				=> $json->title ,
-		'Status'			=> $statc2stat[ $json->stat ]. _kakko( $json->stat ),
+		'Status'			=> _subdata( 'status_code', L_EN ? 'en' : 'ja' )[ $json->stat ]
+								. _kakko( $json->stat ),
 		'Deposition date'	=> $json->ddep ,
 		'Date'				=> $json->date ,
 		'Hold until'		=> _datestr( $json->dhold ) ,
@@ -126,12 +102,13 @@ if ( $unrel_type == 'prerel' ) {
 } else if ( $unrel_type == 'emdb_obs' ) {
 	$_subtitle = TERM_OBS_EMDB;
 	$json = _json_cache( DN_DATA. '/emdb/emdb-obs.json.gz' )->$id;
-	
+	$arch = new cls_archive( $id );
+	$arch_xml = $arch->get('emdb_obs_xml');
+	$arch_dir = $arch->get('emdb_obs_dir');
+
 	$rep = '';
 	foreach ( (array)$json->repids as $i )
 		$rep .= ( new cls_entid )->set_emdb( $i )->ent_item_list();
-
-	$ftpu = _url( 'emdb_ftp', ID );
 
 	$o_data
 		->lev1title( 'Basic information' )
@@ -158,9 +135,12 @@ if ( $unrel_type == 'prerel' ) {
 			'Details'	=> $json->det ,
 			'New ID'	=> $rep ,
 			'Downloads' => _quick_kv([
-				'TEST' => _test( _ab(['disp', 'emdb_obs.'. ID ], 'XML') ) ,
-				'Header file' => _ab( $ftpu. "/header/emd-$id.xml", "emd-$id.xml" ) ,
-				'FTP directory'	=> _ab( $ftpu, $ftpu )
+				$arch_xml['name'] => _imp2(
+					$arch_xml['dl']. _kakko( $arch_xml['size'] ) ,
+					$arch_xml['disp'] ,
+					$arch_xml['doc']
+				),
+				$arch_dir['name'] => BR. $arch_dir['dl'],
 			]) ,
 		])
 	;

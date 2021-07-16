@@ -75,7 +75,7 @@ foreach ( [
 	$met_list[ $s ] = $met_names[ $s ];
 $met_list[ 'hybrid' ] = 'Hybrid';
 
-$_simple->hdiv( 'Search query',
+_simple()->hdiv( 'Search query',
 	_t( 'form | #form1', _table_2col([
 		'Keywords' => _inpbox( 'kw', KW, [ 'acomp' => 'kw' ] ) ,
 		'Structure methods' => EM_MODE
@@ -114,14 +114,14 @@ $_simple->hdiv( 'Search query',
 //. データ表示
 if ( ID == '' ) {
 	//- 検索結果
-	$_simple->hdiv( TERM_PAP_LIST, _getlist(), [ 'id' => 'list' ] );
+	_simple()->hdiv( TERM_PAP_LIST, _getlist(), [ 'id' => 'list' ] );
 } else {
 	//- 単独データ取得
 	$res = ( new cls_sqlite( 'pap' ) )->qar([
 		'select'	=> 'pmid, journal, date, data, if' ,
 		'where'		=> 'pmid='. _quote( ID )
 	]);
-	$_simple->hdiv(
+	_simple()->hdiv(
 		"Structure paper" ,
 		count( $res )
 			? _simple_table( _indivi( $res[0] ) )
@@ -130,7 +130,7 @@ if ( ID == '' ) {
 }
 
 //. output
-$_simple->page_conf([
+_simple()->page_conf([
 	'title' => EM_MODE ? _ej( 'EMN Papers', 'EMN文献' ): _ej( 'Yorodumi Papers', '万見文献' ) ,
 	'icon'	=> 'lk-article.gif' ,
 	'js'	=> '' ,

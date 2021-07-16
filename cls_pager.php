@@ -54,14 +54,12 @@ function __toString(){
 
 //. set
 function set( $in ) {
-	global $_simple;
 	//- arrayでセット
 	foreach ( $in as $k => $v )
 		$this->$k = $v;
-	
 	//- jsvar
 	if ( $in[ 'div' ] != '' ) {
-		$_simple->jsvar([ 'pagenum' => [
+		_simple()->jsvar([ 'pagenum' => [
 			$this->objname => [
 				'url'	=> $this->url , 
 				'pvar'	=> $this->pvar ,

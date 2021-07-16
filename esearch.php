@@ -379,7 +379,7 @@ if ( G_AJAX == 'l' )
 	die( $_out );
 
 //. ページ作成
-$_simple
+_simple()
 ->page_conf([
 	'title' 	=> _l( 'EMN search' ) ,
 	'icon'		=> 'emn' ,
@@ -558,10 +558,9 @@ function _make_form() {
 
 //. function: _id_hit
 function _id_hit() {
-	global $_simple;
 	$o_id = new cls_entid( G_KW );
 	if ( ! $o_id->ex() || $o_id->db == 'chem' ) return;
-	return $_simple->hdiv(
+	return _simple()->hdiv(
 		'Found entry by ID search' ,
 		$o_id->ent_item_list() ,
 		[ 'type' => 'h2' ]

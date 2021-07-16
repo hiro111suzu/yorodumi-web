@@ -14,7 +14,7 @@ foreach ( $json as $k => $v ) {
 
 //. main
 foreach ( $categs as $cat => $val ) {
-	$_simple->hdiv( "categ: $cat", _table( $val ) );
+	_simple()->hdiv( "categ: $cat", _table( $val ) );
 }
 
 //. func: table

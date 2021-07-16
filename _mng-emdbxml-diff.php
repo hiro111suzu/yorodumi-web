@@ -46,7 +46,7 @@ if ( ! $flg_id_hit || ID == '' ) {
 		}
 
 	}
-	$_simple->hdiv( 'ID input', ''
+	_simple()->hdiv( 'ID input', ''
 		. ( ID == '' ? '' : _p( 'No old xml for ' . ID ) )
 		. _idinput( ID ) 
 	);
@@ -57,10 +57,10 @@ if ( ! $flg_id_hit || ID == '' ) {
 		foreach( $dates as $d ) {
 			$o[] = _ab( "?date=$d", $d );
 		}
-		$_simple->hdiv( 'date list', _imp( $o ) );
+		_simple()->hdiv( 'date list', _imp( $o ) );
 
 	}
-	$_simple->hdiv( 'ID list' . ( DT == '' ? '' : ' for '.DT )
+	_simple()->hdiv( 'ID list' . ( DT == '' ? '' : ' for '.DT )
 		, _imp( $out ) );
 	die();
 }
@@ -97,7 +97,7 @@ if ( count( $diff ) == 0 ) {
 
 
 //.. 
-$_simple
+_simple()
 ->hdiv( 'ID input', _idinput( ID ), [ 'hide' => true] )
 ->hdiv( ID, ''
 	. $o_id->ent_item_list()

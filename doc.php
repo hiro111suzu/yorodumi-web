@@ -42,13 +42,20 @@ EOD
 $sqlite = new cls_sqlite( 'doc' );
 
 //.. フィルタ
-$ids = [];
+$ids = $rel = [];
 if ( ID ) {
 	//- ID指定
 	$ids = [ ID ];
+	$rel = json_decode( $sqlite->qcol([
+		'select' => 'json',
+		'where'  => 'id='. _quote( ID )
+	])[0] )->rel;
 } else if ( TAG . TYPE . KW == '' ) {
 	//- 全部表示
-	$ids = $sqlite->qcol([ 'select' => 'id' ]);
+	$ids = $sqlite->qcol([
+		'select'   => 'id',
+		'order by' => 'num' ,
+	]);
 } else {
 	//- キーワード
 	$where = _kw2sql( KW, 'doc' );
@@ -62,7 +69,11 @@ if ( ID ) {
 		$where[] = _like( 'tag',  '|'. TAG. '|' );
 
 	//- 取得
-	$ids = $sqlite->qcol([ 'select' => 'id', 'where' => $where ]);
+	$ids = $sqlite->qcol([
+		'select'   => 'id',
+		'where'    => $where,
+		'order by' => 'num' ,
+	]);
 }
 
 //.. 読み込み
@@ -71,6 +82,10 @@ $count = [];
 //_testinfo( $ids, 'ids' );
 
 $out = [];
+foreach ( $rel as $id ) {
+	$out['rel'] .= _doc_hdiv( $id, [ 'hide' => MANY ] );
+}
+
 foreach ( $ids as $id ) {
 	$t = $sqlite->qcol([
 		'select' => 'type',
@@ -84,6 +99,9 @@ foreach ( $ids as $id ) {
 //. 作成
 
 //.. フォーム
+$get = $_GET;
+unset( $get['lang'] );
+$get = '?'. http_build_query( $get );
 $samples = [];
 foreach ([
 	'?type=faq'	 => 'FAQ' ,
@@ -96,7 +114,10 @@ foreach ([
 	'?tag=about' => 'Services' ,
 	'?'			 => 'All docs' ,
 ] as $url => $name ) {
-	$samples[] = _a( $url, IC_HELP. _l( $name ) );
+	$samples[] = $get== $url
+		? _span( '.red bld', IC_HELP. _l( $name ) )
+		: _a( $url, IC_HELP. _l( $name ) )
+	;
 }
 
 $_simple->hdiv(
@@ -107,9 +128,9 @@ $_simple->hdiv(
 		. _input( 'submit' )
 	)
 	. _p( _imp( $samples ) )
-	. _test(
-		_p( _span( 'st:background: pink', _a( '_mng-docs.php', 'データベース更新' ) ) )
-	)
+//	. _test(
+//		_p( _span( 'st:background: pink', _a( '_mng-docs.php', 'データベース更新' ) ) )
+//	)
 	,
 	[ 'hide' => ID != '' ]
 );
@@ -124,6 +145,7 @@ foreach([
 	'news' => 'News' ,
 	'faq'  => 'FAQ' ,
 	'info' => 'Information' ,
+	'rel'  => 'Related docs' ,
 ] as $type => $name ) {
 	if ( ! $out[ $type ] ) continue;
 	$_simple->hdiv(

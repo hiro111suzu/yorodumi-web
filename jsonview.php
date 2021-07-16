@@ -193,7 +193,7 @@ if ( TEST ) {
 		_a( '?a=sasbdb.SASDA82', 'SASDA82' ),
 	]));
 }
-$_simple->hdiv( 'Data', $out );
+_simple()->hdiv( 'Data', $out );
 
 //.. エントリ情報
 $out = '';
@@ -292,7 +292,7 @@ if ( $json_type == 'emdb_json3' ) {
 }
 
 if ( $out != '' ) {
-	$_simple->hdiv( 'Entry info', $out );
+	_simple()->hdiv( 'Entry info', $out );
 }
 
 //.. json 親、姉妹、子供
@@ -381,7 +381,7 @@ if ( $json != [] ) {
 		$chlcnt = 0;
 	}
 
-	$_simple
+	_simple()
 	->hdiv( _ic( 'parent' ) . 'Parents',
 		_p( $fn_json ) .
 		_p( implode( ' / ', $pr ) . ( count( $pr_link ) > 0 ? _p( _imp( $pr_link ) ) : '' ) )
@@ -448,7 +448,7 @@ if ( $json != [] ) {
 			break;
 		}
 	}
-	$_simple->hdiv( 'JSON', 
+	_simple()->hdiv( 'JSON', 
 		_div( '.json simple_border', $out )
 		. ( $cnt > 2
 			? _p( '.green bold', $omitflag ? 'The rest omitted' : 'End of data' ) 
@@ -464,9 +464,9 @@ if ( $json != [] ) {
 				$f = strtr( basename( $pn, '.gz' ), [ '.json' => '' ] );
 				$a[] = _a( "?a=file.$f", $f );
 			}
-			$_simple->hdiv( 'JSON files', _imp( $a ) );	
+			_simple()->hdiv( 'JSON files', _imp( $a ) );	
 		} else {
-			$_simple->hdiv( 'JSON', file_exists( $fn_json )
+			_simple()->hdiv( 'JSON', file_exists( $fn_json )
 				? "empty JSON data: $fn_json"
 				: "no JSON file: $fn_json"
 			);
@@ -477,13 +477,13 @@ if ( $json != [] ) {
 //.. file list
 //- jsonファイルがないなら、適当なファイルリストを表示
 if ( count( $file_list ) > 0 ) {
-	$_simple->hdiv( "File list: {$file_list['dn']}", 
-		$_simple->hdiv( 'Dir',
+	_simple()->hdiv( "File list: {$file_list['dn']}", 
+		_simple()->hdiv( 'Dir',
 			implode( '', (array)$file_list['d'] ) ,
 			[ 'type' => 'h2' ] 
 		)
 		.
-		$_simple->hdiv( 'Json files',
+		_simple()->hdiv( 'Json files',
 			implode( '', (array)$file_list['f'] ) ,
 			[ 'type' => 'h2' ]
 		)
@@ -501,7 +501,7 @@ _testinfo( _t( 'table', $o ), 'values' );
 
 
 //. page
-$_simple
+_simple()
 //.. conf
 ->page_conf([
 	'title' => 'JSON view' ,

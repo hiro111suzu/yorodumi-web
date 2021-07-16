@@ -288,7 +288,6 @@ function _opt_tr( $name, $icon, $th, $td ) {
 
 //.. _hit_item: IDが直接ヒット
 function _hit_item() {
-	global $_simple;
 	//... met
 	$k = strtr( G_KW, [ '"' => '' ] );
 	$s = substr( $k, 0, 4 );
@@ -299,7 +298,7 @@ function _hit_item() {
 			'where'	 => [ 'key', $k ] ,
 			'select' => 'name'
 		])) {
-			return $_simple->hdiv(
+			return _simple()->hdiv(
 				TERM_HIT_ITEM ,
 				_met_data( $k ) ,
 				[ 'type' => 'h2' ]
@@ -317,7 +316,7 @@ function _hit_item() {
 			'where'	 => [ 'db_id', $kw ] ,
 		]));
 		if ( ! $num ) return ;
-		return $_simple->hdiv(
+		return _simple()->hdiv(
 			TERM_HIT_ITEM ,
 			_obj('dbid')->hit_item( $kw, $title ) ,
 			[ 'type' => 'h2' ]
@@ -327,7 +326,7 @@ function _hit_item() {
 	//... structure-DB
 	$o_id = new cls_entid( G_KW );
 	if ( $o_id->ex() ) {
-		return $_simple->hdiv(
+		return _simple()->hdiv(
 			TERM_HIT_ITEM ,
 			$o_id->ent_item_list() ,
 			[ 'type' => 'h2' ]
@@ -561,7 +560,7 @@ class cls_search {
 	private function dbid() {
 		$ans = $this->search_main([
 			'dbname' => 'dbid' ,
-			'sortby' => 'num DESC, db_id' ,
+			'sortby' => 'num + 0 DESC, db_id' ,
 			'select' => '*'
 		]);
 		if ( ! $ans ) return;

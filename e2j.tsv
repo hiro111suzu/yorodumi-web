@@ -196,11 +196,12 @@ Random choices	ランダム
 EMDB pages	EMDBのページ
 
 Links	リンク
+Downloads	ダウンロード
 Gene	遺伝子
 entity	要素
 Electron microscopy imaging	電子顕微鏡撮影
 SASBDB page	SASBDBのページ
-Validation report	構造検証レポート
+Validation report	検証レポート
 Journal/publisher site	ジャーナル・出版社サイト
 Search PubMed	PubMedで検索
 Citation information	引用情報
@@ -225,7 +226,7 @@ show less	表示を減らす
 ref.	文献
 similarity	類似性
 similarity search	類似検索
-
+Display	表示
 ..	em
 Imaging	撮影
 Aggregation state	試料の集合状態
@@ -415,7 +416,7 @@ isomorphous replacement	同系置換
 Group deposition	グループ登録
 Specimen source	試料の由来
 PDB pages	PDBのページ
-PDBx/mmcif format	PDBx/mmcif形式
+PDBx/mmCIF format	PDBx/mmCIFf形式
 PDB format	PDB形式
 Tree view	ツリー表示
 Display in browser	ブラウザで表示
@@ -675,6 +676,9 @@ Classification	グループ分け
 Display mode	表示モード
 All	すべて
 Homology	相同性
+Homology & Component	相同性+構成要素
+as list	リスト表示
+images only	画像のみ
 All - function	すべて - 分子機能
 Query	検索クエリ
 score	スコア
@@ -685,7 +689,7 @@ FAQ	ありがちな質問と回答
 Services	サービス一覧
 Information	解説
 All docs	すべての文書
-
+Related docs	関連する文書
 .	pop
 
 Data	データ

@@ -78,12 +78,12 @@ $_simple
 			'h'		=> 'Homology' ,
 			'c'		=> 'Component' ,
 			'hc'	=> 'Homology & Component' ,
-		]) ,
+		]). ' '. _doc_pop( 'func_homology' ) ,
 		'Display mode' => ID2
 			? '' 
 			: _radiobtns( [ 'name' => 'mode', '#disp_mode', 'on' => G_MODE ], [
-				'icon'	=> 'icons' ,
-				'list'	=> 'list' ,
+				'icon'	=> _fa( 'th-large' ). _l( 'images only' ) ,
+				'list'	=> _fa( 'list-ul' ). _l( 'as list' ) ,
 			])
 	])
 	. _input( 'hidden', 'name:id2', ID2 )

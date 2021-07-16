@@ -120,7 +120,7 @@ EOD
 //. function
 //.. _datalist
 function _datalist() {
-	global $json, $_simple;
+	global $json;
 	if ( ! $json ) return "no json info";
 	
 	//... sort
@@ -154,7 +154,7 @@ function _datalist() {
 	foreach ( range( $start, $start + NUM_IN_PAGE ) as $num ) {
 		$clust_id = $sort[ $num ];
 		if ( $clust_id == '' ) continue;
-		$list .= $_simple->hdiv(
+		$list .= _simple()->hdiv(
 			"Cluster #$clust_id" , 
 			_data_item( $clust_id ) ,
 			[ 'type' => 'h2' ]

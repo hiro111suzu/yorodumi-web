@@ -53,11 +53,8 @@ if ( $_doc != _json_load( $fn ) ) {
 echo( 'データ読み込み: '. ( $changed ? '変更あり' : '変更なし' ) );
 
 //. function
-//.. _d_obso 取り消し 空関数
-function _d_obso() { return; }
-
 //.. _d:  登録 new ver
-function _d2( $in ) {
+function _d( $in ) {
 	global $_doc, $_count_id, $_type, $_done, $_related, $_rep;
 
 	$key = 'dummy';
@@ -277,15 +274,16 @@ function _rep( $in, $flg_global = false ) {
 }
 
 //.. _prep_ul: 配列を箇条書きに
-function _prep_ul( $in ) {
-	global $out;
-	if ( $in == '' ) return;
+function _prep_ul( $in, $child = false ) {
+	if ( ! $in ) return;
 	if ( is_string( $in ) )
 		return _t( 'li', $in );
+	if ( ! $child && count( (array)$in ) == 1 )
+		return _t( 'p', $in[0] );
 
 	$ret = '';
 	foreach ( $in as $c ) {
-		$ret .= _prep_ul( $c );
+		$ret .= _prep_ul( $c, true );
 	}
 	return _t( 'ul | .doc_ul', $ret );
 }

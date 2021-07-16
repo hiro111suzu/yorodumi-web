@@ -12,8 +12,7 @@ _add_unit( 'quick-emdb' );
 
 //$ftpdir = _url( 'ftpdir' );
 
-define( 'URL_HTTP_DL', _url( 'url_http_dl', ID ) );
-define( 'MAP_EX'	 , $main_id->ex_map() );
+define( 'URL_HTTP_DL', _url( 'emdb_arc_http', ID ) );
 define( 'MOV_EX'	 , $main_id->ex_mov() );
 define( 'MOLDATA_EX' , $main_id->ex_polygon() );
 
@@ -68,7 +67,7 @@ $mov_info = $main_id->movjson(); //- ムービー情報
 $map_info = $main_id->mapjson(); //- マップ情報
 
 
-$_simple->time( 'emdb init' );
+_simple()->time( 'emdb init' );
 
 //. basic
 //.. sample compo scan
@@ -155,12 +154,12 @@ $compo = $compo
 ;
 
 //.. taxo
-//$_simple->time( 'basic taxo前' );
+//_simple()->time( 'basic taxo前' );
 $src_items = [];
 foreach ( $src as $k => $v ) {
 	$src_items[] = _quick_taxo( $v, array_filter( $syn[ $k ] )[0] );
 }
-//$_simple->time( 'basic taxoあと' );
+//_simple()->time( 'basic taxoあと' );
 
 //.. citation
 $citation = new cls_citation();
@@ -268,7 +267,7 @@ if ( TEST ) {
 	}
 }
 
-$_simple->time( 'basic-prep' );
+_simple()->time( 'basic-prep' );
 
 //.. output
 function _f( $s ){
@@ -317,7 +316,7 @@ $o_data->basicinfo([
 ;
 
 //.. end
-$_simple->time( 'basic' );
+_simple()->time( 'basic' );
 
 unset( $citation, $history, $compo, $funding );
 
@@ -363,60 +362,67 @@ $o_data->lev1( 'Supplemental images', $out );
 //. ダウンロードとリンク
 $o_data->lev1title( 'downlink', true );
 
-//.. ダウンロード
-$files = [
-	'map' => [] ,
-	'header' => [] ,
-];
+//.. EMDB archive
+$arch = new cls_archive( ID );
+//- 順番固定
+$files = $main_id->ex_map()
+	? [ 'map' => [], 'header' => [] ]
+	: [ 'header' => [] ]
+;
+
+$url_disp = TEST
+	? 'disp.php?path=/data/yorodumi/fdata/emdb-mirror/structures/EMD-'. ID
+	: URL_HTTP_DL
+;
 foreach ( _emn_json( 'filelist', DID ) as $type => $c ) {
 	 foreach ( $c as $a ) {
 		extract( (array)$a ); //- $name , $size
-		$files[ $type ][] = _a( URL_HTTP_DL. "/$type/$name", IC_DL. $name )
-			. _kakko( _format_bytes( $size ) )
-		;
+		$files[ $type ]['dl'][] = _a(
+			URL_HTTP_DL. "/$type/$name",
+			IC_DL. $name,
+			"download:$name"
+		);
+		if ( _instr( '.xml', $name ) ) {
+			$files[ $type ]['disp'][] = _ab(
+				"$url_disp/$type/$name",
+				_fa('file-text-o'). _l('Display') 
+			);
+		}
+		$files[ $type ]['size'][] = _format_bytes( $size );
 	}
 }
 $f = _url( 'ftpdir', ID );
 $files['archive_dir'] = [
-	_ab( URL_HTTP_DL, IC_L. URL_HTTP_DL ). ' (HTTP)',
-	_ab( $f, IC_L. $f ). " (FTP)"
+	'dl' => [ _ab( URL_HTTP_DL, IC_L. URL_HTTP_DL ), _ab( $f, IC_L. $f ) ] ,
+	'size' => [ 'HTTPS', 'FTP' ]
 ];
 
-$add = [
+$hdiv_focus = [
 	'map'	=> _hdiv_focus('map') ,
 	'masks'	=> _hdiv_focus('supplemental') ,
 	'other'	=> _hdiv_focus('supplemental') ,
 ];
-
-foreach ( $files as $type => $lnk ) {
-	if ( $lnk )
-		$lnk[] = $add[ $type ];
-	$o_data->lev2( "filedesc_$type" ?: $type, _ul( (array)$lnk ) );
+foreach ( $files as $type => $c ) {
+	$dl = $disp = $size = [];
+	extract( $c );
+	$o_data->lev2( "filedesc_$type" ?: $type, implode( TD, [
+		implode( BR, $dl ) ,
+		implode( BR, $size ) ,
+		implode( BR, $disp ) ?: $hdiv_focus[ $type ] ,
+		in_array( $type, [ 'map', 'header', 'masks', 'fsc' ] )
+			? _doc_pop( "file_emdb_$type" )
+			: null
+		,
+	]) );
 }
+$o_data->end2( 'EMDB archive' );
 
-$o_data->end2( 'Download' );
-
-//.. download2
-//... validation report EMDB
-/*
-テーブル
-name , dl, size, disp, 
-
-*/
-/*
-if ( is_dir( _fn( TESTSV ? 'dn_valrep_emdb_fs3' : 'dn_valrep_emdb_mainsv' ) ) ) {
-	$arch = new cls_archive( ID );
-	$valrep = _ul([
-		$arch->kv( 'valrep_emdb_sum' ) ,
-		$arch->kv( 'valrep_emdb_full' ) ,
-		$arch->kv( 'valrep_emdb_xml' ) ,
-		$arch->kv( 'valrep_emdb_cif' ) ,
-		$arch->kv( 'valrep_dir' ) ,
-		_ab( 'valrep_emdb_help', IC_HELP. TERM_ABOUT_VALREP )
-	], 0 );
+//.. validation report EMDB
+if ( is_dir( _fn( TESTSV ? 'dn_valrep_emdb_fs3' : 'dn_valrep_emdb_mainsv', $id ) ) ) {
+	foreach ([ 'sum', 'full', 'xml', 'cif', 'dir', ] as $type )
+		_archive_tr( $arch->get( "valrep_emdb_$type" ), [ 'no_file_no_link' => true ] );
 }
-*/
-
+$o_data->end2( 'Validation report' );
 
 //.. 関連構造データ
 ( new cls_related([ 'is_em' => true ]) )
@@ -433,16 +439,9 @@ $kw = [];
 foreach ( (array)_json_load2([ 'pubmed', $main_id->add()->pmid ])->kw as $c ) {
 	$kw[] = $c->name;
 }
-$kw[] = [ 
-	'ribosome-c'	=> 'ribosome' ,
-	'70s'			=> '70S Ribosomes' ,
-	'80s'			=> 'ribosome' ,
-	'amyloid' 		=> 'amyloid' ,
-][ _ezsqlite([
-	'dbname' => 'main' ,
-	'select' => 'categ' ,
-	'where'  => [ 'db_id', DID ]
-])];
+
+//- categ
+$kw[] = _categ2momkw();
 
 $kw[] = $json3->sample->name;
 foreach ( (array)$json3->sample->supramolecule as $c ) {
@@ -465,7 +464,7 @@ $o_data
 ;
 //unset( $emp_json, $emp_link );
 //_similar();
-$_simple->time( 'dl&link' );
+_simple()->time( 'dl&link' );
 
 //. map data
 $o_data->lev1title( 'Map' );
@@ -473,7 +472,7 @@ $map = $json3->map;
 
 //.. file
 $file = $map->file;
-$o_data->lev1( 'File', MAP_EX
+$o_data->lev1( 'File', $main_id->ex_map()
 	? [
 		'#notag' => _ab( _url( 'dl-map', ID ), IC_DL. _l( 'Download' ) ) ,
 		'File'		=> $map->file ,
@@ -529,7 +528,7 @@ if ( file_exists( "$dn_media/mapi/proj0.jpg" ) ) {
 		$lv2r[1][ 'x' ] = $lv2r[0][ 'z' ] =
 			[ 's' => 1, '_' =>  1, 'a' => 1/3, 'b'=> 0.5, 'c' => 2/3 ];
 	}
-	$_simple->jsvar([ 'lv2r' => $lv2r ]);
+	_simple()->jsvar([ 'lv2r' => $lv2r ]);
 
 	//- スライスラインを出力
 	foreach ( [ 
@@ -539,7 +538,7 @@ if ( file_exists( "$dn_media/mapi/proj0.jpg" ) ) {
 		'slc_z_', 'slc_y_', 'slc_x_',
 		'slc_xs', 'slc_ys', 'slc_zs'
 	] as $n ) {
-		$_simple->hidden .= _div( "#l_$n | .l_slc" );
+		_simple()->hidden .= _div( "#l_$n | .l_slc" );
 	}
 
 	//... output
@@ -612,7 +611,7 @@ if ( file_exists( "$dn_media/mapi/proj0.jpg" ) ) {
 		)
 	);
 }
-$_simple->css( <<<EOD
+_simple()->css( <<<EOD
 //- プロジェクションとかのテーブル
 #pstable, #pstable td, #pstable th {
 	border: none; margin: 0; padding: 0; background: white; }
@@ -649,14 +648,14 @@ $xy = round( $map->pixel_spacing->y , 5 );
 $xz = round( $map->pixel_spacing->z , 5 );
 
 //- ccp4 header info
-if ( $map_info != '' ) {
+if ( $map_info ) {
 	$hx =round( $map_info->{'APIX X'} , 5 );
 	$hy =round( $map_info->{'APIX Y'} , 5 );
 	$hz =round( $map_info->{'APIX Z'} , 5 );
 }
 
 //- Movie info
-if ( $mov_info !='' ) {
+if ( $mov_info ) {
 	$mx = _ifnn( round( $mov_info->{1}->{'apix x'}, 5 ), '\1', $hx );
 	$my = _ifnn( round( $mov_info->{1}->{'apix y'}, 5 ), '\1', $hy );
 	$mz = _ifnn( round( $mov_info->{1}->{'apix z'}, 5 ), '\1', $hz );
@@ -855,7 +854,7 @@ $o_data->lev1( 'Details', _more( $out ) );
 //. Supplement
 $o_data->lev1title( 'Supplemental data', true );
 $_out = '';
-$_simple->time( 'map' );
+_simple()->time( 'map' );
 
 //.. filename => annotation
 $map_annot = [];
@@ -1052,7 +1051,7 @@ function _prjslc( $dn ) {
 		])
 	);
 }
-$_simple->time( 'suppli' );
+_simple()->time( 'suppli' );
 
 //. Sample
 $o_data->lev1title( 'Sample components', true );
@@ -1210,7 +1209,7 @@ foreach ( $json1->sample->sampleComponent as $c1 ) {
 		)))
 	);
 }
-$_simple->time( 'sample' );
+_simple()->time( 'sample' );
 
 //. Experiment
 $o_data->lev1title( 'Experimental details', true, false );
@@ -1441,7 +1440,7 @@ $o_data
 
 $o_data->end2( 'Atomic model buiding' );
 
-$_simple->time( 'exp.' );
+_simple()->time( 'exp.' );
 
 //. function
 function _pstable_top( &$map_info, $src, $xyz ) {

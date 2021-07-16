@@ -208,7 +208,7 @@ if ( _getpost( 'ajax' ) )
 	die( CATALOG );
 
 //. ページ作成
-$_simple
+_simple()
 ->page_conf([
 	'title' 	=> _ej( 'EMN Covid-19 info', 'EMN Covid-19情報' ) ,
 	'icon'		=> 'emn' ,
@@ -257,7 +257,7 @@ $_simple
 )
 //.. 関連情報エリア
 ->hdiv( TERM_REL_INFO, ''
-	. $_simple->hdiv( TERM_YM_PAGES, _ul([
+	. _simple()->hdiv( TERM_YM_PAGES, _ul([
 		_obj('taxo')->item( NAME_SARS_COV_2 ) ,
 		_ab(
 			_local_link([ 'ysearch', 'kw' => '"'. NAME_SARS_COV_2. '"' ]),
@@ -269,7 +269,7 @@ $_simple
 		)
 
 	]), [ 'type' => 'h2' ] )
-	. $_simple->hdiv( TERM_PDBJ_PAGES, _ul([
+	. _simple()->hdiv( TERM_PDBJ_PAGES, _ul([
 		_ab( 'https://pdbj.org/featured/covid-19', TERM_PDBJ_PAGETITLE ) ,
 		_ab( 'https://bmrbj.pdbj.org/top_search/covid-19', TERM_BMRB_PAGETITLE ) ,
 		TERM_MOM. _ul([

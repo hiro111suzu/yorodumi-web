@@ -59,8 +59,6 @@ define( 'L_EN', $lang != 'ja' );
 require( __DIR__. '/common-mng-web.php' );
 require( __DIR__. '/common-func.php' );
 
-$_simple = new cls_simple;
-
 //. 攻撃対策
 //.. baidu対策
 //- baiduには、5/10の確率で503を返す
@@ -214,7 +212,7 @@ define( 'MOV_TASK_INFO',
 );
 
 //. jsvar 
-if ( ! AJAX ) $_simple->jsvar([
+if ( ! AJAX ) _simple()->jsvar([
 	'loading' => LOADINGT ,
 	'loadingerror'	=> _span( '.red', _ej( ' error?', ' エラー?' ) ) ,
 	'vwurl'	=> [
@@ -273,7 +271,7 @@ $bg_medium = "background: $col_medium";
 $fsize = [ 'x-small', 'small', 'medium', 'large', 'x-large' ][ $_COOKIE[ 'vfsize' ] ?: 2 ];
 
 //- ここから
-if ( ! AJAX ) $_simple->css( <<<EOD
+if ( ! AJAX ) _simple()->css( <<<EOD
 
 //- IEが対応していないので使わない
 :root {
@@ -655,8 +653,10 @@ img.poptrg_act { box-shadow: 1px 1px 10px #777; }
 .dbid_pr {color: #173; }
 
 .dbid_un {color: #119; }
+.dbid_gb {color: #218; }
 .dbid_bd {color: #416; }
-.dbid_gb {color: #317; }
+.dbid_chem {color: #416 }
+.dbid_poly {color: #317 }
 
 //.. met
 .met_yearly, .met_yearly tr, .met_yearly td {
@@ -702,10 +702,10 @@ EOD
 
 //. その他、共通部
 if ( ! AJAX ) {
-	if ( ! MODE_POPVW ) $_simple->meta( 'viewport', [
+	if ( ! MODE_POPVW ) _simple()->meta( 'viewport', [
 		'width=device-width' ,
 		'initial-scale=1.0' ,
 		'user-scalable=yes' ,
 	]);
-	$_simple->meta( 'theme-color', $col_dark );
+	_simple()->meta( 'theme-color', $col_dark );
 }

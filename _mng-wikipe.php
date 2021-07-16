@@ -20,7 +20,7 @@ if ( FLG_AJAX ) {
 }
 
 //. フルページ
-$_simple->hdiv( 'Database', 
+_simple()->hdiv( 'Database', 
 	FLG_SMALL
 		? '<b>[Small]</b> / '
 			. _a( '?'. http_build_query([ 'small' => 0 ] + $_GET ), 'Large' )
@@ -28,7 +28,7 @@ $_simple->hdiv( 'Database',
 			. ' / <b>[Large]</b> '
 );
 
-$_simple->hdiv( 'Keyword search', 
+_simple()->hdiv( 'Keyword search', 
 	_t( 'form', _inpbox( 'kw', KW )  )
 	. _p( '注意項目' )
 	. _imp2([
@@ -43,7 +43,7 @@ $_simple->hdiv( 'Keyword search',
 if ( NOT_FOUND_LIST == 'chem' ) {
 	$fn = DN_PREP. '/wikipedia/not_found_list_chem.txt';
 	$ids = array_slice( _file( $fn ), 0, 50 );
-	$_simple->hdiv( 'not-found list chem' ,
+	_simple()->hdiv( 'not-found list chem' ,
 		_ent_catalog( $ids, [ 'mode' => 'list' ] )
 	);
 	die();
@@ -56,7 +56,7 @@ if ( NOT_FOUND_LIST == 'taxo' ) {
 	foreach ( array_slice( _file( $fn ), 0, 50 ) as $term ) {
 		$out[] = _ab([ 'taxo', 's' => $term ], $term );
 	}
-	$_simple->hdiv( 'not-found list taxo' ,
+	_simple()->hdiv( 'not-found list taxo' ,
 		_ul( $out, 0 )
 	);
 	die();
@@ -70,19 +70,19 @@ if ( KEY ) {
 		'where'  => 'key='. _quote( KEY )
 	])[0];
 	if ( ! $r )  {
-		$_simple->hdiv( "Item - " .KEY, 'no item' );
+		_simple()->hdiv( "Item - " .KEY, 'no item' );
 		die();
 	}
 	extract( $r );
-	$_simple->hdiv( "Item - " .KEY, ''
-		. $_simple->hdiv( 'Eng: ' .$en_title, $en_abst . _source( $en_abst ), [ 'type' => 'h2' ])
-		. $_simple->hdiv( 'Jp: '  .$ja_title, $ja_abst . _source( $ja_abst ), [ 'type' => 'h2' ])
+	_simple()->hdiv( "Item - " .KEY, ''
+		. _simple()->hdiv( 'Eng: ' .$en_title, $en_abst . _source( $en_abst ), [ 'type' => 'h2' ])
+		. _simple()->hdiv( 'Jp: '  .$ja_title, $ja_abst . _source( $ja_abst ), [ 'type' => 'h2' ])
 	);
 	die();
 }
 
 //. 一覧
-$_simple->hdiv( 'Search result', _div( '#searchres', _search_res() ) );
+_simple()->hdiv( 'Search result', _div( '#searchres', _search_res() ) );
 
 //. functions 
 //.. search result

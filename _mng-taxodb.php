@@ -13,7 +13,7 @@ if ( FLG_AJAX ) {
 }
 
 //. 書き出し
-$_simple
+_simple()
 ->hdiv(
 	'Keyword search', 
 	_t( 'form', _inpbox( 'kw', KW )  )

@@ -218,7 +218,7 @@ if ( !SAS && QUERY && QUERY != 'header' && ITEM_IDS && !_instr( 'atom_site', QUE
 
 //. output
 //.. query
-$_simple->hdiv( 'Query', _simple_table([
+_simple()->hdiv( 'Query', _simple_table([
 	'Dictionary' => _imp2([
 		_a_flg( MODE == 'pdb', '?db='   , 'PDB' ) ,
 //		_a_flg( MODE_V5      , '?v5=1'  , 'V5' ) ,
@@ -231,18 +231,18 @@ $_simple->hdiv( 'Query', _simple_table([
 
 //.. data
 if ( $data != '' )
-	$_simple->hdiv( 'Data', _t( 'pre', $data ) );
+	_simple()->hdiv( 'Data', _t( 'pre', $data ) );
 if ( $search_res ) {
-	$_simple->hdiv( 'Search result', _div( '#searchres', $search_res ) );
+	_simple()->hdiv( 'Search result', _div( '#searchres', $search_res ) );
 }
 
 //.. wikipe
 if ( $wikipe )
-	$_simple->hdiv( TERM_REL_WIKIPE, $wikipe );
+	_simple()->hdiv( TERM_REL_WIKIPE, $wikipe );
 
 //.. pdb
 if ( !SAS && $pdb_ents != '' )
-	$_simple->hdiv( 'PDB entries', $pdb_ents );
+	_simple()->hdiv( 'PDB entries', $pdb_ents );
 
 //.. links
 if ( QUERY || KW )
@@ -254,7 +254,7 @@ $links[] = _ab(
 	'Download dictionry text'
 );
 
-$_simple
+_simple()
 ->page_conf([
 	'title' => 'Cif dic view' ,
 	'sub'	=> 'simple Cif dictionry viewer' ,

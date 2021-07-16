@@ -473,20 +473,6 @@ function _load_trep_tsv() {
 	return $data;
 }
 
-//.. _paper_id: pubmed-idの代わりのIDを作る
-function _paper_id( $title, $journal ) {
-	return $title . $journal == ''
-			|| strtolower( $title ) == 'to be published'
-			|| strtolower( $title ) == 'suppressed'
-			|| strtolower( $journal ) == 'suppressed'
-		? ''
-		: '_' . md5(
-			$title .'|'
-			. preg_replace( '/[^a-z]/', '', strtolower( $journal ) )
-		)
-	;
-}
-
 //.. _reps_wikipe_terms
 function _reps_wikipe_terms() {
 	return [[
@@ -983,7 +969,7 @@ class abs_entid {
 $o_dbs = [];
 function _ezsqlite( $in, $val = '' ) {
 	global $o_dbs;
-	extract( $in ); //- $dbname, $where, $key, $val, $select
+	extract( $in ); //- $dbname, $where, $key, $val, $select, $flg_all
 	if ( is_array( $where ) )
 		list( $key, $val ) = $where;
 	if ( ! $o_dbs[ $dbname ] )
@@ -995,9 +981,12 @@ function _ezsqlite( $in, $val = '' ) {
 			: "$key=". _quote( $val ) 
 		,
 	];
-	return is_array( $select )
-		? (array)$o_dbs[$dbname]->qar( $sql )[0]
-		: $o_dbs[$dbname]->qcol( $sql )[0]
+	return $flg_all
+		? $o_dbs[$dbname]->qcol( $sql )
+		: ( is_array( $select )
+			? (array)$o_dbs[$dbname]->qar( $sql )[0]
+			: $o_dbs[$dbname]->qcol( $sql )[0]
+		)
 	;
 }
 /*
@@ -1199,8 +1188,8 @@ class cls_sqlite {
 
 	//.. log
 	function log( $a, $b, $c ) {
-		global $_simple;
+		if ( FLG_MNG ) return;
 		if ( ! $_COOKIE['sqlite_log'] ) return;
-		$_simple->sqlite_log[] = [ $a, $b, $c ];
+		_simple()->sqlite_log[] = [ $a, $b, $c ];
 	}
 }
