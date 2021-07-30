@@ -211,8 +211,8 @@ doc_pdb_format	https://www.wwpdb.org/documentation/file-format-content/format33/
 wwpdb_landing	https://www.wwpdb.org/pdb?id=pdb_0000[id]
 rcsb	https://www.rcsb.org/structure/[id]
 pdbe	https://www.ebi.ac.uk/pdbe/entry/pdb/[id]
-bmrb	https://bmrb.protein.osaka-u.ac.jp/data_library/generate_summary.php?bmrbId=[id]
-
+//bmrb	https://bmrb.protein.osaka-u.ac.jp/data_library/generate_summary.php?bmrbId=[id]
+bmrb	https://bmrbj.pdbj.org/bmr/bmr[id]
 ftp-bu	ftp://ftp.pdbj.org/pub/pdb/data/biounit/coordinates/all/[id].pdb[id2].gz
 mlplus_ad	ftp://ftp.pdbj.org/XML/pdbmlplus/pdbml_add/[id]-add.xml.gz
 

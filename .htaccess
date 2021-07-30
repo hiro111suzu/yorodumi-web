@@ -7,8 +7,8 @@ AddType video/webm webmv
 AddType image/svg+xml svg svgz
 AddEncoding gzip svgz
 
-php_value post_max_size 1024M
-php_value upload_max_filesize 1024M
+php_value post_max_size "1024M"
+php_value upload_max_filesize "1024M"
 
 # Redirect permanent /emnavi/ /
 

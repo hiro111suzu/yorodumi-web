@@ -773,6 +773,11 @@ f	分子機能	Function
 h	ドメイン・相同性	Domain/homology
 c	構成要素	Component
 
+.	fh_search_keys
+all	機能・相同性	Function & homology
+f	機能	Function
+hc	相同性	Homology
+
 .	symmetry_term
 C	_ fold cyclic	_回回転対称
 D	2x_ fold dihedral	2回x_回 2面回転対称

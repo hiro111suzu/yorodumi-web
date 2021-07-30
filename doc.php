@@ -115,7 +115,7 @@ foreach ([
 	'?'			 => 'All docs' ,
 ] as $url => $name ) {
 	$samples[] = $get== $url
-		? _span( '.red bld', IC_HELP. _l( $name ) )
+		? _span( '.bld', IC_HELP. _l( $name ) )
 		: _a( $url, IC_HELP. _l( $name ) )
 	;
 }

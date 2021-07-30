@@ -17,7 +17,10 @@ $( function() {
 
 //. [func] _emn_search
 function _emn_search(){
-	$( '#form1' ).attr( 'action', 'esearch.php' ).submit();
+	$( '#form1' ).attr({
+		onsubmit: 'return true' ,
+		action: 'esearch.php' 
+	}).submit();
 }
 
 //. [obj] _ystab

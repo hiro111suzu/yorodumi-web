@@ -217,7 +217,7 @@ function _search() {
 			'select' => [ 'strids', 'score' ] ,
 			'where'  => [ 'dbid', $fh_id ]
 		]) );
-		if ( $score < 0.0001 ) continue;
+		if ( $score < 0.001 ) continue;
 		foreach ( explode( '|', $strids ) as $i ) {
 			if ( !$i || $i == ID ) continue;
 			$data[ $i ] += $score;

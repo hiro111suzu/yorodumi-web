@@ -77,10 +77,6 @@ _simple()->time( 'emdb init' );
 UniProt検索リンク 管理用
 由来情報
 */
-$flg_unp_links = (
-	TEST && 
-	_tsv_load( DN_PREP. '/unp/emdb_unpids_annot.tsv' )[ ID ] == '_'
-);
 $abst_names = [];
 $unp_link_test = [];
 $src = [];
@@ -107,7 +103,7 @@ foreach ( (array)$json1->sample->sampleComponent as $c ) {
 
 	//- その他 (test)
 	if ( $c->entry == 'protein' ) {
-		if ( $flg_unp_links ) {
+		if ( TEST ) {
 			$t = "$name ". (string)$c->protein->sciSpeciesName;
 			$unp_link_test[] = _ab([ 'unp_search', $t ], $t );
 		}
@@ -425,7 +421,29 @@ if ( is_dir( _fn( TESTSV ? 'dn_valrep_emdb_fs3' : 'dn_valrep_emdb_mainsv', $id )
 $o_data->end2( 'Validation report' );
 
 //.. 関連構造データ
-( new cls_related([ 'is_em' => true ]) )
+$id_list = [];
+foreach ([ 'emdb', 'pdb' ] as $db ) {
+	foreach ( (array)$json3->crossreferences->{ $db. '_reference' } as $c ) {
+		$text = [];
+		foreach ( $c->relationship as $k => $v ) {
+			if ( $k != 'other' )
+				$text[] = $k;
+			if ( ! in_array( $v, [ 'other EM volume', 'unknown' ] ) )
+				$text[] = $v;
+		}
+		$text[] = $c->details;
+		$i = $db == 'emdb'
+			? 'emdb-'. _numonly( $c->emdb_id )
+			: 'pdb-'. $c->pdb_id
+		;
+		$id_list[ $i ][ 'txt' ] = _imp( $text );
+	}
+}
+
+( new cls_related([
+	'is_em' => true ,
+	'id_list' => $id_list ,
+]) )
 ->set_omokage( 'e'. ID )
 ->set_similar([[ 'ida' => 'e'. ID ]])
 ->set_others()

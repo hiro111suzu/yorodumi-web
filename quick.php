@@ -552,7 +552,6 @@ define( 'TREP_AUTO', _subdata( 'trep_auto', [
 
 $_primary_pap_id = '';
 $_has_fh_item = [];
-define( 'FH_CLS_NAME', _subdata( 'trep', 'fhinfo_cls_name' ) );
 
 //. main
 $js = '';
@@ -1131,7 +1130,7 @@ function _func_homology() {
 		$_has_fh_item[ $c ] = true;
 	}
 	$tabs = [];
-	foreach ( FH_CLS_NAME as $cls => $cls_name ) {
+	foreach ( _subdata( 'trep', 'fhinfo_cls_name' ) as $cls => $cls_name ) {
 		if ( ! $items_cls[ $cls ] ) continue;
 		$tabs[] = [
 			'tab' => $cls_name ,
@@ -1895,7 +1894,8 @@ class cls_related {
 		}
 
 		//... fhタブ
-		foreach ( FH_CLS_NAME as $cls => $cls_name ) {
+		$_has_fh_item[ 'hc' ] = $_has_fh_item[ 'h' ] || $_has_fh_item[ 'c' ] ;
+		foreach ( _subdata( 'trep', 'fh_search_keys' ) as $cls => $cls_name ) {
 			if ( ! $_has_fh_item[ $cls ] ) continue;
 			$tabs[] = [
 				'tab' => $cls_name ,

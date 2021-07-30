@@ -172,7 +172,7 @@ $all_items = [];
 foreach ( _json_load( FN_FOUND ) as $c ) {
 	extract( $c ); //- ids, auth, $pmids_t, $pmids_a
 	$ids = implode( ',', $ids );
-	foreach ( $pmids_a + $pmids_t as $pmid ) {
+	foreach ( (array)$pmids_a + (array)$pmids_t as $pmid ) {
 		$all_items[ "$pmid,$ids" ] = true;
 	}
 }
