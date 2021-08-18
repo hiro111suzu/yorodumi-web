@@ -7,3 +7,4 @@ primedata/
 temp/
 *.sqlite
 php_errors.log
+Sitemap.xml
