@@ -275,6 +275,7 @@ $o_data->basicinfo([
 	'flg_link'       => true ,
 	'js_open_viewer' => MOV_EX ? "_pmov.open('$did')" : '',
 	'add_txt'		 =>
+		$main_id->ex_map() &&
 		! file_exists( _fn( 'emdb_snap', ID, 's1' ) ) &&
 		! file_exists( _fn( 'emdb_snap', ID, 's2' ) )
 			? _p( LABEL_YM_ANNOT. TERM_IMG_UNDER_PREP )
