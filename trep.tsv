@@ -779,12 +779,12 @@ f	機能	Function
 hc	相同性	Homology
 
 .	symmetry_term
-C	_ fold cyclic	_回回転対称
-D	2x_ fold dihedral	2回x_回 2面回転対称
-T	tetrahedral	正4面体型対称
-O	octahedral	正8面体型対称
-I	icosahedral	正20面体型対称
-X	asymmetric	非対称
+C	_回回転対称	_ fold cyclic
+D	2回x_回 2面回転対称	2x_ fold dihedral
+T	正4面体型対称	tetrahedral
+O	正8面体型対称	octahedral
+I	正20面体型対称	icosahedral
+X	非対称	asymmetric
 
 .	media_file_type
 mp4	.mp4 (H.264/MPEG-4 AVC 形式)	.mp4 (H.264/MPEG-4 AVC format)

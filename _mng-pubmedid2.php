@@ -7,6 +7,7 @@ define( 'LIM_ID', 32000000 );
 define( 'FN_TSV',   DN_EDIT. '/pubmed_id.tsv' );
 define( 'FN_WLIST', DN_EDIT. '/pubmedid_whitelist.txt' );
 define( 'FN_BLIST', DN_PREP. '/pubmed/pubmed_blacklist.json' );
+define( 'FN_HIT_BL', DN_PREP. '/pubmed/pubmed_hit_blist.json' );
 define( 'FN_FOUND', DN_PREP. '/pubmed/pubmed_found.json.gz' );
 
 //. get
@@ -172,28 +173,39 @@ $all_items = [];
 foreach ( _json_load( FN_FOUND ) as $c ) {
 	extract( $c ); //- ids, auth, $pmids_t, $pmids_a
 	$ids = implode( ',', $ids );
-	foreach ( (array)$pmids_a + (array)$pmids_t as $pmid ) {
+	foreach ( array_merge( (array)$pmids_a, (array)$pmids_t ) as $pmid ) {
 		$all_items[ "$pmid,$ids" ] = true;
 	}
 }
 
 $blist_result = [];
 $new_list =[];
+$obs = [];
 foreach ( _json_load( FN_BLIST ) as $item ) {
 	if ( $all_items[ $item ] ) {
 		++ $blist_result[ 'active' ];
 		$new_list[] = $item;
 	} else {
+		$obs[] = $item;
 		++ $blist_result[ 'obso' ];
 	}
 }
 if ( $_GET['clean_blist'] ) {
+	copy( FN_BLIST, strtr( FN_BLIST, [ '.json' => '-bkup.json' ] ) );
 	_json_save( FN_BLIST, $new_list );
+} else {
+	_json_save( FN_HIT_BL, $new_list );
 }
 
 _simple()->hdiv(
 	'blacklist item',
 	_kv( $blist_result )
-	.BR. _ab( '?clean_blist=1', 'clean' )
+	. BR
+	. ( $obs
+		? _ab( '?clean_blist=1', 'clean' )
+		: 'no obso-item'
+	)
+//	. _p( 'obs' )
+//	. _ul( $obs )
 );
 
