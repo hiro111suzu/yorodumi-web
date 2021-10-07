@@ -19,6 +19,7 @@ define( 'G_PAGE'	, _getpost( 'page' ) ?: 0 );
 define( 'G_AJAX'	, _getpost( 'ajax' ) );
 define( 'G_MODE'	, _getpost( 'mode' ) ?: 'icon' );
 define( 'G_TYPE'	, _getpost( 'type' ) ?: 'all' );
+define( 'G_DB'		, _getpost( 'db' ) ?: 'all' );
 define( 'ID2'		, _getpost( 'id2' ) );
 
 define( 'G_RANGE'	, G_MODE == 'icon' ? 100 : 50 );
@@ -79,6 +80,15 @@ $_simple
 			'c'		=> 'Component' ,
 			'hc'	=> 'Homology & Component' ,
 		]). ' '. _doc_pop( 'func_homology' ) ,
+		'Database' => ID2
+			? ''
+			: _radiobtns( [ 'name' => 'db', '#filt_db', 'on' => G_DB ], [
+				'all'	=> 'All' ,
+				'emdb'	=> 'EMDB only' ,
+				'pdb'	=> 'PDB only' ,
+				'sas'	=> 'SASBDB only' ,
+			])
+		,
 		'Display mode' => ID2
 			? '' 
 			: _radiobtns( [ 'name' => 'mode', '#disp_mode', 'on' => G_MODE ], [
@@ -119,7 +129,8 @@ EOD
 ->jsvar([ 'postdata' =>[
 	'id' => ID ,
 	'mode' => G_MODE ,
-	'type' => G_TYPE
+	'type' => G_TYPE ,
+	'db' => G_DB
 ]])
 ->js( <<<EOD
 function _page( num ) {
@@ -135,9 +146,23 @@ EOD
 ->out();
 
 //. function
-//.. get _get_result
+//.. _get_result
 function _get_result() {
 	$data = _search();
+	if ( G_DB != 'all' ) {
+		foreach ( $data as $str_id => $score ) {
+			$id1 = substr( $str_id, 0, 1 );
+			if ( G_DB == 'emdb' ) {
+				if ( $id1 == 'e' ) continue;
+			} else if ( G_DB == 'sas' ) {
+				if ( $id1 == 'S' ) continue;
+			} else {
+				if ( $id1 != 'e' && $id1 != 'S' ) continue;
+			}
+			unset( $data[ $str_id ] );
+		}
+	}
+
 	//- output
 	$o_pager = new cls_pager([
 		'total'		=> count( $data ) ,

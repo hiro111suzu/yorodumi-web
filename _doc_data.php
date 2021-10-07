@@ -44,6 +44,46 @@ EOD
 
 //. news
 $_type = 'news';
+
+//.. 2021-10-05 nobel prize
+/*
+mechanosensitive ion channel activity - yorodumi search
+{http://localhost:8081/emnavi/ysearch.php?kw="go%3A0008381"
+
+mechanosensitive ion channel activity - yorodumi search
+{http://localhost:8081/emnavi/ysearch.php?kw="go%3A0097603"
+
+*/
+
+_d(<<<EOD
+title
+	2021-10-05
+abst
+	Nobel Prize for mechanically activated and temperature-gated ion channels
+	温度感受性及び、機械刺激依存性イオンチャネルに関するノーベル賞
+main_e
+	The Nobel Prize in Physiology or Medicine 2021 was awarded jointly to David Julius and Ardem Patapoutian "for their discoveries of receptors for temperature and touch."
+	EM Navigator can help to find cryo-EM structure data by both pioneers.
+main_j
+	2021年のノーベル医学・生理学賞は、温度と触覚の受容体を発見したデビッド・ジュリアスとアーデム・パタポウティアンに共同で授与されました
+	EM Navigatorでは、両先駆者によるクライオEM構造データを見つけることができます
+id
+	nobelprize_2021
+tag
+	emn
+link
+	u	https://www.nobelprize.org/prizes/medicine/2021/summary/
+	t	The Nobel Prize in Physiology or Medicine 2021 - NobelPrize.org
+	-
+	u	esearch.php?auth=%22Ardem+Patapoutian%22
+	t	Structure data by Ardem Patapoutian
+	-
+	u	esearch.php?auth=%22David+Julius%22
+	t	Structure data by David Julius
+EOD
+);
+
+
 //.. 2020-08-12 New page for Covid-19 info
 _d(<<<EOD
 title
