@@ -98,6 +98,9 @@ define( 'PLOTSTR',
 	. "\"| gnuplot"
 );
 
+//.. misc
+define( 'G_COMPOS', _getpost('compos') ? true : false );
+
 //. データ取得
 $prof = [];
 //$info = [];
@@ -229,12 +232,14 @@ $_simple->hdiv( 'Structures', ''
 		.TR 
 		.TD. _databox( $o_ids[0], 0 )
 		.TD. _databox( $o_ids[1], 1 )
+
 		//- compos
-/*
-		.TR
-		.TD. $compos_table[0]
-		.TD. $compos_table[1]
-*/
+		. ( G_COMPOS ? 
+			TR
+			.TD. $compos_table[0]
+			.TD. $compos_table[1]
+		: '' )
+
 		//- Jmol とコントローラー列
 		. _e( 'tr | .jmole' )
 		. _e( 'td | st:text-align:right' )
