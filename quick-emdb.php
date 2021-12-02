@@ -371,7 +371,7 @@ $url_disp = TEST
 	? 'disp.php?path=/data/yorodumi/fdata/emdb-mirror/structures/EMD-'. ID
 	: URL_HTTP_DL
 ;
-foreach ( _emn_json( 'filelist', DID ) as $type => $c ) {
+foreach ( (array)_emn_json( 'filelist', DID ) as $type => $c ) {
 	 foreach ( $c as $a ) {
 		extract( (array)$a ); //- $name , $size
 		$files[ $type ]['dl'][] = _a(

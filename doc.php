@@ -49,7 +49,7 @@ if ( ID ) {
 	$rel = json_decode( $sqlite->qcol([
 		'select' => 'json',
 		'where'  => 'id='. _quote( ID )
-	])[0] )->rel;
+	])[0] )->rel ?: [];
 } else if ( TAG . TYPE . KW == '' ) {
 	//- 全部表示
 	$ids = $sqlite->qcol([
@@ -82,6 +82,7 @@ $count = [];
 //_testinfo( $ids, 'ids' );
 
 $out = [];
+_testinfo( print_r( $rel, true ) );
 foreach ( $rel as $id ) {
 	$out['rel'] .= _doc_hdiv( $id, [ 'hide' => MANY ] );
 }
