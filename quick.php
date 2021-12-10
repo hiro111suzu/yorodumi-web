@@ -1508,7 +1508,7 @@ class cls_citation {
 			'ISSN' 		=> $j->ref_ISSN ,
 			'ASTM'		=> $j->ref_ASTM ,
 			'title' 	=> $j->title ,
-			'authors'	=> $j->author ,
+			'authors'	=> _emdb_json3_auth( $j->author  ),
 			'page'		=> $this->emdb_xml_page( $j ) ,
 			'pmid'		=> $j->ref_PUBMED ,
 		], $citation_id );
@@ -1518,7 +1518,7 @@ class cls_citation {
 	function emdb_non_journal( $j, $citation_id = 0 ) {
 		$ret = [
 			'page'		=> $this->emdb_xml_page( $j ) ,
-			'authors'	=> $j->author ,
+			'authors'	=> _emdb_json3_auth( $j->author ) ,
 			'title'		=> $j->thesis_title ,
 			'first_page' => null,
 			'last_page'	=> null ,

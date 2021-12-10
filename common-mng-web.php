@@ -582,6 +582,15 @@ function _emdb_json3_rep( &$json ) {
 	return $json;
 }
 
+//.. 
+function _emdb_json3_auth( $in ) {
+	$ret = [];
+	foreach ( (array)$in as $a ) {
+		$ret[] = is_object( $a ) ? $a->_v : $a;
+	}
+	return $ret;
+}
+
 //.. _emn_json : sqlite に入れたjsonデータを返す
 function _emn_json( $type, $did ) {
 	//- 通常 & web
