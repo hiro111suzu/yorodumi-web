@@ -17,6 +17,20 @@ foreach ( $categs as $cat => $val ) {
 	_simple()->hdiv( "categ: $cat", _table( $val ) );
 }
 
+_simple()->css( <<<EOD
+//- スコアのグラフ
+.sbar { border: 1px solid #009; padding: 0; margin: 1px; display: inline-block;
+	background: white;
+	height: 0.8em; width: 2em;
+	box-shadow: 0 0.1em 0.1em 0.1em rgba(0,0,0,0.2) inset;
+}
+.sbari { height: 100%; background: #900;
+	box-shadow: 0 0.1em 0.2em 0.2em rgba(255,255,255,0.4) inset;
+}
+
+EOD
+);
+
 //. func: table
 function _table( $val ) {
 	global $cat;
@@ -34,11 +48,11 @@ function _table( $val ) {
 	foreach ( $val as $tag => $data ) {
 		$i_array = [];
 		foreach ( $data['ids'] as $i ) {
-			$i_array[] = _ab( "jsonview.php?a=emdb_json3.$i.$cat", $i );
+			$i_array[] = _ab( "jsonview.php?a=emdb_json.$i.$cat", $i );
 		}
 		$multi = [];
 		foreach ( $data['ids_multi'] as $i ) {
-			$multi[] = _ab( "jsonview.php?a=emdb_json3.$i.$cat", $i );
+			$multi[] = _ab( "jsonview.php?a=emdb_json.$i.$cat", $i );
 		}
 		foreach ( $rep as $i => $o ) 
 			$tag = strtr( $tag, [ $i => $o ] );
@@ -46,19 +60,28 @@ function _table( $val ) {
 			'<~>[' => '[' ,
 			'<~>' => '->'
 		]);
+		$rate = $data['num'] / INFO['all'];
 		$num = $data['num'] == INFO['all']
-			? 'all'
-			: round( $data['num'] / INFO['all']  * 100, 2 ). '%'
+			? _levelbar(1) . 'all'
+			: _levelbar( $rate ) . round( $rate  * 100, 2 ). '%'
 		;
 		$type = $data['type'] == 'val' ? '' : $data['type'];
 		if ( $multi )
-			$type = _pop( $type, _ul( $multi ) );
+			$type = _pop( $type, _long( $multi, 200 ) );
 		$ret .= TR.TH. $type. TD. $tag. TD. ( $i_array
-			? _pop( $num, _ul( $i_array )  )
+			? _pop( $num, _long( $i_array, 500 )  )
 			: $num
 		);
 
 	}
 	return _t( 'table', $ret );
 }
+
+//.. _levelbar
+function _levelbar( $v ) {
+	$v = round( $v * 100 );
+	return _div( '.sbar', // . ( $wid != '' ? ' | st:width:200px' : '' ) ,
+		_div( ".sbari | st:width:$v%" ) );
+}
+
 

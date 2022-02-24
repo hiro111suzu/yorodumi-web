@@ -6,17 +6,8 @@ require( __DIR__. '/common-web.php' );
 
 //.. lang / term
 _add_lang('ysearch');
-
+_set_met_subdata(); //- MET_SUBDATA
 _define_term(<<<EOD
-TERM_METHOD
-	Method
-	実験手法
-TERM_EQUIP
-	Equipment
-	設備・装置
-TERM_SOFT
-	Software
-	ソフトウェア
 TERM_NAME
 	Name
 	名称
@@ -264,9 +255,9 @@ function _make_ysform() { return  ''
 		. _opt_tr( 'met_type', 'met_type', 'Type',
 			_radiobtns( [ 'name' => 'met_type', '#c_mettype', 'on' => G_MET_TYPE ], [
 				'a' => _l( 'All' ) ,
-				'm' => ICON_METHOD. TERM_METHOD ,
-				'e' => ICON_EQUIP . TERM_EQUIP ,
-				's' => ICON_SOFT  . TERM_SOFT ,
+				'm' => MET_SUBDATA['icon_term']['m'] ,
+				'e' => MET_SUBDATA['icon_term']['e'] ,
+				's' => MET_SUBDATA['icon_term']['s'] ,
 			])
 		)
 	)
@@ -587,12 +578,6 @@ class cls_search {
 			'select'	=> '*'
 		]);
 		if ( !$ans ) return;
-
-		$icon_dic = [
-			'm' => _span( '?'.TERM_METHOD , ICON_METHOD ),
-			'e' => _span( '?'.TERM_EQUIP  , ICON_EQUIP ) ,
-			's' => _span( '?'.TERM_SOFT   , ICON_SOFT ) ,
-		];
 		_add_lang( 'met' );
 
 		//... main loop
@@ -621,8 +606,9 @@ class cls_search {
 			}
 
 			//- output
+			$key1 = substr( $key, 0, 1 );
 			$table[] = [
-				$icon_dic[ substr( $key, 0, 1 ) ] ,
+				_span( '?'. MET_SUBDATA['term'][ $key1 ], MET_SUBDATA['icon'][ $key1 ] ) ,
 				_pop_ajax(
 					_l( explode( '|', $name, 2 )[0] )
 					. _country_flag( $data ? json_decode( $data )->place : '' )
@@ -640,9 +626,9 @@ class cls_search {
 
 		//... return
 		return _p( _imp2(
-			ICON_METHOD . TERM_METHOD ,
-			ICON_EQUIP  . TERM_EQUIP ,
-			ICON_SOFT   . TERM_SOFT
+			MET_SUBDATA['m'] ,
+			MET_SUBDATA['e'] ,
+			MET_SUBDATA['s'] ,
 		)). _table_toph(
 			[ TERM_CATEG, TERM_NAME, TERM_FOR_AS, TERM_NUMSTR ] ,
 			$table

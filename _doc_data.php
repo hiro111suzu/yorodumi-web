@@ -45,6 +45,34 @@ EOD
 //. news
 $_type = 'news';
 
+//.. 2022-02-09 new XML
+_d(<<<EOD
+title
+	2022-02-09
+id
+	emdb_header_v3
+abst
+	New format data for meta-information of EMDB entries
+	EMDBエントリの付随情報ファイルのフォーマットが新しくなりました
+main_j
+	EMDBのヘッダファイルのバージョン3が、公式のフォーマットとなりました。
+	これまでは公式だったバージョン1.9は、アーカイブから削除されます。
+main_e
+	Version 3 of the EMDB header file is now the official format.
+	The previous official version 1.9 will be removed from the archive.
+tag
+	emn ym
+link
+	u	https://www.wwpdb.org/news/news?year=2021#610ad31fef055f03d1f222bb
+	t	wwPDB to switch to version 3 of the EMDB data model
+	uj	https://pdbj.org/news/wwpdb-retiring-EMDB-v19
+	tj	wwPDBはEMDBデータモデルのバージョン3へ移行します
+rel
+	file_emdb_header
+
+EOD
+);
+
 //.. 2021-10-05 nobel prize
 /*
 mechanosensitive ion channel activity - yorodumi search
@@ -1177,6 +1205,10 @@ title
 abst
 	Meta information in XML format
 	XML形式のメタ情報(付随情報)データ
+main_e
+	Data file in XML format containing information associated with the map of EMDB entries, experimental information, detailed sample information, etc.
+main_j
+	EMDBエントリのマップに付随する情報、実験情報、サンプルの詳細情報などを含むXML形式のデータファイル
 tag
 	emn emdb
 link

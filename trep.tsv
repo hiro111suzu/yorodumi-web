@@ -22,32 +22,29 @@ comments	コメント
 unit	単位
 nucleic-acid	核酸	nucleic acid
 
-.	quick-emdb
+..	EM EMDB & PDB
+...	em sample
+aggregation_state	試料の集合状態
+cryogen_name	凍結剤
+specimen_holder_model	試料ホルダーモデル	
 
-defocus	デフォーカス
-algorithm	アルゴリズム
-overallBValue	温度因子
-ligand	リガンド
-ribosome-eukaryote	真核細胞リボソーム
-ribosome-prokaryote	原核細胞リボソーム
-compDegree	オリゴマーの状態	Oligomeric State
-numComponents	構成要素数
-sciName	名称	Name
-synName	別称	a.k.a
-numCopies	個数	Number of Copies
-oligomericDetails	オリゴマーの状態	Oligomeric Details
-hostCategory	宿主のカテゴリ
-hostSpecies	宿主	Host Species
-natSource	由来(天然)	Source (natural)
-engSource	由来(合成)	Source (engineered)
-UniProt	UniProt	UniProt
-InterPro	InterPro	InterPro
-expSystem	発現系	Expression System
-recombinantExpFlag	組換発現	Recombinant expression
-organOrTissue	臓器・器官・組織
-cellLocation	細胞中の位置	Location in cell
-expSystemCell	発現系の細胞	Cell of expression system
-cell	細胞
+...	em camera
+film_or_detector_model	フィルム・検出器のモデル
+detector_mode	検出モード
+average_exposure_time	平均露光時間
+detector_distance	カメラ長	Camera length
+
+...	em sample holder
+specimen_holder	試料ホルダー
+
+...	em optics
+chr_aberration_corrector	色収差補正装置	Chromatic aberration corrector
+sph_aberration_corrector	球面収差補正装置	Spherical aberration corrector
+phase_plate	位相板
+
+
+
+.	quick-emdb
 
 ..	admin
 update	更新
@@ -79,25 +76,40 @@ symmetry	対称性
 space_group	空間群
 label	ラベル
 
-..	sample
-specimenConc	試料濃度	Specimen conc.
-specimenState	試料の状態
-specimenSupportDetails	支持膜	Support film
-cryogenName	凍結剤
+..	sample 生物系
 
-aLength	A	A
-bLength	B	B
-cLength	C	C
+ligand	リガンド
+host_species	宿主	Host Species
+natural_host	宿主	Host (natural)
+natural_source	由来(天然)	Source (natural)
+organ	臓器・器官
+tissue	組織
+cellular_location	細胞中の位置	Location in cell
+cell	細胞
+sci_species_name	生物種
+sci_species_name.ncbi	NCBI-ID	NCBI-ID
+synonym_organism	別称	synonym
+oligomeric_state	集合状態
+recombinant_exp_flag	組換発現	Recombinant expression
+recombinant_cell	組換細胞
+recombinant_plasmid	組換プラスミド
+recombinant_strain	組換株
+recombinant_organism	組換生物種
+
+virus_empty	ウイルス・中空状態
+virus_enveloped	ウイルス・エンベロープ
+virus_isolate	ウイルス・単離状態
+virus_type	ウイルスタイプ
+virus_shell	ウイルス殻
 alpha	&alpha;	&alpha;
 beta	&beta;	&beta;
 gamma	&gamma;	&gamma;
-helicalParameters	らせんパラメータ
-twoDCrystalParameters	結晶パラメータ	Crystal parameters
-threeDCrystalParameters	結晶パラメータ	Crystal parameters
-planeGroup	面群
-spaceGroup	空間群
-axialSymmetry	軸対称性
-crystalGrowDetails	結晶化の詳細
+helical_parameters	らせんパラメータ
+
+crystal_parameters	結晶パラメータ	Crystal parameters
+plane_group	面群
+
+axial_symmetry	軸対称性
 
 Crystal parameters	結晶パラメータ
 Sample solution	試料溶液
@@ -115,17 +127,34 @@ tissue	組織
 cell	細胞
 Organelle	細胞器官
 
+dna	DNA	DNA
+rna	RNA	RNA
+protein_or_peptide	タンパク質・ペプチド	Protein or peptide
+organelle_or_cellular_component	細胞器官・細胞要素
+complex	複合体
+supmol_type	タイプ	type
+macmol_type	タイプ	type
+macromolecule	分子
+supramolecule	超分子
+supramolecule_id	ID	ID
+macromolecule_id	ID	ID
+organism	生物種	Organism
+recombinant_organism	生物種	Organism
+ncbi_tax_id	NCBI Tax. ID	NCBI Tax. ID
+recombinant_organism.ncbi	NCBI Tax. ID	NCBI Tax. ID
+molecular_weight	分子量
+experimental	実験値
+theoretical	理論値
+
 ..	sample compo
 expSystemStrain	株	Strain
-refUniProt	UniProt	UniProt
-refInterpro	InterPro	InterPro
+UNIPROTKB	UniProtKB	UniProtKB
+INTERPRO	InterPro	InterPro
 refGo	遺伝子オントロジー	Gene Ontology
-molWtTheo	理論値	Theoretical
-molWtExp	実験値	Experimental
 molWtMethod	測定法	Measured by
 timeResolvedState	時間分割
 syntheticFlag	合成
-tNumber	T番号(三角分割数)	T number (triangulation number)
+triangulation	T番号(三角分割数)	T number (triangulation number)
 Serotype	血清型
 Strain	株
 hostSpeciesStrain	宿主株
@@ -133,48 +162,161 @@ Entire	全体
 externalReferences	外部リンク
 Mass	分子量
 nameElement	要素名	Name of element
+recombinant_expression	組換発現
+string	文字列
+ec_number	EC番号	EC number
+number_of_copies	コピー数
+formula	式
+enantiomer	光学異性体
+chimera	キメラ
+parent	親要素
+macromolecule_list	含まれる分子
 
-..	imaging
+..	experiment
+structure determination	構造解析
+...	em, gun
 Experimental equipment	実験機器
 Electron gun	電子銃
-electronSource	電子線源
-acceleratingVoltage	加速電圧
-electronDose	照射量
-illuminationMode	照射モード
-nominalCs	Cs	Cs
-imagingMode	撮影モード
-energyFilter	エネルギーフィルター
-energyWindow	スリット
-Specimen Holder	試料ホルダ
+electron beam	電子線
 
-imageAcquisition	画像取得
-Image acquisition	画像取得
-numDigitalImages	デジタル画像の数
-quantBitNumber	ビット深度	Bit depth
-samplingSize	サンプリングサイズ
-odRange	ODレンジ	OD range
-URLRawData	生データのURL	URL of raw data
-Scanner	スキャナー
+...	sample
+concentration	濃度
+buffer	緩衝液
+grid	グリッド
 
-..	proc
+material	材質
+mesh	メッシュ
+support_film	支持フィルム
+film_material	材質	Material
+film_topology	トポロジー	topology
+pretreatment	前処理
+pressure	気圧
+chamber_humidity	チャンバー内湿度
+chamber_temperature	チャンバー内温度
+sample stage	試料ステージ
+specimen_holder	試料ホルダー
+specimen_holder_model	試料ホルダーモデル
+cooling_holder_cryogen	ホルダー冷却材
+
+fiducial_marker	位置合わせマーカー
+temperature_min	最低	Min
+temperature_max	最高	Max
+temperature_average	平均	Average
+
+crystal_formation	結晶化
+atmosphere	雰囲気
+lipid_mixture	脂質混合液
+lipid_protein_ratio	脂質・タンパク質比
+time	時間
+
+sugar_embedding	糖包埋
+ultramicrotomy	ウルトラミクロトーム
+high_pressure_freezing	加圧凍結法
+sectioning	切片作成
+other_sectioning	その他	other
+focused_ion_beam	集束イオンビーム
+ion	イオン
+voltage	電圧
+duration	時間
+current	電流
+final_thickness	最終 厚さ
+
+...	optics
+electron optics	電子光学系
+alignment_procedure	アライメント法
+electron_source	電子線源
+acceleration_voltage	加速電圧
+defocus	デフォーカス
+imaging_mode	撮影モード
+camera_length	カメラ長
+
+specialist_optics	特殊光学系
+nominal_magnification	倍率（公称値）
+nominal_defocus_max	最大 デフォーカス（公称値）
+nominal_defocus_min	最小 デフォーカス（公称値）
+nominal_defocus	デフォーカス（公称値）
+calibrated_defocus_max	最大 デフォーカス（補正後）
+calibrated_defocus_min	最小 デフォーカス（補正後）
+c2_aperture_diameter	C2レンズ絞り径
+
+...	camera
+image_recording	撮影
+illumination_mode	照射モード
+nominal_cs	Cs	Cs
+energy_filter	エネルギーフィルター
+slit_width	スリット幅
+upper_energy_threshold	エネルギー上限
+lower_energy_threshold	エネルギー下限
+scanner	スキャナー
+average_electron_dose_per_image	平均電子線量	Average electron dose
+calibrated_magnification	倍率（補正後）
+number_grids_imaged	撮影したグリッド数
+number_diffraction_images	回折像の数
+number_real_images	実像数
+bits_per_pixel	ビット/ピクセル	Bits/pixel
+sampling_interval	サンプリング間隔
+digitization_details	デジタル化	Digitization
+dimensions	サイズ
+width	横
+height	縦
+frames_per_image	画像ごとのフレーム数	Frames/image
+
+...	proc
 Image processing	画像解析
-appliedSymmetry	想定した対称性
-resolutionByAuthor	解像度	Resolution
-ctfCorrection	CTF補正	CTF correction
-resolutionMethod	解像度の算出法
-tiltAngleIncrement	傾斜角の増分
-numProjections	投影像の数
-numSubtomograms	サブトモグラムの数
+applied_symmetry	想定した対称性
+ctf_correction	CTF補正	CTF correction
+resolution_method	解像度の算出法
+point_group	点群
+
+number_subtomograms_used	サブトモグラムの数
 numSections	セクションの数
 numClassAverages	クラス平均の数
-eulerAnglesDetails	オイラー角	Euler angles
-targetCriteria	当てはまり具合の基準
 
+particle_selection	粒子像選択
+startup_model	初期モデル
+initial_angle_assignment	初期 角度割当
+final_angle_assignment	最終 角度割当
+final_reconstruction	最終 再構成
+final_three_d_classification	最終 3次元分類
+final_two_d_classification	最終 2次元分類
+number_classes	クラス数
 
-refProtocol	精密化のプロトコル	Refinement protocol
-refSpace	精密化に使用した空間	Refinement space
+initial_model	初期モデル
+
+refinement_protocol	プロトコル	Protocol
+refinement_space	空間	Space
 pdbEntryId	利用したPDBモデル	Input PDB model
 pdbChainId	鎖ID	Chain ID
+
+pdb_model	PDBモデル	PDB model
+pdb_id	PDB ID	PDB ID
+access_code	PDB ID	PDB ID
+emdb_id	EMDB ID	EMDB ID
+
+target_criteria	当てはまり具合の基準
+overall_bvalue	温度因子	Overall B value
+
+delta_z	&Delta;z	&Delta;z
+delta_phi	&Delta;&Phi;	&Delta;&Phi
+
+type_of_model	モデルのタイプ
+algorithm	アルゴリズム
+number_images_used	使用した粒子像数
+number_tomograms	トモグラム数
+reference_model	参照モデル
+number_classes_used	使用したクラス数
+number_subtomograms_used	使用したサブトモグラム数
+number_selected	選択した数
+
+processing_details	詳細	details
+
+unit_cell	単位格子
+extraction	抽出
+average_number_members_per_class	平均メンバー数/クラス	Avg.num./class
+insilico_model	in silico モデル	In silico model
+
+...	modeling
+resolution.type	解像度のタイプ
 
 .	quick-sasbdb
 sas_buffer	バッファ
@@ -311,7 +453,7 @@ pdbx_redundancy	冗長度
 ..	em
 
 ...	sample
-aggregation_state	試料の集合状態
+
 em_assembly	試料の集合体	Assembly of specimen
 em_specimen	試料	Specimen
 em_entity_assembly	構成要素	Component
@@ -342,7 +484,6 @@ experimental_flag	実験値	Experimental value
 concentration_units	単位	Units
 
 chamber_temperature	凍結前の試料温度
-average_exposure_time	平均照射時間
 num_grids_imaged	撮影したグリッド数
 
 grid_type	グリッドのタイプ
@@ -351,14 +492,11 @@ grid_material	グリッドの材料
 
 recording_temperature_maximum	最高温度	Temperature (max)
 recording_temperature_minimum	最低温度	Temperature (min)
-cryogen	冷却剤
-cryogen_name	凍結剤
-specimen_holder_model	モデル	Model
+cryogen	凍結剤
 
 organism	生物種
 em_entity_assembly_recombinant.cell	細胞
 plasmid	プラスミド
-cryogen_name	凍結剤
 
 
 ...	em
@@ -386,9 +524,6 @@ tilt_angle_max	傾斜角・最大
 tilt_angle_min	傾斜角・最小
 camera_length	カメラ長
 number_digital_images	デジタル画像の数
-sph_aberration_corrector	球面収差補正器	Spherical aberration corrector
-chr_aberration_corrector	色収差補正器	Chromatic aberration corrector
-phase_plate	位相版
 
 em_staining	染色
 em_staining.material	染色剤
@@ -397,7 +532,7 @@ em_image_recording	撮影	Image recording
 em_detector	カメラ	Camera
 EM image scans	画像スキャン	Image scans
 nominal_cs	Cs	Cs
-detector_distance	カメラ長	Camera length
+
 Data collection	データ収集
 Microscopy	顕微鏡
 Electron gun	電子銃
@@ -412,8 +547,6 @@ energyfilter_name	エネルギーフィルター名称
 energyfilter_upper	エネルギーフィルター 上限
 energyfilter_lower	エネルギーフィルター 下限
 avg_electron_dose_per_image	電子線照射量	Electron dose
-detector_mode	検出モード
-film_or_detector_model	フィルム・検出器のモデル
 
 ...	proc
 ref_protocol	プロトコル	Protocol
@@ -766,6 +899,11 @@ s	単粒子	single particle
 //i	正20面体対称	icosahedral
 h	らせん対称	helical
 2	電子線結晶学	electron crystallography
+
+.	met_term
+m	実験手法	Method
+e	装置・材質	Equipment/material
+s	ソフトウェア	Software
 
 .	fhinfo_cls_name
 all	機能・相同性	Function / homology

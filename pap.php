@@ -51,6 +51,7 @@ if ( GET_STR ) {
 		'select' => 'pmid' ,
 		'where' => [ 'strid', strtr( GET_STR, [ 'pdb-' => '', 'emdb-' => 'e' ] ) ] ,
 	]);
+	_testinfo( $id ?: 'Not found for '. GET_STR, 'pap-ID' );
 }
 define( 'ID', $id );
 
@@ -112,7 +113,9 @@ _simple()->hdiv( 'Search query',
 );
 
 //. データ表示
-if ( ID == '' ) {
+if ( TEST && GET_STR && ID == ''  ) {
+	_simple()->hdiv( 'not found', 'str-ID: '. GET_STR );
+} else if ( ID == '' ) {
 	//- 検索結果
 	_simple()->hdiv( TERM_PAP_LIST, _getlist(), [ 'id' => 'list' ] );
 } else {

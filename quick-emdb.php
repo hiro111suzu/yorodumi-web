@@ -1,14 +1,13 @@
 <?php
 //. init
-$json1 = $json;
-$json3 = _emdb_json3_rep( _json_load2( _fn( 'emdb_json3', ID ) ) );
+$main_json = $json;
 
 _add_lang( 'quick-emdb' );
 _add_trep( 'quick-emdb' );
 
 _add_fn(   'quick-emdb' );
 _add_url(  'quick-emdb' );
-_add_unit( 'quick-emdb' );
+//_add_unit( 'quick-emdb' );
 
 //$ftpdir = _url( 'ftpdir' );
 
@@ -62,113 +61,138 @@ TERM_HALFMAP
 	ハーフマップ
 EOD
 );
+
+//- 単位文字列の変換、v3対応
+define ( 'UNIT_REP', [
+	'full' => [
+		's' => 'sec.' ,
+		'nanometer' => 'nm' ,
+		'percentage' => '%' ,
+		'deg' => '&deg;'
+	],
+	'rep' => [
+		'^2' => '<sup>2</sup>' ,
+		'^3' => '<sup>3</sup>' ,
+		'Å' => '&Aring;' ,
+	],
+]);
+
 //. 追加データ
 $mov_info = $main_id->movjson(); //- ムービー情報
 $map_info = $main_id->mapjson(); //- マップ情報
 
-
 _simple()->time( 'emdb init' );
 
-//. basic
-//.. sample compo scan
-/*
-タンパク質名リスト
-概要名称リスト
-UniProt検索リンク 管理用
-由来情報
-*/
-$abst_names = [];
-$unp_link_test = [];
-$src = [];
-$syn = [];
-foreach ( (array)$json1->sample->sampleComponent as $c ) {
-
-	$name = (string)$c->sciName ?: (string)$c->synName ?: '?' ;
-
-	//- src
-	foreach ( (object)$c as $k => $v ) {
-		if ( ! $k ) continue;
-		$n = $v->natSpeciesName ?: $v->sciSpeciesName ;
-		if ( $n ) {
-			$nl = strtolower( $n );
-			$src[ $nl ] = $n;
-			$syn[ $nl ][] = $v->synSpeciesName;
-		}
+//. supmol-tree
+$items = [];
+$has_m = [];
+$has_s = [];
+$name = [];
+$type = [];
+//.. supmol
+foreach ( (array)$main_json->sample->supramolecule as $c ) {
+	$i = 's'. $c->supramolecule_id;
+	$name[ $i ] = $c->name;
+	$type[ $i ] = $c->supmol_type;
+	if ( ! $name[0] )
+		$name[0] = $c->name;
+	foreach ( _branch( $c, 'macromolecule_list->macromolecule[*]->macromolecule_id' ) as $m ) {
+		if ( ! $m ) continue;
+		$has_m[ $i ][] = "m$m";
 	}
-	//- abst name
-	$n = in_array( $c->entry, [ 'protein', 'cellular-component' ] )
-		? $name : $c->entry;
-	if ( $n != $json1->sample->name )
-		$abst_names[] = $n;
-
-	//- その他 (test)
-	if ( $c->entry == 'protein' ) {
-		if ( TEST ) {
-			$t = "$name ". (string)$c->protein->sciSpeciesName;
-			$unp_link_test[] = _ab([ 'unp_search', $t ], $t );
-		}
+	if ( $c->parent && $c->parent != $c->supramolecule_id ) {
+		$has_s[ 's'. $c->parent ][] = $i;
+	} else {
+		$has_s[ 'e' ][] = $i;
 	}
 }
 
-define( 'FLG_MANY_ENT', 5 < count( $json1->sample->sampleComponent ) );
+//.. macmol
+$num_mac = 0;
+foreach ( (array)$main_json->sample->macromolecule as $c ) {
+	$i = 'm'. $c->macromolecule_id;
+	$name[ $i ] = $c->name;
+	$type[ $i ] = $c->macmol_type;
+	$has_m[ 'e' ][] = $i;
+	++ $num_mac;
+}
 
+//.. make
+$done = []; //- 重複防止
+$sup_mol_list = _supmol_list( 'e' );
+$done = [];
+$sup_mol_list_abst = 
+	( $name[0] == $main_json->sample->name
+		? ''
+		: $main_json->sample->name. ' !=  ' . $name[0] . _p( $main_json->sample->name )
+	)
+	//- macmolが多いときは、概要のみ
+	. _supmol_list( 'e', 10 < $num_mac )
+;
+
+function _supmol_list( $mol_id, $flg_abst = false ) {
+	global $has_m, $has_s, $done, $type;
+	$items = [];
+	foreach ( (array)$has_s[ $mol_id ] as $i ) {
+		$items[] = _type_name( $i ). _supmol_list( $i, $flg_abst );
+	}
+	$count = [];
+	foreach ( (array)$has_m[ $mol_id ] as $i ) {
+		if ( $done[ $i ] ) continue;
+		$done[ $i ] = true;
+		if ( $flg_abst ) {
+			++ $count[ $type[ $i ] ?: 'other' ];
+		} else {
+			$items[] = _type_name( $i );
+		}
+	}
+//	_testinfo( $count, $mol_id );
+	foreach ( $count as $k => $v ) {
+		$items[] = _kv([ $k => " x $v". _ej( ' types', '種' )]);
+	}
+	return $items ? _ul( $items ) : '';
+}
+function _type_name( $mol_id ) {
+	global $name, $type;
+	return _kv([ $type[ $mol_id ] =>
+		$type[ $mol_id ] == 'virus'
+			? _quick_taxo( $name[ $mol_id ] )
+			: $name[ $mol_id ]. _obj('wikipe')->pop_xx( $name[ $mol_id ] )
+	]);
+}
+
+//. basic
 //.. sample name
-$s = _x( $json3->sample->name );
-$sample_name = _ezsqlite([
+$s = _x( $main_json->sample->name );
+define( 'SAMPLE_NAME', _ezsqlite([
 	'dbname' => 'taxoid' ,
 	'where'	 =>	[ 'name', $s ] ,
 	'select' => 'id' ,
-]) ? _quick_taxo( $s ) : _f( $s );
+]) ? _quick_taxo( $s ) : _f( $s ) );
 
-//.. sample-compo グループ化
-$group_names = _group_name( $abst_names );
-$out = [];
-foreach ( $abst_names as $n ) {
-	foreach( (array)$group_names as $g ) {
-		if ( !_headmatch( $g, $n ) ) continue;
-		$n = "$g ...";
-		break;
-	}
-	++ $out[ $n ];
-}
-
-$compo = [];
-foreach ( $out as $t => $cnt ) {
-	$w = _obj('wikipe')->pop_xx( $t );
-	$compo[] = $cnt == 1 ? $t.$w : "($t$w) x $cnt";
-}
-
-//- 長い文字列のやつがあったら箇条書き
-$flg = false;
-foreach ( $compo as $s ) {
-	if ( strlen( strip_tags( $s ) ) < 40 ) continue;
-	$flg = true;
-}
-$compo = $compo
-	? ( $flg ? _ul( $compo ) : ':' . BR . _long( $compo, 10 ) )
-	: ''
-;
-
-//.. taxo
-//_simple()->time( 'basic taxo前' );
+//.. 生物種
+//- taxo
 $src_items = [];
-foreach ( $src as $k => $v ) {
-	$src_items[] = _quick_taxo( $v, array_filter( $syn[ $k ] )[0] );
+foreach ( _branch_multi( $main_json,
+	'sample->supramolecule[*]->natural_source[0]->organism' ,
+	'sample->macromolecule[*]->natural_source[0]->organism' ,
+	'sample->supramolecule[*]->sci_species_name' ,
+) as $o ) {
+	$src_items[] =_quick_taxo( $o );
 }
-//_simple()->time( 'basic taxoあと' );
 
 //.. citation
 $citation = new cls_citation();
 //- primary
 if ( ! $citation->pubmed_json( $main_id->add()->pmid ) ) {
 	$citation->emdb_json(
-		$json3->crossreferences->primary_citation->journal_citation
+		$main_json->crossreferences->primary_citation->journal_citation
 	);
 }
 
 //- secondary
 $cnt = 1;
-foreach ( (array)$json3->crossreferences->secondary_citation as $j ) {
+foreach ( (array)$main_json->crossreferences->secondary_citation as $j ) {
 	if ( ! $citation->pubmed_json( $j->journal_citation->ref_PUBMED ) ) {
 		$j->non_journal_citation
 			? $citation->emdb_non_journal( $j->non_journal_citation, $cnt )
@@ -182,7 +206,7 @@ foreach ( (array)$json3->crossreferences->secondary_citation as $j ) {
 //... supersession
 $date = [];
 $history = [];
-$c = $json3->admin->obsolete_list->entry;
+$c = $main_json->admin->obsolete_list->entry;
 if ( $c ) {
 	$history[] = [
 		'date'	=> $date[] = $c->date ,
@@ -193,7 +217,7 @@ if ( $c ) {
 }
 
 //... date
-foreach ( $json3->admin->key_dates as $k => $v ) {
+foreach ( $main_json->admin->key_dates as $k => $v ) {
 	$history[] = [
 		'date'	=> $date[] = $v ,
 		'event'	=> $k ,
@@ -202,7 +226,7 @@ foreach ( $json3->admin->key_dates as $k => $v ) {
 }
 
 //... current
-$c = $json3->admin->current_status;
+$c = $main_json->admin->current_status;
 if ( $c ) {
 	$history[] = [
 		'date'		=> $c->date ?: max( $date ),
@@ -218,7 +242,7 @@ $funding = [];
 $flags = [];
 $num = 0;
 $country_jname = _subdata( 'e2j', 'country' );
-foreach ( (array)$json3->admin->grant_support->grant_reference as $c ) {
+foreach ( (array)$main_json->admin->grant_support->grant_reference as $c ) {
 	$f = ''
 		. _country_flag( $c->country )
 		. _ej(
@@ -262,12 +286,11 @@ if ( TEST ) {
 		$fh_annot = _input_emdb_unp( ID, $pmid );
 	}
 }
-
 _simple()->time( 'basic-prep' );
 
 //.. output
-function _f( $s ){
-	return _x( $s ) . _obj('wikipe')->pop_xx( $s );
+function _f( $in ){
+	return $in. _obj('wikipe')->pop_xx( $in );
 }
 
 $o_data->basicinfo([
@@ -283,12 +306,12 @@ $o_data->basicinfo([
 	, 
 ])
 ->lev1ar([
-	'Title'				=> _f( $json3->admin->title ) ,
-	'Map data'			=> _f( $json3->map->annotationDetails ). _hdiv_focus( 'map' ),
-	'Sample'			=> $sample_name. $compo. _hdiv_focus( 'sample' ),
-	'Keywords'			=> _keywords( $json3->admin->keywords ) ,
+	'Title'				=> _f( $main_json->admin->title ) ,
+	'Map data'			=> _f( $main_json->map->annotation_details ). _hdiv_focus( 'map' ),
+	'Sample'				=> $sup_mol_list_abst. _hdiv_focus( 'sample' ),
+	'Keywords'			=> _keywords( $main_json->admin->keywords ) ,
 	'func_homology'		=> _func_homology(),
-	'Biological species' => _imp2( $src_items ) ,
+	'Biological species' => _imp2( _uniqfilt( $src_items ) ) ,
 
 	'Method'			=> _imp2([ TERM_REC_MET, TERM_CRYOEM, TERM_STAIN,
 		_ifnn( $main_id->add()->reso, _quick_kv([ 'Resolution' => '\1 &Aring' ]) )
@@ -297,15 +320,15 @@ $o_data->basicinfo([
 	'Authors'			=> _authlist( $main_id->add()->author ),
 	'Funding support' 	=> $funding ,
 	'Citation'			=> $citation->output() ,
-//	'Validation Report' => _validation_rep( $fit_pdb ) ,
 	'History'			=> _history_table( $history ) ,
 	'F&H annot'			=> $fh_annot ,
 	'EMN category'		=> _emn_categ() ,
 ])
 ->test_item([
 	_ab([ 'json', DID ], 'jsonview' ) ,
-	_ab([ 'json3', ID ], 'json3' ) ,
 	_ab([ 'jsonview', 'emdb_add.'. ID ], 'add-json' ) ,
+	_ab([ 'jsonview', 'pap_emdb.'. ID ], 'pap-json' ) ,
+	_ab([ 'jsonview', 'emdb_met.'. ID ], 'met-json' ) ,
 	_ab([ 'disp', 'emdb_kw.'. ID ], 'search terms' ) ,
 	_ab([ 'dir_emdb_med', ID ], _fa( 'folder' ) . 'media dir' ),
 	_ab([ '_mng-dir', 'fn' => 'emdb_ftp|'. ID ], 'FTP dir on fs3' )
@@ -424,7 +447,7 @@ $o_data->end2( 'Validation report' );
 //.. 関連構造データ
 $id_list = [];
 foreach ([ 'emdb', 'pdb' ] as $db ) {
-	foreach ( (array)$json3->crossreferences->{ $db. '_reference' } as $c ) {
+	foreach ( (array)$main_json->crossreferences->{ $db. '_reference' } as $c ) {
 		$text = [];
 		foreach ( $c->relationship as $k => $v ) {
 			if ( $k != 'other' )
@@ -461,15 +484,11 @@ foreach ( (array)_json_load2([ 'pubmed', $main_id->add()->pmid ])->kw as $c ) {
 
 //- categ
 $kw[] = _categ2momkw();
-
-$kw[] = $json3->sample->name;
-foreach ( (array)$json3->sample->supramolecule as $c ) {
+$kw[] = $main_json->sample->name;
+foreach ( (array)$main_json->sample->supramolecule as $c ) {
 	$kw[] = $c->name;
 	$kw[] = $c->sci_species_name;
-//	_testinfo( $c, 'supra' );
 }
-//_testinfo( $kw, 'kw' );
-//_testinfo( $json3->sample );
 
 //... output
 $o_data
@@ -487,7 +506,7 @@ _simple()->time( 'dl&link' );
 
 //. map data
 $o_data->lev1title( 'Map' );
-$map = $json3->map;
+$map = $main_json->map;
 
 //.. file
 $file = $map->file;
@@ -500,8 +519,11 @@ $o_data->lev1( 'File', $main_id->ex_map()
 		'type'		=> $map->data_type ,
 //		'label'		=> $map->label ,
 	]
-	: _trep( $json3->admin->current_status->code )
+	: _trep( $main_json->admin->current_status->code )
 );
+
+//.. annotation
+$o_data->lev1( 'Annotation', $main_json->map->annotation_details );
 
 //.. projection / slices
 if ( file_exists( "$dn_media/mapi/proj0.jpg" ) ) {
@@ -877,35 +899,35 @@ _simple()->time( 'map' );
 
 //.. filename => annotation
 $map_annot = [];
-foreach ( (array)$json3->interpretation->segmentation_list->segmentation as $j ) {
-	$map_annot[ $j->file ] = [
-		'full' => $j->annotation_details ,
-		'type' => TERM_SEGMENTATION ,
-	];
+foreach ([
+	TERM_SEGMENTATION => 
+		'interpretation->segmentation_list->segmentation[*]->mask_details' ,
+	TERM_ADDITIONAL_MAP =>
+		'interpretation->additional_map_list->additional_map' ,
+	TERM_HALFMAP =>
+		'interpretation->half_map_list->half_map' ,
+] as $type => $branch ) {
+	foreach ( _branch( $main_json, $branch ) as $j ) {
+		if ( ! $j ) continue;
+		$map_annot[ $j->file ] = [
+			'full' => $j->annotation_details ,
+			'type' => $type ,
+		];
+	}
 }
-foreach ( (array)$json3->interpretation->additional_map_list->additional_map as $j ) {
-	$map_annot[ $j->file ] = [
-		'full' => $j->annotation_details ,
-		'type' => TERM_ADDITIONAL_MAP ,
-	];
-}
-foreach ( (array)$json3->interpretation->half_map_list->half_map as $j ) {
-	$map_annot[ $j->file ] = [
-		'full' => $j->annotation_details ,
-		'type' => TERM_HALFMAP 
-	];
-}
+
+//_testinfo( $map_annot );
 $num = [];
-foreach ( $map_annot as $k => $v ) {
-	$t = $v['type'];
-	$map_annot[ $k ]['short'] = strlen( $v['full'] ) < 70
-		? "$t: ". ( $v['full'] ?: '#'. ( ++ $num[ $v['type'] ] ) )
-		: "$t: ". implode( ' ', array_slice( explode( ' ', $v['full'] ), 0, 8 ) ). '...'
+foreach ( $map_annot as $key => $val ) {
+	$type = $val['type'];
+	$map_annot[ $key ]['short'] = strlen( $val['full'] ) < 70
+		? "$type: ". ( $val['full'] ?: '#'. ( ++ $num[ $val['type'] ] ) )
+		: "$type: ". implode( ' ', array_slice( explode( ' ', $val['full'] ), 0, 8 ) ). '...'
 	;
-	if ( _instr( 'additional_1.map', $k ) ) {
-		$k1 = strtr( $k, [ 'additional_1.map' => 'additional.map' ] );
-		if ( ! $map_annot[ $k1 ] )
-			$map_annot[ $k1 ] = $map_annot[ $k ];
+	if ( _instr( 'additional_1.map', $key ) ) {
+		$key1 = strtr( $key, [ 'additional_1.map' => 'additional.map' ] );
+		if ( ! $map_annot[ $key1 ] )
+			$map_annot[ $key1 ] = $map_annot[ $key ];
 	}
 }
 //_testinfo( $map_annot );
@@ -917,7 +939,7 @@ $addnum = $mskjson[ 0 ]  || $mskjson[ 1 ] ? 0 : 1;
 
 $done = [];
 $i = 0;
-foreach ( (array)$json1->supplement->mask as $c1 ) {
+foreach ( (array)$main_json->supplement->mask as $c1 ) {
 	$f = $c1->file;
 	$annot = $map_annot[ $f->name ];
 	$o_data->lev2( 'Annotation', $annot['full'] );
@@ -1075,393 +1097,455 @@ _simple()->time( 'suppli' );
 //. Sample
 $o_data->lev1title( 'Sample components', true );
 
-$order = [
-	'name' ,
-	'Name' , //-?
-	'sciName' ,
-	'synName' ,
-	'class' ,
-	'mutantFlag' ,
-	'oligomericDetails' ,
-	'numberOfCopies' ,
-	'protein' ,
-	'details' ,
-	'structure' ,
-	
-	'host' ,
-	'hostSpecies',
-	'hostCategory',
-	'hostSpeciesStrain',
-
-	'sciSpeciesName' ,
-	'synSpeciesName' ,
-	'expSystem'  ,
-	'sciSpeciesStrain' ,
-	'organelle' ,
-	'Tissue' ,
-	'cellLocation' ,
-	'cell' ,
-	'mutant' ,
-	'vector' ,
-];
-
 //.. sample全体
-$o_data->lev3order( $order )
-	->lev3ign([ 'sampleComponent', 'molWtTheo', 'molWtExp', 'molWtMethod' ]);
-foreach ( $json1->sample as $k => $v ) {
-	if ( $k == 'name' )
-		$v = $sample_name;
-	$o_data->lev3( $k, $v );
-}
-$o_data->end3( 'Entire' )
-->lev2( 'Mass', _mol_wt( $json1->sample ) )
-->end2( 'Entire|' . _span( '.h_addstr', _short( $json1->sample->name ) ) );
+$o_data
+->lev3( 'name', SAMPLE_NAME )
+->end3( 'Entire' )
+->lev2( 'components', $sup_mol_list )
+->end2( 'Entire|: ' . _span( '.h_addstr', _short( $main_json->sample->name ) ) )
+;
 
-//.. sample 要素 事前
-/*
-$prot_names = [];
-foreach ( $json1->sample->sampleComponent as $c ) {
-//	if ( ! is_object( $c->protein ) ) continue;
-//	$prot_names[] = 
-}
-*/
+$ids_all_macmol = array_values( _uniqfilt( _branch(
+	$main_json ,
+	'sample->macromolecule[*]->macromolecule_id'
+)));
 
 //.. sample 各要素
+foreach ( [ 'supramolecule', 'macromolecule' ] as $mol_class ) {
+	foreach ( (array)$main_json->sample->$mol_class as $num => $compo ) {
+		$c_obj = [];
+		$o_data->lev3order([ 'name', 'macmol_type', 'supmol_type' ]);
 
-//- 第3階層があるデータは以下のみ
-$_keys_lev3 = [ 'engSource', 'natSource', 'shell', 'externalReferences' ];
+		//... valが単純
+		foreach ( $compo as $key1 => $val1 ) {
+			if ( $key1 == 'macromolecule_list' ) {
+				$ids = array_values( _uniqfilt( _branch(
+					$val1,
+					'macromolecule->macromolecule_id'
+				)));
+				$val1 = $ids_all_macmol == $ids
+					? _l( 'all' )
+					: _conv_num( $ids )
+				;
+			}
+			if ( is_object( $val1 ) || is_array( $val1 ) ) {
+				$c_obj[ $key1 ] = true;
+				continue;
+			}
+			//- ec
+			if ( $key1 == 'ec_number' ) {
+				$val1 = _obj('dbid')->pop( 'ec', $val1 );
+			}
 
-
-foreach ( $json1->sample->sampleComponent as $c1 ) {
-	$flg_virus = $c1->entry == 'virus';
-	$src = '';
-
-	$o_data->lev3order( $order )
-		->lev3ign([ 'entry', 'componentID', 'ncbiTaxId', 'sciSpeciesName', 'synSpeciesName',
-			'sciSpeciesSerotype', 'sciSpeciesStrain', 'molWtTheo', 'molWtExp', 'molWtMethod'
-		])
-	;
-	$ent = $c1->{ $c1->entry };
-
-	//... 一般
-	foreach ( $c1 as $n2=>$c2 ) {
-		//- 文字列ならそのまま入れる
-		if ( ! is_object( $c2 ) ) {
-			$o_data->lev3( $n2, $c2 . _obj('wikipe')->pop_xx( $c2 ) );
-
-		//- オブジェクト (Protein とか ribosomeとかなので、そのままのレベルで処理)
-		} else foreach ( $c2 as $n3=>$c3 ) {
-			//- level3がないタグのみ
-			if ( in_array( $n3, $_keys_lev3 ) ) continue;
-			$o_data->lev3( $n3, $c3 );
+			$o_data->lev3( $key1, $val1 );
 		}
-	}
-	$o_data->end3( $c1->entry )
-	->lev2( 'Mass', _mol_wt( $c1 ) )
-	->lev3order( $order );
-		
-	//... 種名
-	//- ウイルスなら、種名が名称
-	if ( $flg_virus ) {
-		$o_data->lev3( 'Species' ,
-			_quick_taxo( $ent->sciSpeciesName ?: $ent->name, $ent->synSpeciesName )
-		)
-			->lev3( 'Strain', $ent->sciSpeciesStrain )
-			->lev3( 'Serotype',  $ent->sciSpeciesSerotype )
-			->end3( 'Species' )
-		;
-	} else {
-		$o_data
-			->lev3( 'Species', _quick_taxo( $ent->sciSpeciesName, $ent->synSpeciesName ) )
-			->lev3( 'Strain', $ent->sciSpeciesStrain )
-			->lev3( 'Serotype',  $ent->sciSpeciesSerotype )
-			->end3( 'Source' )
-		;
-	}
+		$o_data->end3( $mol_class );
 
-	//... source 3種
-	//- engSource
-	$o_data->lev3ign([ 'ncbiTaxId' ])->lev3order( $order );
-	foreach ( (array)$ent->engSource as $n4 => $c4 ) {
-		if ( in_array( $n4, [ 'expSystem', 'hostSpecies' ] ) )
-			$c4 = _quick_taxo( $c4 );
-		$o_data->lev3( $n4, $c4 );
+		//... valが配列かオブジェクト
+		foreach ( array_keys( $c_obj ) as $key1 ) {
+			foreach ( is_array( $compo->$key1 ) ? $compo->$key1 : [ $compo->$key1 ]
+				as $num2 => $val2 
+			) {
+				$o_data->lev3ign([
+					'database', 'ncbi', 'organism.ncbi', 'recombinant_organism.ncbi'
+				]);
+				$o_data->lev3order([
+					'organism', 'recombinant_organism'
+				]);
+				_prep_unit( $val2 );
+				foreach ( (array)$val2 as $key3 => $val3 ) {
+					//- 生物種
+					if ( in_array( $key3, [ 'organism', 'recombinant_organism' ] ) )
+						$val3 = _quick_taxo( $val3 );
+						
+					//- 配列
+					if ( $key3 == 'string') {
+						$val3 = _seqstr( $val3 );
+					}
+					//- ref
+					if ( substr( $key3, 0, 4 ) == 'ref_' ) {
+						$type = explode( '_', $key3, 2 )[1];
+						$items = [];
+						foreach ( ( is_array( $val3 ) ? $val3 : [ $val3 ] ) as $i ) {
+							if ( $type == 'GO' )
+								$i = _numonly( $i );
+							$items[] = _obj('dbid')->pop( $type, $i );
+						}
+						$key3 = $type;
+						$val3 = _imp( $items );
+					}
+					
+					$o_data->lev3( $key3, _to_str( $val3 ) );
+				}
+				$o_data->end3( $key1 );
+			}
+		}
+		//... 化合物？
+		if ( $compo->macmol_type == 'ligand' ) {
+			$chem_id = _ezsqlite([
+				'dbname' => 'chem' ,
+				'select' => 'id' ,
+				'where' => [ 'name', $compo->name ] ,
+			]);
+			if ( $chem_id ) {
+				$o_data->lev2(
+					'Chemical component information' ,
+					_ent_catalog( 'chem-'. $chem_id, [ 'mode' => 'list' ])
+				);
+			}
+		}
+		//... まとめ
+		$o_data->end2( _trep( $mol_class )
+			. '|'
+			. ' '. _sharp( $compo->macromolecule_id ?: $compo->supramolecule_id ?: $num )
+			. ': '. _span( '.h_addstr', _short( $compo->name ) )
+		);
 	}
-	$o_data->end3( 'engSource' );
-
-	//- natSource
-	$o_data->lev3ign([ 'ncbiTaxId' ])->lev3order( $order );
-	foreach ( (array)$ent->natSource as $n4 => $c4 ) {
-		if ( in_array( $n4, [ 'expSystem', 'hostSpecies' ] ) )
-			$c4 = _quick_taxo( $c4 );
-		$o_data->lev3( $n4, $c4 );
-	}
-	$o_data->end3( 'natSource' );
-
-	//- hostSpecies
-	$o_data->lev3ign([ 'ncbiTaxId' ])->lev3order( $order );
-	foreach ( (array)$ent->hostSpecies as $n4 => $c4 ) {
-		if ( in_array( $n4, [ 'expSystem', 'hostSpecies' ] ) )
-			$c4 = _quick_taxo( $c4 );
-		$o_data->lev3( $n4, $c4 );
-	}
-	$o_data->end3( 'hostSpecies' );
-
-	//... shell
-	foreach ( (array)$ent->shell as $n4 => $c4 ) {
-		if ( $c4->nameElement != '' )
-		$o_data->lev2( 'Shell|#' . $c4->id, [
-			'nameElement'	=> $c4->nameElement ,  
-			'Diameter'		=> _ifnn( $c4->diameter, '\1 &Aring;' ) ,
-			'tNumber'		=> $c4->tNumber ,
-		]);
-	}
-
-	//... ext ref
-	foreach ( (array)$ent->externalReferences as $n4 => $c4 )
-		$o_data->lev3( $n4, _emdb_dbid_link( $n4, $c4 ) );
-	$o_data->end3( 'External references' );
-
-	$o_data->end2( 'component|' . '#' . $c1->componentID
-		. ': ' . _span( '.h_addstr', _short( _imp(
-			_l( $c1->entry ), _l( $c1->sciName )
-		)))
-	);
 }
-_simple()->time( 'sample' );
 
+_simple()->time( 'sample' );
 //. Experiment
 $o_data->lev1title( 'Experimental details', true, false );
+//.. structure_determination (概要)
 
-//.. sample preparation / Vitrification
-$jprep = $json1->experiment->specimenPreparation;
-
-//... 状態
-$o_data->lev2( 'specimen', [
-	'specimenState' => _trep( $jprep->specimenState ) ,
-	'method' => _imp( TERM_STAIN, TERM_CRYOEM )
-]);
-
-//... らせんパラメータ
-$o_data->lev3order([ 'axialSymmetry', 'hand', 'deltaZ', 'deltaPhi' ]);
-foreach ( (array)$jprep->helicalParameters as $k => $v ) {
-	if ( $k == 'axialSymmetry' )
-		$v = _symmetry_text( $v );
-	$o_data->lev3( $k, $v );
-}
-$o_data->end3( 'helicalParameters' );
-
-//... 結晶パラメータ
-$o_data->lev3order([
-	'planeGroup', 'spaceGroup', 'aLength', 'bLength', 'cLength', 'alpha', 'beta', 'gamma' 
-]);
-foreach ( (array)$jprep->twoDCrystalParameters as $k => $v ) {
-	$o_data->lev3( $k, $v );
-}
-foreach ( (array)$jprep->threeDCrystalParameters as $k => $v ) {
-	$o_data->lev3( $k, $v );
-}
-$o_data->end3( 'Crystal parameters' );
-
-//... 結晶化法
-$o_data->lev2( 'crystalGrowDetails', $jprep->crystalGrowDetails );
-
-//... sample solution
-$o_data->lev2( 'Sample solution', [
-	'specimenConc'		=> $jprep->specimenConc ,
-	'Buffer solution'	=> $jprep->buffer->details ,
-	'ph'				=> $jprep->buffer->ph ,
-]);
-
-//... その他exp:
-foreach ( [ 'specimenSupportDetails', 'staining' ] as $k ) {
-	$o_data->lev2( $k, $jprep->$k );
-}
-
-//... vitrification
-$flg_multi = count( $vit = $json1->experiment->vitrification ) > 1;
-$num = 1;
-foreach ( (array)$json1->experiment->vitrification as $n1 => $c1 ) {
-
-	$o_data->lev3order(
-		[ 'instrument', 'cryogenName', 'temperature', 'humidity', 'method' ]
-	);
-	foreach ( $c1 as $k => $v ) {
-		$o_data->lev3( $k, $k == 'instrument' ? _met_pop( $v, 'e' ) : $v );
+$o_data->lev2( 'method', _imp( TERM_STAIN, TERM_CRYOEM ) );
+$o_data->lev2( 'Processing', TERM_REC_MET );
+$o_data->lev2ign([ 'structure_determination_id', 'method' ]);
+foreach ( $main_json->structure_determination[0] as $key => $val ) {
+	if ( ! is_string( $val ) ) continue;
+	if ( $key == 'aggregation_state' ) {
+		$val = strtr( $val,[
+			'twoD'   => '2D' ,
+			'threeD' => '3D' ,
+			'Array'  => ' array'
+		]);
 	}
-	$o_data->end3( 'Vitrification' . ( $flg_multi ? "|#$num" : '' ) );
-	++ $num;
-}
-$o_data->end2( 'Sample preparation' );
-
-//.. Imaging
-$flg_multi = count( $json3->structure_determination[0]->microscopy ) > 1;
-
-$num = 1;
-foreach ( $json1->experiment->imaging as $n1 => $o_img ) {
-
-	//... EM
-	$o_data->lev2( 'Experimental equipment', _eqimg( $o_img->microscope ) );
-	$o_data->lev2( 'Imaging', [
-		'microscope'	=> _met_pop( $o_img->microscope, 'e' ) ,
-		'Date'			=> $o_img->date ,
-		'details'		=> $o_img->details ,
-	]);
-
-	//... gun
-	foreach ( [ 'electronSource', 'acceleratingVoltage', 'electronDose',
-				'electronBeamTiltParams', 'illuminationMode' ] as $n )
-		$o_data->lev3( $n, _wikipe_em( $n, $o_img->$n ) );
-	$o_data->end3( 'Electron gun' );
 	
-	//... lens
-	$o_data->lev3( 'Magnification', _imp( 
-		_ifnn( $o_img->nominalMagnification, '\1 X ('. _l( 'nominal' ) . ')' ),
-		_ifnn( $o_img->calibratedMagnification, '\1 X ('. _l( 'calibrated' ) . ')' )
-	));
-
-	foreach( [ 'astigmatism', 'nominalCs', 'imagingMode' ] as $n )
-		$o_data->lev3( $n, _wikipe_em( $n, $o_img->$n ) );
-
-	$min = $o_img->nominalDefocusMin;
-	$max =  $o_img->nominalDefocusMax;
-	if ( $min . $max != '' ) {
-		$o_data->lev3( 'Defocus', $min != $max ? "$min - $max nm" : "$max nm");
-	}
-//	foreach ( [ 'energyFilter', 'energyWindow' ] as $n )
-	$o_data
-		->lev3( 'energyFilter', _met_pop( $o_img->energyFilter, 'e' ) )
-		->lev3( 'energyWindow', _ifnn( $o_img->energyWindow, '\1 eV' ) )
-	;
-
-	$o_data->end3( 'lens' );
-
-	//... Sample Holder
-	$o_data
-		->lev3( 'Holder' , $o_img->specimenHolder )
-		->lev3( 'Model'  , $o_img->specimenHolderModel )
-	;
-
-	$min = $o_img->tiltAngleMin;
-	$max = $o_img->tiltAngleMax;
-	if ( $min || $max )
-		$o_data->lev3( 'Tilt Angle', "$min - $max &deg;" );
-
-	$max = $o_img->temperatureMax;
-	$min = $o_img->temperatureMin;
-	$o_data->lev3( 'Temperature' ,
-		$o_img->temperature
-		. ( $min . $max ? _kakko( "$min - $max K" ) : '' )
-	);
-		
-	$o_data->end3( 'Specimen Holder' );
-
-	//... camera
-	$o_data->lev3( 'Detector', _met_pop( $o_img->detector, 'e' ) );
-	if ( $o_img->detectorDistance ) {
-		$o_data->lev3( 'Distance', $o_img->detectorDistance );
-	}
-	$o_data->end3( 'Camera' );
-
-	//... output
-	$o_data->end2( 'Electron microscopy imaging' . ( $flg_multi ? "|#$num" : '' ) );
-	++ $num;
+	$o_data->lev2( $key, $val );
 }
+$o_data->end2( 'structure_determination' );
 
-//.. imageAcquisition
-$flg_multi = count( (array)$json1->experiment->imageAcquisition ) > 1;
-$o_data->lev3order([
-	'numDigitalImages',
-	'scanner',
-	'samplingSize',
-	'quantBitNumber',
-	'odRange',
-	'details',
-	'URLRawData',
+//.. 残り全部 pre
+//... 配置換え
+define( 'TAG_RELOC', [
+	'microscopy' => [
+		'electron beam' => [
+			'acceleration_voltage' ,
+			'electron_source' ,
+		],
+		'electron optics'  => [
+			'c2_aperture_diameter', 
+			'calibrated_defocus_max' ,
+			'calibrated_defocus_min' ,
+			'calibrated_magnification' ,
+			'illumination_mode' ,
+			'imaging_mode' ,
+			'nominal_cs' ,
+			'nominal_defocus_max' ,
+			'nominal_defocus_min' ,
+			'nominal_magnification'  ,
+			'camera_length' ,
+		] ,
+		'sample stage' => [
+			'specimen_holder' ,
+			'specimen_holder_model'  ,
+			'cooling_holder_cryogen' ,
+			'tilt_angle_min' ,
+			'tilt_angle_max' ,
+			'tilt_angle' ,
+			'tilt_series' ,
+		]
+	],
+	'modelling' => [
+		'refinement' => [
+			'refinement_space' ,
+			'refinement_protocol' ,
+			'overall_bvalue' ,
+			'target_criteria' ,
+		]
+	]
 ]);
 
-foreach ( (array)$json1->experiment->imageAcquisition as $n1 => $c ) {
-	foreach ( (array)$c as $k => $v ) {
-		$o_data->lev3( $k, _instr( 'URL', $k ) && $v != '' ? _ab( $v, $v ) : $v );
+//... 順番
+define( 'MET_TAG_ORDER', [
+	'microscopy' => [
+		'microscope' ,
+		'electron beam' ,
+		'electron optics' ,
+		'specialist_optics' ,
+		'sample stage' ,
+		'temperature' ,
+	] ,
+	'processing' => [
+		'crystal_parameters' ,
+		'crystallography_statistics' ,
+		'molecular_replacement' ,
+		'particle_selection' ,
+		'segment_selection' ,
+		'extraction' ,
+		'ctf_correction' ,
+		'startup_model' ,
+		'symmetry_determination_software_list' ,
+		'final_two_d_classification' ,
+		'initial_angle_assignment' ,
+		'final_three_d_classification' ,
+		'final_angle_assignment' ,
+		'final_reconstruction' ,
+		'merging_software_list' ,
+		'details' ,
+	] ,
+]);
+
+//... タグの種類
+define( 'TAG_TYPE', [
+	'met' => [
+		'energy_filter.name' => 'e' ,
+		'electron_source'=> 'e', 
+		'film_or_detector_model' => 'e' ,
+		'microscope' => 'e' ,
+		'instrument' => 'e' ,
+		'phase_plate' => 'e' ,
+		'grid.model' => 'e' ,
+		'specimen_holder' => 'e' ,
+		'specimen_holder_model' => 'e' ,
+		'sph_aberration_corrector' => 'e' ,
+		'detector_mode' => 'm' ,
+		'software.name' => 's' ,
+	],
+	'_' => [
+		'initial_model.access_code' => 'pdb' ,
+		'pdb_id' 			=> 'pdb' ,
+		'emdb_id'			=> 'emdb' ,
+		'point_group'		=> 'symmetry' ,
+		'axial_symmetry'	=> 'symmetry' ,
+		'imaging_mode'		=> 'wikipe' ,
+		'formula'	=> 'formula' ,
+		'name'	=> 'wikipe' ,
+	] ,
+	'table' => [
+		'component' => true ,
+		'software' => true ,
+		'initial_model' => true ,
+//		'image_recording' => true , //- 子要素に枝があるのでうまくテーブル化できない
+		'fiducial_marker' => true,
+		'shell' => true
+	]
+]);
+
+//... 一個しかない手法タイプはIDを消す
+$type2name = [
+	'preparation'	=> 'Sample preparation' ,
+	'microscopy'	=> 'Electron microscopy' ,
+	'processing'	=> 'Image processing' ,
+	'modelling'		=> 'Atomic model buiding' ,
+];
+$type2idname = [
+	'preparation'	=> 'preparation_id' ,
+	'microscopy'	=> 'microscopy_id' ,
+	'processing'	=> 'image_processing_id' ,
+	'image_recording' => 'image_recording_id' ,
+	'support_film'	=> 'film_type_id' ,
+];
+
+//- processing中にimage_recording_idがある
+$flg_single_id = [];
+$flg_single_tag = [];
+foreach ([
+	'preparation'	=> 'preparation' , 
+	'microscopy'	=> 'microscopy' , 
+	'processing'	=> 'processing' ,
+	'image_recording' => 'microscopy->image_recording' ,
+	'support_film'	=> 'preparation[*]->grid->support_film'
+] as $type => $branch ) {
+	if ( count(
+		_branch( $main_json->structure_determination[0], $branch )
+	) == 1 ) {
+		$flg_single_tag[ $type ] = true;
+		$flg_single_id[ $type2idname[ $type ] ]=  true;
 	}
-	$o_data->end3( 'image acquisition' . ( $flg_multi ? '|#' . ( $n1 + 1 ) : '' ) );
 }
+//_testinfo( $flg_single_id, 'flg_single_id' );
+//_testinfo( $flg_single_tag, 'flg_single_tag' );
 
-$o_data
-	->lev2( 'Raw data', $emp_link )
-	->end2( 'image acquisition' )
-;
+//.. 残り全部 メイン info
+foreach ([
+	'preparation'	=> $main_json->structure_determination[0]->preparation, 
+	'microscopy'	=> $main_json->structure_determination[0]->microscopy, 
+	'processing'	=> $main_json->structure_determination[0]->processing,
+	'modelling'		=> $main_json->interpretation->modelling,
+] as $type => $c0 ) foreach ( (array)$c0 as $type_num => $c ) {
 
-//.. Processing
-
-//... method
-$o_data->lev3( 'Method', TERM_REC_MET );
-
-//... processing 手法別
-
-foreach ( (array)$json1->processing as $n1 => $c1 ) {
-	if ( $n1 == 'method' || $n1 == 'reconstruction' ) continue;
-	$o = '';
-	foreach ( $c1 as $n2 => $c2 ) {
-		if ( $n2 == 'appliedSymmetry' )
-			$c2 = _symmetry_text( $c2 );
-		$o_data->lev3( $n2, $c2 );
+	//... 前処理 タグ再配置
+	foreach ( (array)TAG_RELOC[ $type ] as $to => $from_list ) {
+		$c->$to = new stdClass;
+		foreach ( $from_list as $from ) {
+			if ( $c->$from ) {
+				$c->$to->$from = $c->$from;
+				unset( $c->$from );
+			}
+			if ( $c->{"$from.units"} ) {
+				$c->$to->{"$from.units"} = $c->{"$from.units"};
+				unset( $c->{"$from.units"} );
+			}
+		}
 	}
-}
-$o_data->end3( 'Processing' );
+	$o_data->lev2order( (array)MET_TAG_ORDER[ $type ] );
+
+	//... 本処理
+	_expmet_lev( $c );
+
+	//... emn 追加情報
+	if ( $type == 'processing' ) {
+		if ( file_exists( _fn( 'fsc_img_s', ID ) ) ) {
+			$o_data->lev2(
+				TERM_FSC_DESC. _obj('wikipe')->get('Fourier shell correlation')->pop(),
+				_img_sl( 'fsc_img_s', 'fsc_img_l' )
+			);
+		}
+	} else if ( $type == 'modelling' ) {
+		$o_data->lev2(
+			'Output model',
+			_ent_catalog( _emn_json( 'fit', DID ), [ 'mode'=>'list' ] )
+		);
+	} else if ( $type == 'microscopy' ) {
+		$o_data->lev2( 'Experimental equipment', _eqimg( $c->microscope ) );
+	}
 	
-//... reconstruction
-$x = $json1->processing->reconstruction;
-$flg_multi = count( (array)$x ) > 1;
-$num = 1;
-foreach ( (array)$x as $c1 ) {
-	$o = [];
-	foreach ( $c1 as $k => $v )
-		$o[$k] = $k == 'software'
-			? _met_pop_split( $v, 's' )
-			: $v
-		;
-	$o_data->lev2( '3D reconstruction' . ( $flg_multi ? "|#$num" : '' ), $o );
-	++ $num;
-}
-
-if ( file_exists( _fn( 'fsc_img_s', ID ) ) ) {
-	$o_data->lev2(
-		TERM_FSC_DESC. _obj('wikipe')->get('Fourier shell correlation')->pop(),
-		_img_sl( 'fsc_img_s', 'fsc_img_l' )
+	//... 見出し
+	$o_data->end2( $type2name[ $type ]
+		. ( $flg_single_tag[ $type ]
+			? ''
+			: '| '. _sharp( $c->{ $type2idname[ $type ] } ?: $type_num + 1 )
+		)
 	);
 }
 
-$o_data->end2( 'Image processing' );
-
-//..  Fitting
-$num = 1;
-foreach ( (array)$json1->experiment->fitting as $c1 ) {
-	$o_data->lev3order([
-		'software', 'refProtocol', 'targetCriteria', 'refSpace',
-		'details', 'pdbEntryId', 'pdbChainId'
-	]);
-	foreach( $c1 as $n2=>$c2 ) {
-		if ( is_array( $c2 ) )
-			$c2 = _imp( $c2 );
-		if ( $n2 == 'software' )
-			$c2 = _met_pop_split( $c2, 's' );
-		$o_data->lev3( $n2, $c2 );
+//.. func _expmet_lev (多重処理)
+function _expmet_lev( $obj, $parents = [] ) {
+	global $flg_single_id;
+	$parents_rep = [];
+	foreach ( array_slice( $parents, 1 ) as $p ) {
+		$parents_rep[] = is_numeric( $p ) ? "#$p" :  _trep( $p );
 	}
-	$o_data->end3( 'Modeling' . "| #$num" );
-	++ $num;
+	$parents_rep = array_filter( $parents_rep );
+	$parents_rep = $parents_rep
+		? implode( ' - ', $parents_rep ). ' - '
+		: ''
+	;
+	_prep_unit( $obj );
+	foreach ( (array)$obj as $key => $val ) {
+		if ( $flg_single_id[ $key ] ) continue;
+		if ( is_array( $val ) && count( $val ) == 1 ) $val = $val[0];
+		if ( TAG_TYPE['table'][ $key ] )
+			$val = _to_table( $val, $key, $parents );
+		if ( is_string( $val ) ) { 
+			//- val
+			$val = _val_prep( $val, $key, $parents );
+			//- 出力
+			if ( ! $parents ) {
+				_set_data()->lev2( $key, $val );
+			} else {
+				_set_data()->lev3(
+					$parents_rep. _trep( $key ),
+					$val
+				);
+			}
+		} else {
+			//- 再帰呼び出し
+			_expmet_lev( $val, array_merge( $parents, [ $key ] ) );
+		}
+		if ( ! $parents )
+			_set_data()->end3( $key );
+	}
 }
-
-$o_data
-	->lev3( '_', _ent_catalog( _emn_json( 'fit', DID ), [ 'mode'=>'icon' ] ) )
-	->end3( 'Output model' )
-;
-
-$o_data->end2( 'Atomic model buiding' );
 
 _simple()->time( 'exp.' );
 
+//.. func: _valrep
+function _val_prep( $val, $key, $parents = [] ) {
+	//- 既にhtmlタグが付いている？
+	if ( _instr( '<', $val ) ) return $val;
+
+	$info = null;
+	//... タグ種類判別
+	foreach ( TAG_TYPE as $type => $key_match ) {
+		if ( $key_match[ $key ] ) {
+			$info = $key_match[ $key ];
+			break;
+		}
+		foreach ( $key_match as $keym_key => $keym_val ) {
+			if ( ! _instr( '.', $keym_key ) ) continue;
+			list( $keym0, $keym1 ) = explode( '.', $keym_key );
+			if ( $keym1 == $key && in_array( $keym0, $parents ) ) {
+				$info = $keym_val;
+				break 2;
+			}
+		}
+	}
+	//... 変換
+	if ( $info ) {
+		if ( $type == 'met' )
+			return _met_pop( $val, $info );
+		if ( $info == 'symmetry' )
+			return _symmetry_text( $val );
+		if ( $info == 'wikipe')
+			return $val . _obj('wikipe')->pop_xx( $val );
+		if ( $info == 'formula')
+			return _reg_rep( $val, [ '/[0-9]+/' => '<sub>$0</sub>' ] )
+				. _obj('wikipe')->pop_xx( $val )
+			;
+		if ( $info == 'pdb' )
+			return BR. _ent_catalog( 'pdb-'. $val, [ 'mode'=>'icon' ] );
+		if ( $info == 'emdb' )
+			return BR. _ent_catalog( $val, [ 'mode'=>'icon' ] );
+	}
+	return $val;
+}
+
+//.. _to_table
+function _to_table( $val, $key, $parents = [] ) {
+	if ( ! is_array( $val ) || count( $val ) < 2 ) return $val;
+	foreach ( $val as &$obj ) {//- unitを処理しておく
+		_prep_unit( $obj );
+	}
+	unset( $obj );
+	$parents = array_merge( [ $key ], $parents );
+	//- 行ヘッダ
+	$heads = [];
+	foreach ( $val as $c ) foreach ( $c as $k => $v ) {
+		$heads[ $k ] = true;
+		$heads_rep[ _trep( $k ) ] = true;
+	}
+
+	//- 一行のみなら、コンマ区切り	
+	if ( count( $heads ) == 1 ) {
+		$out = [];
+		foreach ( $val as $c ) {
+			$out[] = _val_prep( $c->$k, $k, $parents );
+		}
+		return '('. _trep( $k ). ': '. _imp( $out ). ')';
+	}
+
+	//- テーブル作成
+	$rows = [];
+	foreach ( $val as $c ) {
+		$r = [];
+		foreach ( array_keys( $heads ) as $k ) {
+			$r[] = is_string( $c->$k )
+				? _val_prep( $c->$k, $k, $parents )
+				: _to_str( $c->$k )
+			;
+		}
+		$rows[]= TD. implode( TD, $r );
+	}
+	return _t( 'table', ''
+		. TR_TOP. TH. implode( TH, array_keys( $heads_rep ) ) 
+		. TR. implode( TR, $rows )
+	);
+}
+
 //. function
+//.. _pstable_top: 断面図テーブルのヘッダ
 function _pstable_top( &$map_info, $src, $xyz ) {
 	global $map_info;
 	return 	TD
@@ -1500,68 +1584,37 @@ function _pstable_row( $img, $name, $in1, $in2, $in3, $dn = '' ) {
 	return $ret;
 }
 
-//.. _mol_wt
-//- 連想配列の中の分子量関連の表記をまとめる
-function _mol_wt( $o ) {
-	return [
-		'molWtTheo'		=> _mw_calc( $o->molWtTheo ) ,
-		'molWtExp' 		=> _mw_calc( $o->molWtExp ) ,
-		'molWtMethod'	=> $o->molWtMethod
-	];
-}
-
-function _mw_calc( $w ) {
-	if ( $w == '' ) return;
-	$w = preg_replace( '/[^0-9\.]/', '', ( $w ) );
-	if ( $w > 1000 ) return ( $w / 1000 ) . 'GDa';
-	if ( $w > 1    ) return "$w MDa";
-	return ( $w * 1000 ) . " kDa";
-}
-
-
-//.. _emdb_dbid_link: 各種データベースへのリンクを生成して返す
-function _emdb_dbid_link( $name, $str ) {
-	if ( is_array( $str ) )
-		$str = _imp( $str );
-	$str = trim( $str );
-	$ret = [];
-
-	if ( $name == 'refGo' ) {
-		//- GO
-		preg_match_all( '/[0-9]+/', $str, $ids );
-		foreach ( (array)$ids[0] as $i )
-			$ret[] = _obj('dbid')->pop( 'GO', $i );
-	} else if ( $name == 'refInterpro' ) {
-		//- InterPro
-		preg_match_all( '/[0-9]+/', $str, $ids );
-		foreach ( (array)$ids[0] as $i )
-			$ret[] = _obj('dbid')->pop( 'InterPro', "IPR$i" );
-	} else if ( $name == 'refUniProt' ) {
-		//- UniProt
-		preg_match_all( '/[A-Za-z0-9]+/', $str, $ids );
-		foreach ( (array)$ids[0] as $i )
-			$ret[] = _obj('dbid')->pop( 'UniProt', $i );
-	} else {
-		//- それ以外（ないはずだけど）
-		$ret = [ $str ];
+//.. _prep_unit 単位と、ソフトウェアバージョン
+function _prep_unit( &$obj ) {
+	foreach ( (array)$obj as $key => $val ) {
+		if ( ! _instr( '.units', $key ) ) continue;
+		$p = explode( '.', $key, 2 )[0];
+		if ( $val == 'MDa' ) {
+			if ( $obj->$p < 0.001 ) {
+				$obj->$p = ( $obj->$p * 1000000 ). ' Da';
+			} else if ( $obj->$p < 1 ) {
+				$obj->$p = ( $obj->$p * 1000 ). ' KDa';
+			} else {
+				$obj->$p = $obj->$p. ' MDa';
+			}
+		} else {
+			$obj->$p .= ' '. ( UNIT_REP['full'][ $val ] ?: strtr( $val, UNIT_REP['rep'] ) );
+		}
+		unset( $obj->$key );
 	}
-	return _imp( $ret );
+	if ( $obj->name && $obj->version ) {
+		$obj->name = _met_pop( $obj->name, 's' ). ' (ver. '. $obj->version. ')';
+		unset( $obj->version );
+	}
 }
 
-//.. _wikipe_em
-function _wikipe_em( $key, $val ) {
-	return $val
-		. (in_array( $key, [ 'electronSource', 'imagingMode', 'illuminationMode' ] )
-			? _obj('wikipe')->icon_pop( $val )
-			: ''
-		)
+//.. _to_str: 配列やオブジェクトを無理やり文字列化
+function _to_str( $in ) {
+	return is_string( $in ) ? $in
+		: _reg_rep( json_encode( $in ), [
+			'/[\[\]{}"]/' => '',
+			'/(:|,)/' => '$1 ' ,
+			'/^null$/' => '' ,
+		])
 	;
-}
-
-//.. _met_split
-function _met_pop_split( $name, $mcateg ) {
-	return _met_pop( 
-		_reg_rep( $name,[ '/,/' => '@|@', '/ ,?and /' => '@|@' ] ) ,
-		$mcateg
-	);
 }

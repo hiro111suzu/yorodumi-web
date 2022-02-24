@@ -34,6 +34,14 @@ tsvview.php(12) : foreach ( (array)_file( FN_TSV ) as $line) {
 tsvview.php(24) : if ( $data )
 tsvview.php(28) : _simple()->out([
 tsvview.php(36) : function _add_table( $header, $data ) {
+jsmol.php(7) : function _t( $tag, $str = '' ) {
+jsmol.php(17) : if ( $id == '' )
+jsmol.php(42) : if ( stripos( $use, 'ja' ) !== false )
+jsmol.php(95) : function _defo() { 
+jsmol.php(99) : function _c_defo() {
+_categ_size.php(17) : foreach ( $json as $categ => $data ) {
+_categ_size.php(23) : function _json_size( $j ) {
+_categ_size.php(28) : foreach ( $sizes as $categ => $size ) {
 _abctrans.php(11) : foreach ( [
 _abctrans.php(93) : foreach ( $res as $o ) {
 _cif2pdb.php(6) : if ( ! file_exists( $fn ) ) {
@@ -147,6 +155,10 @@ _mng-pubmedid.php(57) : foreach( TSV_DATA[ 'pdb' ] as $id => $pmid ) {
 _mng-pubmedid.php(86) : foreach ( array_slice( array_keys( $clist ), PAGE * 10, RANGE ) as $num => $title ) {
 _mng-pubmedid.php(109) : _out( ''
 _mng-pubmedid.php(118) : function _pubmed_url( $str ) {
+pop_mov.php(12) : foreach ( $movinfo as $n => $a ) {
+pop_mov.php(109) : function _movnum(){
+pop_mov.php(127) : function _gmenu_items() {
+_mng-sqliteDBs.php(2) : if ( count( array_keys( $_GET ) ) == 0 ) {
 pop_sview.php(10) : foreach ( file( "$dn/pg1.pdb" ) as $n => $l ) {
 common-func.php(6) : if ( L_EN ) {
 common-func.php(18) : if ( TEST ) {
@@ -791,6 +803,14 @@ cls_pager.php(56) : function set( $in ) {
 cls_pager.php(74) : function btn() {
 cls_pager.php(121) : function msg() {
 cls_pager.php(155) : function both() {
+cls_taxo.php(11) : function from_db( $name, $cn_given = '' ) {
+cls_taxo.php(27) : function from_key( $key ) {
+cls_taxo.php(39) : function from_json( $key, $name, $json ) {
+cls_taxo.php(47) : function parse( $name, $cn_given = '' ) {
+cls_taxo.php(87) : function item( $name = '', $cname = '' ) {
+cls_taxo.php(106) : function pop_cont() {
+cls_taxo.php(147) : function wikipe_img( $img, $flg_large = false ) {
+cls_taxo.php(160) : function wikipe_img_page( $img ) {
 quick.php(13) : if ( $main_id->db == 'sasbdb-model' )
 quick.php(26) : if ( DB == 'emdb' ) {
 quick.php(33) : if ( _getpost( 'ajax' ) == 'chem2pdbs' ) {
@@ -898,6 +918,24 @@ cookiehoge.php(27) : if ( TESTSV ) foreach ( glob( 'mng-*' ) as $fn )
 cookiehoge.php(70) : if ( count( $ck ) > 0 ) foreach ( $ck as $name=>$value ) {
 cookiehoge.php(78) : function _tr( $name, $desc, $sets = '' ) {
 cookiehoge.php(96) : function _link( $name, $s = '' ) {
+csmodel-cif.php(12) : if ( ! file_exists( $fn ) )
+csmodel-cif.php(31) : foreach ( range( 0, 10000 ) as $ln ) { //- foreach categ
+csmodel-cif.php(67) : function _atom() {
+csmodel-cif.php(150) : function _chain( $lines, $atoms, $idindex ) {
+csmodel-cif.php(210) : function _udist( $c1, $c2 ) {
+csmodel-cif.php(221) : function _next() {
+csmodel-cif.php(232) : function _ok() {
+csmodel-cif.php(239) : function _bufline() {
+csmodel-cif.php(247) : function _getline() {
+csmodel-cif.php(256) : function _getsub() {
+csmodel-cif.php(265) : function _out( $s ) {
+csmodel-cif.php(273) : function _end() {
+csmodel-cif.php(284) : foreach ( explode( "\n", _gzload( $fn ) ) as $line ) {
+csmodel-cif.php(302) : foreach ( $models as $modelid => $chains ) {
+csmodel-cif.php(375) : function _udist( $c1, $c2 ) {
+csmodel-cif.php(383) : function _linerep( $resid, $cid, $atomid, $atom ) {
+csmodel-cif.php(396) : function _lenstr( $s, $num ) {
+csmodel-cif.php(403) : function _getval( $n1, $n2 ) {
 ysearch.php(10) : _define_term(<<<EOD
 ysearch.php(56) : define( 'DB_NAMES', [
 ysearch.php(70) : if ( G_AJAX == 'form' ) {
@@ -911,6 +949,13 @@ ysearch.php(213) : function _make_ysform() { return  ''
 ysearch.php(273) : function _opt_tr( $name, $icon, $th, $td ) {
 ysearch.php(281) : function _hit_item() {
 ysearch.php(330) : function _make_result() {
+csmodel.php(14) : if ( ! file_exists( $fn ) )
+csmodel.php(19) : foreach ( explode( "\n", _gzload( $fn ) ) as $line ) {
+csmodel.php(37) : foreach ( $models as $modelid => $chains ) {
+csmodel.php(110) : function _udist( $c1, $c2 ) {
+csmodel.php(118) : function _linerep( $resid, $cid, $atomid, $atom ) {
+csmodel.php(131) : function _lenstr( $s, $num ) {
+csmodel.php(138) : function _getval( $n1, $n2 ) {
 upload_size.php(11) : _simple()->hdiv(
 doc.php(12) : _define_term( <<<EOD
 doc.php(46) : if ( ID ) {
@@ -1040,6 +1085,9 @@ omofh.php(214) : function _disp_pair() {
 omofh.php(283) : function _pair_info( $ids ) {
 omofh.php(299) : function _levelbar( $v ) {
 omofh.php(305) : function _val( $v ) {
+jmol_view.php(23) : if ( is_dir( '/var/www/html/emnavi' ) ) {
+jmol_view.php(41) : function _defo() { 
+jmol_view.php(45) : function _c_defo() {
 jsonview.php(17) : if ( _instr( '.', $id ) || _instr( '/', $id ) )
 jsonview.php(21) : if ( ! $adr && $id ) {
 jsonview.php(28) : if ( preg_match( '/^[0-9]{7,8}$/', $id ) === 1 )
@@ -1118,6 +1166,24 @@ omo-search.php(415) : if ( NO_ID && ! UPLOAD && _getpost( 'id' ) != '' ) {
 omo-search.php(428) : if ( $uihost != '' ) {
 omo-search.php(514) : function _term_ul( $term ) {
 omo-search.php(522) : function _sample_img( $a ) {
+taxo.php(25) : _define_term( <<<EOD
+taxo.php(94) : if ( $ajax == 'stax' )
+taxo.php(97) : if ( $ajax == 'pop' )
+taxo.php(100) : if ( $ajax == 'line' )
+taxo.php(103) : if ( in_array( $ajax, [ 'emdb', 'pdb', 'sas' ] ) ) {
+taxo.php(130) : if ( $lin == '' && ! FLG_KEY_HIT) {
+taxo.php(140) : function _search( $name ) {
+taxo.php(171) : if ( $lin != '' && ! FLG_KEY_HIT) {
+taxo.php(180) : function _lineage( $lin ) {
+taxo.php(205) : function _result_table( $hits ) {
+taxo.php(238) : function _cell( $obj, $db ) {
+taxo.php(247) : if ( ! FLG_KEY_HIT) {
+taxo.php(253) : if ( $data_hit ) {
+taxo.php(420) : if ( KEY ) foreach ([
+taxo.php(433) : function _str_ent( $db ) {
+taxo.php(463) : if ( KEY && TEST ) {
+taxo.php(468) : function _func() {
+taxo.php(531) : function _ref( $s, $sub = '-' ) {
 omo-web-common.php(8) : define( 'DN_OMO', TESTSV
 omo-web-common.php(20) : _define_term( <<<EOD
 omo-web-common.php(86) : function _filter_form( $opt = [] ) {
@@ -1137,6 +1203,15 @@ omo_clust.php(268) : function _v( $val, $o = 3 ) {
 omo_clust.php(273) : function _levelbar( $v ) {
 omo_clust.php(280) : function _keta_format( $num = '*', $keta = 3 ) {
 omo_clust.php(285) : function _fn2( $type, $cycle = '*', $val1 = '*' ) {
+usecount.php(16) : if ( _getpost( 'ajax' ) == 'list' ) {
+usecount.php(39) : if ( ID == '' ) {
+usecount.php(72) : function _getlist() {
+usecount.php(118) : function _ent( $id, $data = [] ) {
+usecount.php(130) : function _ids2link( $id, $str, $mode ) {
+usecount.php(144) : function _dig( $id, $lev = 0 ) {
+omo_gmref.php(25) : foreach ( range( 0, 9 ) as $n ) {
+omo_gmref.php(32) : foreach ( array_slice( $json[ 's' ], 0, $num ) as $i => $x ) {
+omo_gmref.php(65) : function _idrep( $i ) {
 validation_rep.php(5) : if ( substr( ID, 0, 1 ) == 'e' ) {
 validation_rep.php(33) : header( 'Content-type: '. [
 cls_simple.php(27) : function page_conf( $in ) {
@@ -1277,47 +1352,3 @@ _mng-emdb-branch.php(10) : _simple()->hdiv(
 _mng-emdb-branch.php(24) : if ( ! IDS ) {
 _mng-emdb-branch.php(29) : foreach ( IDS ?: $ids as $id ) {
 _mng-emdb-branch.php(44) : _simple()->hdiv(
-jsmol.php(7) : function _t( $tag, $str = '' ) {
-jsmol.php(95) : function _defo() { 
-jsmol.php(99) : function _c_defo() {
-_categ_size.php(23) : function _json_size( $j ) {
-pop_mov.php(109) : function _movnum(){
-pop_mov.php(127) : function _gmenu_items() {
-_mng-sqliteDBs.php(12) : 	function adminer_object() {
-cls_taxo.php(11) : function from_db( $name, $cn_given = '' ) {  /// class cls_taxo
-cls_taxo.php(27) : function from_key( $key ) {  /// class cls_taxo
-cls_taxo.php(39) : function from_json( $key, $name, $json ) {  /// class cls_taxo
-cls_taxo.php(47) : function parse( $name, $cn_given = '' ) {  /// class cls_taxo
-cls_taxo.php(87) : function item( $name = '', $cname = '' ) {  /// class cls_taxo
-cls_taxo.php(106) : function pop_cont() {  /// class cls_taxo
-cls_taxo.php(147) : function wikipe_img( $img, $flg_large = false ) {  /// class cls_taxo
-cls_taxo.php(160) : function wikipe_img_page( $img ) {  /// class cls_taxo
-csmodel-cif.php(67) : function _atom() {
-csmodel-cif.php(150) : function _chain( $lines, $atoms, $idindex ) {
-csmodel-cif.php(210) : function _udist( $c1, $c2 ) {
-csmodel-cif.php(221) : function _next() {
-csmodel-cif.php(232) : function _ok() {
-csmodel-cif.php(239) : function _bufline() {
-csmodel-cif.php(247) : function _getline() {
-csmodel-cif.php(256) : function _getsub() {
-csmodel-cif.php(265) : function _out( $s ) {
-csmodel-cif.php(273) : function _end() {
-csmodel.php(110) : function _udist( $c1, $c2 ) {
-csmodel.php(118) : function _linerep( $resid, $cid, $atomid, $atom ) {
-csmodel.php(131) : function _lenstr( $s, $num ) {
-csmodel.php(138) : function _getval( $n1, $n2 ) {
-jmol_view.php(40) : function j( s ) { document.jmol.script( 'hide water;' + s ); }
-jmol_view.php(41) : function _defo() { 
-jmol_view.php(45) : function _c_defo() {
-taxo.php(140) : function _search( $name ) {
-taxo.php(180) : function _lineage( $lin ) {
-taxo.php(205) : function _result_table( $hits ) {
-taxo.php(238) : function _cell( $obj, $db ) {
-taxo.php(433) : function _str_ent( $db ) {
-taxo.php(468) : function _func() {
-taxo.php(531) : function _ref( $s, $sub = '-' ) {
-usecount.php(72) : function _getlist() {
-usecount.php(118) : function _ent( $id, $data = [] ) {
-usecount.php(130) : function _ids2link( $id, $str, $mode ) {
-usecount.php(144) : function _dig( $id, $lev = 0 ) {
-omo_gmref.php(65) : function _idrep( $i ) {

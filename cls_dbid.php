@@ -26,6 +26,7 @@ function set_key( $db_or_key, $id = '' ) {
 		$d = strtolower( $db_or_key );
 		$this->key = ([
 			'uniprot'	=> 'un' ,
+			'uniprotkb'	=> 'un' ,
 			'bird'		=> 'bd' ,
 			'interpro'	=> 'in' ,
 			'smart'		=> 'sm' ,

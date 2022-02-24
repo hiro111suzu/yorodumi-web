@@ -1,5 +1,5 @@
 .	unit
-..	quick-emdb
+..	quick-emdb v3以降、使っていない
 aLength	&Aring;
 acceleratingVoltage	kV
 alpha	%deg;
@@ -305,7 +305,7 @@ wikipe_img_l	https://upload.wikimedia.org/wikipedia/commons/thumb/[id]/150px-[id
 wikipe_img	data/taxo/wicon/[id]
 
 ..	mng_dir
-dir	?path=[id]
+dir	_mng-dir.php?path=[id]
 jsonview	jsonview.php?path=[id]
 tsvview	tsvview.php?path=[id]
 txt	disp.php?path=[id]
@@ -392,6 +392,7 @@ user_vq50	<omokage>/userdata<s1>/<id>.vq30.pdb
 
 ..	mng_dir
 emdb_ftp	<fdata>/emdb-mirror/structures/EMD-<id>
+marem_link	<prep>/marem/link/<id>.tsv
 
 ..	cifdic
 dic_sas_json	<data>/sas/sascif_dic.json.gz
@@ -406,7 +407,10 @@ unp_json	<data>/unp/<id>.json.gz
 maindbjson	<prep>/maindbjson/<id>.json
 pdb_met	<prep>/met/pdb/<id>.json
 pap_info	<prep>/pap/info/<id>.json.gz
+pap_emdb	<prep>/pap/emdb/<id>.json
+pap_pdb	<prep>/pap/pdb/<id>.json
 prd	<data>/prd/<id>.json.gz
+emdb_met	<prep>/met/emdb/<id>.json
 
 ..	disp
 unp_json	<data>/unp/<id>.json.gz
@@ -811,7 +815,8 @@ name_e	PDBj help
 name_j	PDBjヘルプ
 blank	1
 
-..	mng	
+.	mng
+..	short_name
 problem	_mng.php?mode=problem
 todolist	_mng-todolist.php
 pdbimg	_mng-pdbimg.php
@@ -819,6 +824,7 @@ categ	_mng.php?mode=categ
 log	_mng.php?mode=logview
 pubmed	_mng-pubmedid2.php
 sqlite	_mng-sqliteDBs.php
+emdbtag	_mng-emdb-tags.php
 
 prep	_mng-dir.php?path=/data/yorodumi/prepdata
 data	_mng-dir.php?path=/data/yorodumi/emnavi/data
@@ -826,7 +832,9 @@ fdata	_mng-dir.php?path=/data/yorodumi/fdata
 dir	_mng-dir.php
 
 emn	.
-top	.
+top	_mng.php
+-	_mng.php
+"."	_mng.php
 ym	quick.php
 stat	stat.php
 pap	pap.php
@@ -834,12 +842,13 @@ cifdic	cifdic.php
 
 .	trep_auto
 ..	emdb
-/([a-z])([A-Z])/	$1 $2
-/^num /	Number of_
-/ Flag$/	
-/2d_/	2D_
-/3d_/	3D_
+
+/_flag$/	?
+/two_d__/	2D_
+/three_d_/	3D_
+/_id$/	_ID
 /_/	" "
+/^sci_/	
 
 ..	pdb
 /^number_atoms_(.+)$/	\1 atoms

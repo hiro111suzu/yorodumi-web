@@ -11,7 +11,7 @@ define( 'ID'	, _getpost( 'id' ) ?: _getpost( 'key' ) );
 
 $ret = [];
 if ( MODE == 'surflev' ) {
-	$ret = _json_load2( _fn( 'emdb_json3', $_GET[ 'id' ] ) )->map->contour[0]->level;
+	$ret = _json_load2( _fn( 'emdb_new_json', $_GET[ 'id' ] ) )->map->contour[0]->level;
 } else if ( MODE == 'mov_data' ) {
 	$ret = _mov_data();
 } else if ( MODE == 'hwork_list' ) {
@@ -93,7 +93,7 @@ function _vapros_pdb( $idlist ) {
 	}
 }
 
-//. ret
+//. _add_ret
 function _add_ret( $pdbchain, $comp, $reactome ) {
 	global $ret;
 	list( $pdb, $chain ) = explode( '-', $pdbchain );

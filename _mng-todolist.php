@@ -55,7 +55,7 @@ $data = [
 	'Done' => [] ,
 ];
 foreach ( $ids as $id ) {
-	$contour = _json_load2([ 'emdb_json3', $id ])->map->contour[0];
+	$contour = _json_load2([ 'emdb_new_json', $id ])->map->contour[0];
 	$mov_json = _json_load([ 'movinfo', $id ]);
 	$add_json = _json_load([ 'emdb_add', $id ]);
 	$status = STATUS_JSON[ "emdb-$id" ];
@@ -120,13 +120,17 @@ foreach ( $ids as $id ) {
 			$flg_cifonly = true;
 		}
 		$sym = _json_load2([ 'qinfo', $pdb_id ])->sym;
-
+		$h_atom = in_array(
+			'H',
+			_branch( _json_load2([ 'pdb_json', $pdb_id ]), 'atom_type->symbol' )
+		) ? _span( '.red bld', BR. '*H atom' ) : '';
 		$size = file_exists( $fn ) ? filesize( $fn ) : 0;
 		$pdb[ _ab( "quick.php?id=pdb-$pdb_id", $pdb_id ) ] = _hard(
 			_format_bytes( $size ) . _kakko( $flg_cifonly ? 'cif' : 'pdb' ) ,
 			$flg_cifonly || 1500000 < $size
 		)
 		. ( $sym ? SEP. _hard( $sym, $sym == 'icos' ) : '' )
+		. $h_atom
 		;
 	}
 
@@ -165,7 +169,7 @@ function _hard( $in, $flg = false ) {
 
 
 //. table
-
+$idlist = [];
 foreach ( $data as $cls => $items ) {
 //	if ( ! $items ) continue;
 	//- クラスごと
@@ -185,6 +189,7 @@ foreach ( $data as $cls => $items ) {
 			.TD. _table_2col( (array)$info[ 'info' ] )
 			.TD. _table_2col( (array)$info[ 'pdb' ] )
 		;
+		$idlist[] = $id;
 	}
 
 	$_simple->hdiv(
@@ -195,4 +200,4 @@ foreach ( $data as $cls => $items ) {
 		]
 	);
 }
-
+_json_save( DN_PREP. '/emn/todolist.json', $idlist );

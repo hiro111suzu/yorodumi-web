@@ -40,7 +40,6 @@ if ( $json_type != 'file' ) {
 
 	$json_type = [
 		'emdb'   => 'emdb_json' ,
-		'json3'  => 'emdb_json3' ,
 		'pdb'    => 'pdb_json' ,
 		'pdb_pre' => 'pdb_json_pre' ,
 		'epdb'   => 'epdb_json' ,
@@ -55,6 +54,7 @@ if ( $json_type != 'file' ) {
 		$json_type = _inlist( $json_name, 'epdb' ) ? 'pdb_add' : 'emdb_add';
 
 	$fn_json = _fn( $json_type, $json_name );
+	_testinfo( $json_type, 'json_type' );
 	if ( $json_type == 'maindb' )
 		$fn_json = _fn( 'maindbjson', ( new cls_entid( $json_name ) )->did );
 }
@@ -141,18 +141,13 @@ function _dir( $path, $name = '' ) {
 }
 
 //. json 取得
+//- emdbv3の場合は変換
 $json = [];
-if ( $fn_json )
+if ( $json_type == 'emdb_json' && !$_GET[ 'orig' ] ) {
+	$json = (array)_json_emdb( $fn_json );
+} else if ( $fn_json ) {
 	$json = _json_load( $fn_json );
-
-
-//.. emdbv3の場合は変換
-if ( $json_type == 'emdb_json3' && !$_GET[ 'orig' ] ) {
-	$j = _json_load2( $fn_json );
-	_emdb_json3_rep( $j );
-	$json = (array)$j;
 }
-
 
 //.. json 子孫をたどる
 if ( $json && count( $tag_tree ) ) foreach ( $tag_tree as $t ) {
@@ -265,11 +260,11 @@ if ( $json_name != '' ) {
 		} else if ( $db == 'emdb' ) {
 			$a = [
 				_a( "?a=emdb.$id"	, "json" ) ,
-				_a( "?a=json3.$id"	, "json3" ) ,
 				_a( "?a=add.$id"	, "add" ) ,
 				_a( "?a=movinfo.$id", "movinfo" ) ,
 				_a( "?a=mapinfo.$id", "mapinfo" ) ,
-				_a( "?a=maindb.$id"	, "maindb" ) 
+				_a( "?a=maindb.$id"	, "maindb" )  ,
+				_a( "?a=emdb_met.$id"	, "emdb_met" ) 
 			];
 		}
 
@@ -279,7 +274,7 @@ if ( $json_name != '' ) {
 		}
 	}
 }
-if ( $json_type == 'emdb_json3' ) {
+if ( $json_type == 'emdb_json' ) {
 	$get = $_GET;
 	unset( $get[ 'orig' ] );
 	$u = '?'. http_build_query( $get );

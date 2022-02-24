@@ -10,13 +10,18 @@ define( 'ID'	, _getpost( 'id' ) ?: _getpost( 'key' ) );
 //.. data
 $ret = [];
 if ( MODE == 'surflev' ) {
-	$ret = _json_load2( _fn( 'emdb_json3', $_GET[ 'id' ] ) )->map->contour[0]->level;
+	$ret = _json_load2( _fn( 'emdb_new_json', $_GET[ 'id' ] ) )->map->contour[0]->level;
 } else if ( MODE == 'mov_data' ) {
 	$ret = _mov_data();
 } else if ( MODE == 'hwork_list' ) {
 	foreach ( glob( DN_FDATA. '/hwork/*/*.map' ) as $pn ) {
 		$ret[ strtr( basename( $pn, '.map' ), [ 'emd_' => '' ] ) ] = filesize( $pn );
 	}
+} else if ( MODE == 'next_todo' ) {
+	$ret = _json_load( DN_PREP. '/emn/todolist.json' );
+} else if ( MODE == 'locate' ) {
+	exec( 'locate  -l 100 ' . $_GET['kw'], $items );
+	$ret = $items;
 } else {
 	$ret = [
 		'error' => 'unknown mode: '. MODE

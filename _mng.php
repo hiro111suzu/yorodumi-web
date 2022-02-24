@@ -10,6 +10,9 @@ define( 'COLOR_MODE', 'mng' );
 require( __DIR__. '/common-web.php' );
 if ( ! TESTSV ) die();
 
+_add_url( 'mng_dir' );
+_add_fn( 'mng_dir' );
+
 define( 'BTN_OPEN_ALL', 
 	_btn( '!_hdiv.all2(this)', _ej( 'Show/Hide all', 'すべて表示・隠す' ) ) 
 );
@@ -20,15 +23,15 @@ define( 'PAGE_NAME', [
 	'log'				=> '開発ログ' ,
 	'hourly'			=> 'hourlyログ' ,
 	'problem'			=> '問題!!'  ,
-	'docs'				=> '文書' ,
+	'docs'				=> 'docs (文書)' ,
 	'pubmedid'			=> 'PubMed-ID' ,
 	'pdbimg'			=> 'EM-PDB画像選択' ,
 	'sqliteDBs'			=> 'SQLite DB管理' ,
 //	'subdata'			=> 'サブデータ' ,
 	'categ'				=> 'カテゴリ', 
 	'todolist'			=> 'ToDoリスト',
-	'mom'				=> '今月の分子 情報' ,
-	'emdbunp'			=> 'EMDB-UniProt関連付け' ,
+	'mom'				=> 'mominfo (今月の分子)' ,
+	'emdbunp'			=> 'UniProt-EMDB 関連付け' ,
 
 	'ids_emdb_sup'		=> 'EMDB: サプリがある' ,
 	'ids_emdb_obs'		=> 'EMDB: 取り消し' ,
@@ -52,7 +55,7 @@ if ( function_exists( $func_mode ) ) {
 
 //.. クイック選択
 $kw = _getpost( 'kw' );
-if ( $kw ) foreach ( _subdata( 'pages', 'mng' ) as $key => $url ) {
+if ( $kw ) foreach ( _subdata( 'mng', 'short_name' ) as $key => $url ) {
 	if ( _instr( strtolower( $kw ), $key ) )
 		_redirect( $url );
 }
@@ -62,6 +65,18 @@ if ( $kw ) foreach ( _subdata( 'pages', 'mng' ) as $key => $url ) {
 $a = _getpost('auto_run');
 if ( $a )
 	_auto_run( $a );
+
+//.. ディレクトリ ブックマーク
+define( 'DIR_BOOKMARK', [
+	_dirlink( DN_DATA , 'data' ),
+	_dirlink( DN_PREP , 'prep' ),
+	_dirlink( DN_FDATA, 'fdata' ),
+	_dirlink( '/dev/shm/yorodumi', 'tmp' ) ,
+	_dirlink( DN_PREP . '/mail', 'mail' )  ,
+	_dirlink( DN_PREP . '/marem', 'marem' )  ,
+//	_dirlink( '/home/archive', 'archive' ) ,
+	_dirlink( DN_PREP . '/report', 'report' ) ,
+]);
 
 //. 終了処理
 if ( php_sapi_name() != 'cli' )
@@ -86,7 +101,39 @@ function _end() {
 		)] = $name;
 	}
 
+	//- maremコマンド
 	$dn_marem = DN_PREP. '/marem';
+	$marem_job = '';
+	if ( $_GET['marem'] ) {
+		if ( $_GET['marem'] == 'sync' ) {
+			rename( "$dn_marem/sync-done", "$dn_marem/sync" );
+		} else if ( $_GET['marem'] == 'start' ) {
+			rename( "$dn_marem/stop", "$dn_marem/stop-" );
+		} else if ( $_GET['marem'] == 'stop' ) {
+			rename( "$dn_marem/stop-", "$dn_marem/stop" );
+		}
+		$marem_job = _p( '.green',  _kv([ 'marem switch' => $_GET['marem'] ]) );
+	}
+
+	//- 最終接続
+	$time = time();
+	$last_link = '';
+	while( true ){ //- 最後のファイルを探す
+		$fn = _fn( 'marem_link', date( 'Y-m-d', $time ) );
+		if ( file_exists( $fn ) ) {
+			list( $hour, $min, $sec ) = explode( ':',  
+				explode( "\t", end( _file( $fn ) ) )[0]
+			);
+			list( $year, $month, $day ) = explode( '-', basename( $fn, '.tsv' ) );
+			$last_link = round(
+				( time() - mktime( $hour, $min, $sec, $month, $day, $year ) ) / 1,
+				2
+			). ' 秒前';
+			break;
+		}
+		$time -= 24*60*60;
+	}
+
 	$fn_log = max( glob( "$dn_marem/log/*movrec.tsv" ) );
 
 	_simple()->hdiv( 'ダッシュボード', ''
@@ -95,27 +142,31 @@ function _end() {
 			[ 'type' => 'h2' ]
 		)
 		. _simple()->hdiv( 'marem', ''
+			. $marem_job
 			. _p( basename( $fn_log, '-1-movrec.tsv' ) )
 			. _ul( array_reverse( array_slice(
 				_file( $fn_log ),
 				-20
 			)))
 			. _p( _kv([
-				'stopフラグ' => file_exists( "$dn_marem/stop" ) ? 'あり' : 'なし' ,
+				'stopフラグ' => file_exists( "$dn_marem/stop" )
+					? 'あり '. _ab( '_mng.php?marem=start', '[開始する]' )
+					: 'なし '. _ab( '_mng.php?marem=stop',  '[停止する]' )
+				,
 				'hwork-syncフラグ' => file_exists( "$dn_marem/sync-done" )
-					? '停止'
-					: ( file_exists( "$dn_marem/sync-doing" ) ? '実行中' : '予約' )
+					? '終了 '. _ab( '_mng.php?marem=sync', '[開始する]' )
+					: ( file_exists( "$dn_marem/sync-doing" )
+						? '実行中'
+						: '予約'
+					)
+				,
+				'接続確認' => $last_link
 			]))
 			,
 			[ 'type' => 'h2' ]
 		)
 		. _simple()->hdiv( 'mng page', _table_2col([
-			'dir' => [
-				_dir_link( __DIR__. '/data/' ) ,
-				_dir_link( __DIR__ ) ,
-				_dir_link( __DIR__. '/../managedb' ) ,
-				_dir_link( DN_PREP ) ,
-			] ,
+			'dir' => [ _imp( DIR_BOOKMARK ) ] ,
 			'mng' => [
 				_a( '?mode=problem', '問題' ) ,
 				_a( '_mng-todolist.php', 'ToDo' ) ,
@@ -167,6 +218,12 @@ function _end() {
 }
 
 //. function
+//.. _dirlink
+function _dirlink( $u, $str ) {
+	$u = realpath( $u );
+	return _a_flg( defined( 'PATH' ) && PATH == $u, _url( 'dir', realpath( $u ) ), $str ); 
+}
+
 //.. _daystr
 function _daystr( $in ) {
 	return "$in " . [ '日', '月', '火', '水', '木', '金', '土' ][ date( 'w', strtotime( $in ) ) ];
@@ -282,6 +339,7 @@ function _mode_problem() {
 function _mode_categ() {
 	define( 'FN_TSV', DN_EDIT. '/categ.tsv' );
 	define( 'TSV', _tsv_load2( FN_TSV ) );
+	define( 'GUESS', _json_load( DN_PREP. '/categ_guess.json' ) );
 	$set_id = [];
 
 	//... 値をセット
@@ -336,8 +394,21 @@ function _mode_categ() {
 				if ( $set_id[ $id ] ) continue;
 				if ( $json[ $id ] != 'uncat' && $json[ $id ] != '' ) continue;
 			}
+			$btns = RADIO_BTN;
+			$guess = GUESS[ "$db-$id" ];
+			if ( $guess ) {
+				$btns = [];
+				foreach ( array_keys( TSV[ 'name' ] ) as $c ) {
+					if ( $c == 'uncat' ) continue;
+					$btns[ $c ] = 10 < $guess[ $c ]
+						? _span( '.red bld', "$c {$guess[$c]}%" )
+						: $c
+					;
+				}
+				$btns = _radiobtns( [ 'name' => 'categ-<id>' ], $btns );
+			}
 			$out[] = ( new cls_entid( $id ) )->ent_item_list(
-				[ 'data' => [ 'Categ' => strtr( RADIO_BTN, [ '<id>' => $id ]) ] ]
+				[ 'data' => [ 'Categ' => strtr( $btns, [ '<id>' => $id ]) ] ]
 			);
 		}
 	}

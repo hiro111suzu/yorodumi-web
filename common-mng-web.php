@@ -21,10 +21,10 @@ $_urls = [];
 $_filenames = [
 	//.. EMDB
 	'emdb_json'		=> DN_DATA      . '/emdb/json/<id>.json.gz' ,
-	'emdb_json3'	=> DN_DATA      . '/emdb/json3/<id>.json.gz' ,
+	'emdb_json3'	=> DN_DATA      . '/emdb/json/<id>.json.gz' ,
 
 	'emdb_old_json'	=> DN_DATA      . '/emdb/json/<id>.json.gz' ,
-	'emdb_new_json'	=> DN_DATA      . '/emdb/json3/<id>.json.gz' ,
+	'emdb_new_json'	=> DN_DATA      . '/emdb/json/<id>.json.gz' ,
 
 	'emdb_add' 		=> DN_PREP		. '/emn/emdb_add/emd-<id>-add.json' ,
 	'movinfo'		=> DN_PREP		. '/emn/movinfo/<id>.json' ,
@@ -323,6 +323,11 @@ function _same_str( $s1, $s2 ) {
 	return strtolower( $s1 ) == strtolower( $s2 );
 }
 
+//.. _is_num_array: 連想配列じゃない配列か？
+function _is_num_array( $in ) {
+	return is_array( $in ) && ( array_values( $in ) === $in );
+}
+
 //. sqlite関連
 //.. _quote
 function _quote( $s, $q = "'" ) {
@@ -531,12 +536,19 @@ function _clean_emdb_val( $s ) {
 	return trim( $s );
 }
 
+//.. _emdb_json 状況が収まるまでこの関数を利用
+function _json_emdb( $id ) {
+	return _emdb_json3_rep( _json_load2(
+		_instr( '.json', $id ) ? $id : [ 'emdb_json', $id ]
+	) );
+}
+
 //.. _emdb_json3_rep
 function _emdb_json3_rep( &$json ) {
 	//- 試しに変更してみる、確定したらxml2jsonで採用
 
 	//... structure_determination
-	foreach ( $json->structure_determination as $c ) {
+	foreach ( (array)$json->structure_determination as $c ) {
 		foreach ([
 			'preparation', 'microscopy', 'processing'
 		] as $categ ) foreach ([
@@ -579,16 +591,46 @@ function _emdb_json3_rep( &$json ) {
 		unset( $json->sample->macromolecule_list );
 	}
 
-	return $json;
-}
-
-//.. 
-function _emdb_json3_auth( $in ) {
-	$ret = [];
-	foreach ( (array)$in as $a ) {
-		$ret[] = is_object( $a ) ? $a->_v : $a;
+	//... tilt_list を消す
+	foreach ( $json->structure_determination[0]->microscopy as &$c ) {
+		if ( ! $c->tilt_list ) continue;
+		$c->tilt_angle = implode( ', ', $c->tilt_list->angle );
+		unset( $c->tilt_list );
 	}
-	return $ret;
+	unset( $c );
+
+	//... fiducial_markers_list を消す
+	foreach ( $json->structure_determination[0]->preparation as &$c ) {
+		if ( ! $c->fiducial_markers_list ) continue;
+		$c->fiducial_marker = $c->fiducial_markers_list->fiducial_marker;
+		unset( $c->fiducial_markers_list );
+	}
+	unset( $c );
+
+	//... shell_listを消す
+	foreach ( $json->structure_determination[0]->processing as &$c ) {
+		if ( $c->crystallography_statistics->shell_list ) {
+			$c->crystallography_statistics->shell
+				= $c->crystallography_statistics->shell_list->shell;
+			unset( $c->crystallography_statistics->shell_list );
+		}
+	}
+	unset( $c );
+
+	//... recombinant_expressionの冗長を解消
+	foreach ( $json->sample->supramolecule as &$c1 ) {
+		if ( ! $c1->recombinant_expression
+			|| count( $c1->recombinant_expression ) < 2
+		) continue;
+		foreach ( array_slice( $c1->recombinant_expression, 1 ) as $num => $c2 ) {
+			if ( $c2 != $c1->recombinant_expression[0] ) continue;
+			unset( $c1->recombinant_expression[ $num + 1 ] );
+		}
+	}
+	unset( $c1 );
+
+	//... end
+	return $json;
 }
 
 //.. _emn_json : sqlite に入れたjsonデータを返す
@@ -629,6 +671,57 @@ function _rep_pdbid( $i ) {
 		'select' => 'rep' ,
 		'where'  => [ 'id', $i ]
 	]) )[0] ?: $i;
+}
+
+	//.. _branch json枝とりだし
+function _branch( &$json, $path ) {
+	$path = preg_replace( '/\[[\*0]\]/', '', $path );
+	$output = [ $json ];
+	$input = [];
+	foreach ( explode( '->', $path ) as $branch_name ) {
+		$input = $output;
+		$output = [];
+		foreach ( _is_num_array( $input ) ? $input : [ $input ] as $num => $input_each ) {
+			$o = $input_each->$branch_name;
+			$output = array_merge( $output, _is_num_array( $o ) ? $o : [ $o ] );
+		}
+		if ( $output == [] ) break;
+	}
+	return $output;
+}
+
+	//.. _branch_multi
+function _branch_multi() {
+	$ret = [];
+	foreach ( func_get_args() as $arg ) {
+		if ( ! is_string( $arg ) ) continue;
+		$ret = array_merge( $ret, _branch( func_get_arg(0), $arg ) );
+	}
+	return _uniqfilt( array_filter( $ret ) );
+}
+
+
+	//.. _categ_stat カテゴリ予想
+function _categ_stat( $items, $limit = 5 ) {
+	if ( ! defined( 'DBID2CATEG' ) ) {
+		define( 'DBID2CATEG', _json_load( DN_PREP. '/dbid/dbid2categ.json.gz' ) );
+	}
+	$data = [];
+	$sum = 0;
+	foreach ( $items as $item ) {
+		$w = count( (array)DBID2CATEG[ $item ] );
+		foreach ( (array)DBID2CATEG[ $item ] as $cat => $num ) {
+			$score = $num / $w;
+			$data[ $cat ] += $score;
+			$sum += $score;
+		}
+	}
+	foreach ( $data as $item => $score ) {
+		$score = round( $score / $sum * 100, 1 );
+		$data[ $item ] = $limit < $score ? $score : 0;
+	}
+	arsort( $data );
+	return array_filter( $data );
 }
 
 //. class abs_entid
@@ -905,9 +998,11 @@ class abs_entid {
 	//.. 各種 json
 	//... mainjson
 	function mainjson() {
-		return _json_load2( $this->db == 'sasbdb-model'
-			? _fn( 'sas_json', _sas_info( 'mid2id', $this->id ) )
-			: _fn( $this->db . '_json', $this->id )
+		return $this->db == 'emdb'
+			? _json_emdb( $this->id )
+			: _json_load2( $this->db == 'sasbdb-model'
+			? [ 'sas_json', _sas_info( 'mid2id', $this->id ) ]
+			: [ $this->db . '_json', $this->id ]
 		);
 	}
 

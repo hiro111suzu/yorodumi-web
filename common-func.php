@@ -45,6 +45,10 @@ function _getpost_safe( $s = '' ) {
 //.. _instr: 文字列が含まれるか？
 //- mng版よりも低機能
 function _instr( $needle, $heystack ) {
+//	if ( $heystack && ! is_string( $heystack ) ) {
+//		_testinfo( $heystack, '_instr, heystack' );
+//		return;
+//	}
 	return stripos( $heystack, $needle ) !== false;
 }
 
@@ -163,7 +167,7 @@ function _download_text( $type, $basename, $data ) {
 	);
 }
 
-//.. _group_name
+//.. _group_name 名前文字列をグループ化
 //- 名前文字列を先頭文字列でグループ化
 //- 先頭文字列を返す
 function _group_name( $names ) {
@@ -189,6 +193,27 @@ function _group_name( $names ) {
 	sort( $ret );
 	return $ret;
 //	_die( 'hoge' );
+}
+
+//.. _conv_num 連続する数字をまとめる
+function _conv_num( $in ) {
+	$out = [];
+	$prev = $from = $to = null;
+	foreach ( $in as $num ) {
+		$num = trim( $num );
+		if ( ! $from ) {
+			$from = _sharp( $num );
+		} else if ( $prev == $num -1 ) {
+			$to = _sharp( $num );
+		} else {
+			$out[] = implode( '-', array_filter([ $from, $to ]) );
+			$to = null;
+			$from = _sharp( $num );
+		}
+		$prev = $num;
+	}
+	$out[] = implode( '-', array_filter([ $from, $to ]) );
+	return _imp( $out );
 }
 
 
@@ -1722,7 +1747,7 @@ function _mng_input() {
 	if ( ! TEST ) return;
 	$links = [];
 	$suggest = '';
-	foreach ( _subdata( 'pages', 'mng' ) as $key => $url ) {
+	foreach ( _subdata( 'mng', 'short_name' ) as $key => $url ) {
 		$suggest .= _e( "option| value:$key" );
 		$links[] = _a( $url, $key );
 	}
@@ -1883,6 +1908,7 @@ function _doc_div( $docid ) {
 function _met_pop( $name, $type = 'm', $label = '' ) {
 	if ( $name == '' || $name == 'none' || $name == 'NONE' ) return;
 	_add_lang( 'met' );
+	_set_met_subdata(); //- MET_SUBDATA	
 	if ( ! defined( 'MET_SYN' ) ) {
 		define( 'MET_SYN', _json_load( DN_DATA. '/met_syn.json.gz' ) );
 	}
@@ -1912,12 +1938,8 @@ function _met_pop( $name, $type = 'm', $label = '' ) {
 		$ret[] = $name == '' 
 			? ( $label ?: $n ). _test( _span( '.red', "[x]($k) " ) )
 			: _pop_ajax(
-				_fa([
-					'm' => 'hand-paper-o' ,
-					's' => 'desktop' ,
-					'e' => 'thermometer' ,
-				][ $type ])
-				.( $flg_wikipe ? IC_WIKIPE : '' ) //- wikipe icon
+				MET_SUBDATA['icon'][ $type ]
+				. ( $flg_wikipe ? IC_WIKIPE : '' ) //- wikipe icon
 				. _l( $label ?: $n )
 				. _country_flag( $data->place ) //- 国旗
 				,
@@ -1933,6 +1955,7 @@ function _met_data( $key, $flg_less = false ) {
 
 	//... 準備
 	_add_lang( 'met' );
+	_set_met_subdata(); //- MET_SUBDATA
 
 	$ans = ( new cls_sqlite( 'met' ) )
 		->where( 'key='. _quote( $key ) )
@@ -2009,12 +2032,9 @@ function _met_data( $key, $flg_less = false ) {
 		_ej( 'Category - name', _span( '.nw', 'カテゴリ ' ). '- 名称' ) =>
 			_ab([ 'ysearch', 'kw' => _quote( 'm:'. $key, 2 ) ] 
 				,
-				_l( [
-					'm' => _fa('hand-paper-o'). _l( 'Method' ) ,
-					'e' => _fa('thermometer') . _l( 'Equipment' ) ,
-					's' => _fa('desktop')     . _l( 'Software' ) ,
-				][ $cat ] )
-				.' - '. ( $name == $jname ? $name: "$name ($jname)"  )
+				MET_SUBDATA['icon_term'][ $cat ]
+				.  ' - '
+				. ( $name == $jname ? $name: "$name ($jname)"  )
 			)
 		,
 //		'other names'	=> _imp2( array_slice( explode( '|', $ans->name ), 1 ) ) ,
@@ -2032,6 +2052,27 @@ function _met_data( $key, $flg_less = false ) {
 		'Comment'		=> $data->comment 
 	]));
 }
+
+//.. _set_met_subdata
+function _set_met_subdata() {
+	if ( defined( 'MET_SUBDATA' ) ) return;
+	$term = _subdata( 'trep', 'met_term' );
+	$icon = [
+		'm' => _fa('hand-paper-o') ,
+		'e' => _fa('thermometer') ,
+		's' => _fa('desktop') ,
+	];
+	define( 'MET_SUBDATA', [
+		'icon' => $icon ,
+		'term' => $term ,
+		'icon_term' => [
+			'm' => $icon['m']. $term['m'] ,
+			'e' => $icon['e']. $term['e'] ,
+			's' => $icon['s']. $term['s'] ,
+		],
+	]);
+}
+
 
 //.. _country_flag
 function _country_flag( $str ) {

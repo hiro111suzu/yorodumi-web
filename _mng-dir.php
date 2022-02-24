@@ -50,16 +50,7 @@ if ( _getpost( 'ajax' ) ) {
 
 //. ディレクトリ表示
 _simple()->hdiv( 'Directory path', _ul([
-	'Favorite: ' . _imp2([
-		_dirlink( DN_DATA , 'data' ),
-		_dirlink( DN_PREP , 'prep' ),
-		_dirlink( DN_FDATA, 'fdata' ),
-		_dirlink( '/dev/shm/yorodumi', 'tmp' ) ,
-		_dirlink( DN_PREP . '/mail', 'mail' )  ,
-		_dirlink( DN_PREP . '/marem', 'marem' )  ,
-		_dirlink( '/home/archive', 'archive' ) ,
-	]) . $tree
-	,
+	'Favorite: '. _imp2( DIR_BOOKMARK ) . $tree ,
 	_t( 'form', ''
 		. _inpbox( 'path', realpath( PATH ), [ '' ] )
 		. _inpbox( 'filter', FILTER, [ '' ] )
@@ -150,12 +141,6 @@ function _item_table() {
 		. _t( 'table| #item_table', $dirs . $files )
 		. $o_pager->btn()
 	;
-}
-
-//.. _dirlink
-function _dirlink( $u, $str ) {
-	$u = realpath( $u );
-	return _a_flg( PATH == $u, _url( 'dir', realpath( $u ) ), $str ); 
 }
 
 //.. _tr

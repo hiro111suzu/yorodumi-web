@@ -21,6 +21,7 @@ define( 'URL_DATA'	, 'data' );
 define( 'DN_EMNAVI'	, realpath( __DIR__ ) ); //- mngと共通で使えるように
 define( 'DN_PREP'	, realpath( __DIR__ . '/../prepdata' ) );	//- TESTSVにしかない
 define( 'DN_EDIT'	, realpath( __DIR__ . '/../edit' ) );		//- TESTSVにしかない
+define( 'DN_REPORT'	, realpath( __DIR__ . '/../prepdata/report' ) );	//- TESTSVにしかない
 define( 'DN_FDATA'	, realpath( __DIR__ . '/../fdata' ) );		//- TESTSVにしかない
 
 define( 'TEST', $_COOKIE[ 'testhoge' ] );

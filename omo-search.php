@@ -150,6 +150,8 @@ extract( $o_omoid->get() ); //- $id, $db, $asb
 
 //- upload?
 define( 'UPLOAD', count( $_FILES ) > 0 );
+if ( $_FILES )
+	_testinfo( $_FILES, '$_FILES' );
 define( 'USERDATA', 
 	UPLOAD || ( strlen( $id ) == 33 && substr( $id, 0, 1 ) == '_' )
 );

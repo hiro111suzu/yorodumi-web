@@ -198,26 +198,15 @@ foreach ([
 }
 
 //... em_entity_assembly.entity_id_list, 連続する数字をまとめる
+$all_ent_ids = _branch( $json, 'entity->id' );
+_testinfo( $all_ent_ids, 'all_ent_ids' );
 foreach ( (array)$json->em_entity_assembly as $c ) {
 	if ( ! $c->entity_id_list ) continue;
-	$out = [];
-	$prev = $from = $to = null;
-	foreach ( explode( ',', trim( $c->entity_id_list,  ', ' ) ) as $num ) {
-		$num = trim( $num );
-		if ( ! $from ) {
-			$from = _sharp( $num );
-		} else if ( $prev == $num -1 ) {
-			$to = _sharp( $num );
-		} else {
-			$out[] = implode( '-', array_filter([ $from, $to ]) );
-			$to = null;
-			$from = _sharp( $num );
-		}
-		$prev = $num;
-	}
-	$out[] = implode( '-', array_filter([ $from, $to ]) );
-	$c->entity_id_list = _imp( $out );
-
+	$ids = explode( ',', trim( $c->entity_id_list,  ', ' ) );
+	$c->entity_id_list = $all_ent_ids == $ids
+		? _l( 'all' )
+		: _conv_num( $ids )
+	;
 }
 
 //.. json単純化
@@ -1283,11 +1272,11 @@ if ( $j && $is_xtal ) {
 
 	//... output
 	$o_data->lev1( 'unit cell', ''
-		. _div( '#uc_outer| .left', _div( '#uc_inner', _div( '#uc_inner2', ''
-			. _div( ".uc_pl pl_gamma| $st_gamma", '&gamma;' )
-			. _div( ".uc_pl pl_alpha| $st_alpha", '&alpha;' )
-			. _div( ".uc_pl pl_beta | $st_beta" , '&beta;' )
-		)))
+//		. _div( '#uc_outer| .left', _div( '#uc_inner', _div( '#uc_inner2', ''
+//			. _div( ".uc_pl pl_gamma| $st_gamma", '&gamma;' )
+//			. _div( ".uc_pl pl_alpha| $st_alpha", '&alpha;' )
+//			. _div( ".uc_pl pl_beta | $st_beta" , '&beta;' )
+//		)))
 		. _table_2col( $param )
 /*
 		. _quick_kv( array_merge([
@@ -2430,11 +2419,11 @@ $met_tags = [
 	'em_software.name'						=> 's' ,
 	'em_vitrification.instrument'			=> 'e' ,
 	'em_image_recording.film_or_detector_model' => 'e' ,
+	'em_imaging_optics.energyfilter_name'	=> 'e' ,
+	'em_sample_support.grid_type'			=> 'e' ,
+	'em_sample_support.grid_material'		=> 'e' ,
+	'em_imaging_optics.phase_plate'			=> 'e' ,
 	'em_image_recording.detector_mode'		=> 'm' ,
-	'em_imaging_optics.energyfilter_name'	=> 'm' ,
-	'em_sample_support.grid_type'			=> 'm' ,
-	'em_sample_support.grid_material'		=> 'm' ,
-	'em_imaging_optics.phase_plate'			=> 'm' ,
 
 	//- x-ray
 	'exptl_crystal_grow.method'				=> 'm' ,

@@ -3,7 +3,8 @@
 require( __DIR__ . '/_mng.php' );
 
 define( 'TODAY', date( 'Y-m-d', time() - 150 * 3600 * 24 ) );
-define( 'TSVDATA', _tsv_load2( DN_EDIT. '/pubmed_id.tsv' ) );
+define( 'TSV_DATA', _tsv_load2( DN_EDIT. '/pubmed_id.tsv' ) );
+define( 'RANGE', 10 );
 
 //$url_base = 'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&cmd=search&term=';
 //'http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&cmd=search&term='
@@ -32,12 +33,12 @@ $ign_title = array_fill_keys([
 //. table
 $clist = [];
 $auth = [];
-$flg =  [];
+
 $num = 0;
 
 //.. EMDB
 $num = 0;
-foreach( TSVDATA[ 'emdb' ] as $id => $pmid ) {
+foreach( TSV_DATA[ 'emdb' ] as $id => $pmid ) {
 	if ( $ign_id[ $id ] || $pmid ) continue;
 	$o = new cls_entid();
 	$json = $o->set_emdb( $id )->mainjson()->deposition;
@@ -47,13 +48,13 @@ foreach( TSVDATA[ 'emdb' ] as $id => $pmid ) {
 
 	$clist[ $t ][] = $id;
 	$auth[ $t ] = explode( ',',  $json->authors );
-	if ( $o->ex_map() )
-		$flg[ $t ] = true;
+
+
 }
 $_simple->time( 'emdb' );
 
 //.. PDB
-foreach( TSVDATA[ 'pdb' ] as $id => $pmid ) {
+foreach( TSV_DATA[ 'pdb' ] as $id => $pmid ) {
 	if ( $ign_id[ $id ] || $pmid ) continue;
 	$json = _json_load2([ 'epdb_json', $id ]);
 	$t = '_';
@@ -73,24 +74,16 @@ foreach( TSVDATA[ 'pdb' ] as $id => $pmid ) {
 			$auth[ $t ][] = trim( $j->name );
 		}
 	}
-	
-	$flg[ $t ] = true;
 }
 $_simple->time( 'pdb' );
-
-//.. clean
-foreach ( $clist as $t => $v ) {
-	if ( ! $flg[ $t ] )
-		unset( $clist[ $t ] );
-}
 
 //. main loop
 $wait = 0;
 $out = [];
 $js = '';
 
-$start = PAGE * 10;
-foreach ( array_slice( array_keys( $clist ), PAGE * 10, 10 ) as $num => $title ) {
+$start = PAGE * RANGE;
+foreach ( array_slice( array_keys( $clist ), PAGE * 10, RANGE ) as $num => $title ) {
 	$ids = '';
 	$tt = [];
 	foreach ( $clist[ $title ] as $id ) {

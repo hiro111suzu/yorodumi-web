@@ -1109,6 +1109,10 @@ function _func_homology() {
 	if ( ! $items ) return;
 	$docpop = _div( '.right', _doc_pop('func_homology') );
 	$_has_fh_item['all'] = true;
+	$categ_info = TEST
+		? _t( 'p| .red', _quick_kv( _categ_stat( $items ) ) ?: 'no categ info' )
+		: ''
+	;
 
 	//... 少ない
 	if ( count( $items ) < 10 ) {
@@ -1118,7 +1122,7 @@ function _func_homology() {
 			$ret[] = $o->pop();
 			$_has_fh_item[ $o->get_cls() ] = true;
 		}
-		return _long( $ret, 10 ). $docpop;
+		return _long( $ret, 10 ). $docpop. $categ_info;
 	} 
 
 	//... 多い
@@ -1143,7 +1147,7 @@ function _func_homology() {
 		];
 	}
 	_simple()->time( 'fh_item' );
-	return $docpop. _simple_tabs( $tabs );
+	return $docpop. _simple_tabs( $tabs ). $categ_info;;
 }
 
 //.. _categ2momkw
@@ -1508,7 +1512,7 @@ class cls_citation {
 			'ISSN' 		=> $j->ref_ISSN ,
 			'ASTM'		=> $j->ref_ASTM ,
 			'title' 	=> $j->title ,
-			'authors'	=> _emdb_json3_auth( $j->author  ),
+			'authors'	=> _branch( $j, 'author->name' ) ,
 			'page'		=> $this->emdb_xml_page( $j ) ,
 			'pmid'		=> $j->ref_PUBMED ,
 		], $citation_id );
@@ -1518,11 +1522,11 @@ class cls_citation {
 	function emdb_non_journal( $j, $citation_id = 0 ) {
 		$ret = [
 			'page'		=> $this->emdb_xml_page( $j ) ,
-			'authors'	=> _emdb_json3_auth( $j->author ) ,
+			'authors'	=> _branch( $j, 'author->name' ),
 			'title'		=> $j->thesis_title ,
-			'first_page' => null,
-			'last_page'	=> null ,
-			'author'	=> null ,
+			'first_page' => $j->first_page,
+			'last_page'	=> $j->last_page ,
+			'publisher'	=> $j->publisher . _kakko( $j->publisher_location ) ,
 		] + (array)$j;
 		foreach ( $ret as $k => $v ) {
 			if ( $k == 'authors' ) continue;
@@ -1972,7 +1976,7 @@ class cls_data {
 	function lev1set( $key, $val ) {
 		//- 複数テーブルモードなら、連想配列のママで格納
 		if ( in_array( $key, $this->ign1 ) ) return $this;
-		while( $this->data[ $this->title1 ][ $key ] != ''  ) //- キー名重複対策
+		while( $this->data[ $this->title1 ][ $key ]  ) //- キー名重複対策
 			$key .= '~';
 		$this->data[ $this->title1 ][ $key ] = $this->flg_multi_table
 			? $val : _quick_kv( $val, $this->tag2 );
@@ -2020,7 +2024,7 @@ class cls_data {
 		if ( in_array( strtolower( $key ), $this->ign2 ) ) return $this;
 		if ( $val == '' ) return $this;
 
-		while ( $this->data2[ $key ] != [] ) //- キーに重複？
+		while ( $this->data2[ $key ] ) //- キーに重複？
 			$key .= '~';
 
 		//- 複数テーブルモードでないのに配列なら、括弧でくくる
@@ -2044,6 +2048,7 @@ class cls_data {
 	}
 
 	function end2( $t ) {
+//		_testinfo( $this->data2, $t );
 		$this->lev1set( $t, $this->data2 );
 //		$this->data2;
 		$this->data2 = [];
@@ -2060,7 +2065,7 @@ class cls_data {
 	function lev3( $key, $val, $tag = '' ) {
 		if ( in_array( strtolower( $key ), $this->ign3 ) ) return $this;
 		if ( $val == '' ) return $this;
-		while( $this->data3[ $key ] != '' ) //- キー名重複対応
+		while( $this->data3[ $key ] ) //- キー名重複対応
 			$key .= '~';
 		$this->data3[ $key ] = _quick_kv( _valprep( $val, $key, explode('.', $tag )[0] ) );
 		$this->tag3[ $key ] = $tag;
@@ -2090,32 +2095,32 @@ class cls_data {
 
 	//.. make
 	function make() {
-		foreach ( (array)$this->data as $h => $d ) {
-			if ( $d == '' ) continue;
-			if ( is_string( $d ) ) {
+		foreach ( (array)$this->data as $head => $div ) {
+			if ( $div == '' ) continue;
+			if ( is_string( $div ) ) {
 				//- テーブル無し
-				$out = $d;
-			} else if ( ! is_array( reset( $d ) ) ) {//- 最初の要素を見る
+				$out = $div;
+			} else if ( ! is_array( reset( $div ) ) ) {//- 最初の要素を見る
 				//- テーブルひとつ
-				$out = _simple_table( $d );
+				$out = _simple_table( $div );
 			} else {
 				//- h2のあるブロック (2階層の情報)
 				$out = '';
-				if ( count( $d ) > 3 )
+				if ( count( $div ) > 3 )
 					$out .= BTN_HDIV2_ALL;
-				foreach ( $d as $h2 => $d2 ) {
-					$t = _simple_table( $d2 );
+				foreach ( $div as $head2 => $div2 ) {
+					$t = _simple_table( $div2 );
 					if ( ! $t ) continue;
 					$out .= _simple()->hdiv(
-						$h2,
+						$head2,
 						$t ,
-						[ 'type' => 'h2', 'hide' => ( count( $d2 ) > 15 || count( $d ) > 5 )]
+						[ 'type' => 'h2', 'hide' => ( count( $div2 ) > 20 || count( $div ) > 10 )]
 					);
 				}
 			}
-			_simple()->hdiv( $h, $out, [
-				'id' => preg_replace( [ '/ .*$/', '/[^a-z0-9]/' ], '', strtolower( $h ) ) ,
-				'hide' => $this->hide[ $h ]
+			_simple()->hdiv( $head, $out, [
+				'id' => preg_replace( [ '/ .*$/', '/[^a-z0-9]/' ], '', strtolower( $head ) ) ,
+				'hide' => $this->hide[ $head ]
 			]);
 		}
 	}
